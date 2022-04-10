@@ -116,14 +116,27 @@ class PuppeteerUtil {
     await tab.goto(url, wait: Until.networkIdle, timeout: defaultTimeout);
   }
 
-  Future<String> html({ElementHandle? tag}) async {
-    //다른방법
-    //var pageContent2 = await page.evaluate('document.documentElement.outerHTML');
+  Future<String> text({ElementHandle? tag}) async {
     if (tag == null) {
       return await tab.content ?? "";
     } else {
       return await evaluate(r'el => el.textContent', args: [tag]);
     }
+  }
+
+  Future<String> getAttr({required ElementHandle tag, required String attr}) async {
+    return await evaluate('el => el.getAttribute("$attr")', args: [tag]);
+  }
+
+  Future<void> setAttr({required ElementHandle tag, required String attr, required String attrValue}) async {
+    return await evaluate('el => el.setAttribute("$attr","$attrValue")', args: [tag]);
+  }
+
+  Future<String> getHtml({required ElementHandle tag}) async {
+    return await evaluate(r'el => el.innerHtml', args: [tag]);
+  }
+  Future<String> setHtml({required ElementHandle tag, required String value}) async {
+    return await evaluate(r'el => el.innerHtml="$value"', args: [tag]);
   }
 
   Future<dynamic> evaluate(String pageFunction, {List? args}) async {

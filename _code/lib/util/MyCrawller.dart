@@ -60,18 +60,14 @@ class MyCrawller {
     }
   }
 
-  Future<List<String>> getHumorPostUrl(String targetId) async {
+  Future<List<String>> getPostUrlList(String targetId) async {
     await p.goto("https://www.instagram.com/$targetId");
     if (!await isTargetIdPage(targetId)) return [];
 
-    (await p.$$('a[href^="/p"]')).forEach((elementHandle) async =>
-        LogUtil.debug((await elementHandle.properties).toString()));
-    return [];
-    //이 페이지에서 a[href^="/p"](/p를 포함하는 태그)인 태그는 이미지가 포함된 링크이다.
-    //해당 링크 데이터베이스에서 기록.
-
-    //https://sssinstagram.com/ko에다가, 해당 주소를 넣어서,
-    //이미지 및 비디오 주소 저장.
+    return (await Future.wait((await p.$$('a[href^="/p"]')).map(
+            (elementHandle) => p.getAttr(tag: elementHandle, attr: "href"))))
+        .map((e) => "https://www.instagram.com$e")
+        .toList();
   }
 
   Future<bool> isTargetIdPage(String targetId) async {
@@ -86,6 +82,22 @@ class MyCrawller {
     LogUtil.debug("해당 TargetId($targetId)로 이동에 ${valid ? "성공" : "실패"}하였습니다.");
 
     return valid;
+  }
+
+  Future<List<String>> getMediaStrListOf({required String postUrl}) async {
+    await p.goto("https://sssinstagram.com/ko");
+    await p.type('#main_page_text', postUrl, delay: delay);
+    await p.click('#submit');
+
+    //응답 올때까지 기다리기
+    await p.waitForSelector('#response');
+    return await Future.wait(
+      (await p.$$(
+              '#response > .graph-sidecar-wrapper  div.download-wrapper > a:nth-child(1)'))
+          .map(
+        (el) => p.getAttr(tag: el, attr: 'href'),
+      ),
+    );
   }
 //
 // Future<void> _deleteRequest(ElementHandle tag) async {

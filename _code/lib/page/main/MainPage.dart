@@ -126,8 +126,16 @@ class MainPageService extends KDHService<_MainPageState, MainPageComponent> {
     }
   }
 
-  void saveHumorPost() {
-    crawller.getHumorPostUrl("inssa_unni_");
+  void saveHumorPost() async {
+    List<String> postUrlList = await crawller.getPostUrlList("inssa_unni_");
+    for(String postUrl in postUrlList) {
+      //TODO:해당 postUrl를 저장소에 저장. (URL 중복 관리를 위해서)
+      var mediaStrList = await crawller.getMediaStrListOf(postUrl: postUrl);
+      //TODO:해당 mediaStrList를 저장소에 저장. (나중에 다운로드를 위해서)
+      LogUtil.debug("[$postUrl] mediaStrList $mediaStrList");
+    }
+
+
   }
 
   void startBrowser() {

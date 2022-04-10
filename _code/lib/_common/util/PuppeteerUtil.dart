@@ -9,15 +9,21 @@ class PuppeteerUtil {
 
   final defaultTimeout = Duration(seconds: 10);
 
-  //데스크탑 모드가 아닌 경우에는, 다른 컴퓨터에 켜져있는 pupueteer를 이용할 수 있다.
-
   Future<void> openBrowser(Future<void> Function() function,
       {int width = 1920,
         int height = 1600,
         bool headless = true,
         String? browserUrl}) async {
+    await startBrowser(width:width, height:height,headless:headless,browserUrl:browserUrl );
+    await function();
+    await stopBrowser();
+  }
+
+  Future<void> startBrowser({int width = 1920,
+        int height = 1600,
+        bool headless = true,
+        String? browserUrl}) async {
     bool isConnect = (browserUrl ?? "").isNotEmpty;
-    LogUtil.debug("openBrowser isConnect : $isConnect");
 
     if (isConnect) {
       //크롬 바로가기 만들고, 거기에 "C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222형태로 쓰면 됨.
@@ -44,11 +50,11 @@ class PuppeteerUtil {
     tab = await browser.newPage();
     tab.defaultTimeout = defaultTimeout;
     // 이미지 로드 비활성화
-        await tab.setRequestInterception(true);
-    tab.onRequest.listen((request) {
-      if (request.resourceType == ResourceType.image) request.abort();
-      else request.continueRequest();
-    });
+    // await tab.setRequestInterception(true);
+    // tab.onRequest.listen((request) {
+    //   if (request.resourceType == ResourceType.image) request.abort();
+    //   else request.continueRequest();
+    // });
     /*
     애니메이션 멈추기
      page.on("load", () => {
@@ -94,14 +100,11 @@ class PuppeteerUtil {
      */
 
     await setPageZoom();
-
-    //process
-    await function();
-
-    //close
+  }
+  Future<void> stopBrowser() async {
     try {
       await tab.close();
-      if (!isConnect) await browser.close();
+      await browser.close();
     } catch (e) {}
   }
 

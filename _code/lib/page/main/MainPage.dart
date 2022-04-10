@@ -52,8 +52,14 @@ class MainPageComponent extends KDHComponent<_MainPageState> {
   MainPageComponent(_MainPageState state) : super(state);
 
   Widget body(MainPageService s) {
-    return const Scaffold(
-      body: Text("MainPage"),
+    return Scaffold(
+      body: Column(
+        children: [
+          MyComponents.buttonDefault(child: const Text("브라우저 열기"), onPressed: (){
+
+          }),
+        ],
+      ),
     );
   }
 }

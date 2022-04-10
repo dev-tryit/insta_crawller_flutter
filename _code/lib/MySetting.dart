@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 class MySetting {
-  static const bool isRelease = true;
+  static const bool isRelease = false;
 
   //Lang
   static const Locale defaultLocale = Locale('ko', 'kr');

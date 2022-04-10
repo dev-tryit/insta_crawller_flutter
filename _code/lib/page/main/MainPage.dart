@@ -90,6 +90,12 @@ class MainPageComponent extends KDHComponent<_MainPageState> {
                 crawller.login(idController.text, pwController.text),
           ),
           MyComponents.buttonDefault(
+            child: const Text("알림 설정 끄기"),
+            onPressed: () =>
+                crawller.turnOffAlarmDialog(),
+
+          ),
+          MyComponents.buttonDefault(
             child: const Text("브라우저 중지"),
             onPressed: () => crawller.stopBrowser(),
           ),

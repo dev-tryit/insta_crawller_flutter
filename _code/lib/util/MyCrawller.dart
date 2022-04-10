@@ -2,7 +2,6 @@ import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PuppeteerUtil.dart';
 import 'package:puppeteer/puppeteer.dart';
 
-
 class MyCrawller {
   final PuppeteerUtil p;
   final Duration delay;
@@ -32,11 +31,11 @@ class MyCrawller {
     for (int i = 0; i < 5; i++) {
       await p.goto(loginPageUrl);
       if (await _isLoginSuccess()) {
-        LogUtil.info("로그인 성공");
+        LogUtil.info("[$id] 로그인 성공하였습니다.");
         break;
       }
 
-      LogUtil.info("로그인 필요함");
+      LogUtil.info("[$id] 로그인에 실패하였습니다.");
       await p.type('input[name="username"]', id ?? "", delay: delay);
       await p.type('input[name="password"]', pw ?? "", delay: delay);
       await p.clickAndWaitForNavigation('[type="submit"]', timeout: timeout);
@@ -61,11 +60,20 @@ class MyCrawller {
 
       //https://sssinstagram.com/ko에다가, 해당 주소를 넣어서,
       //이미지 및 비디오 주소 저장.
-   }
+    }
   }
 
   Future<void> saveInfoAboutPost() async {
     //Post 내용 저장.
+  }
+
+  Future<void> turnOffAlarmDialog() async {
+    bool existAlarmDialog = await p.existTag(
+        'img[src="/static/images/ico/xxhdpi_launcher.png/99cf3909d459.png"]');
+    LogUtil.debug("turnOffAlarmDialog existAlarmDialog : $existAlarmDialog");
+    if (existAlarmDialog) {
+      await p.click('[role="dialog"] button:nth-child(2)');
+    }
   }
 //
 // Future<void> _deleteRequest(ElementHandle tag) async {

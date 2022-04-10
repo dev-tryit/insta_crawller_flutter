@@ -70,7 +70,7 @@ class MyCrawller {
     LogUtil.debug("해당 TargetId($targetId)로 이동에 ${isTargetIdPage?"성공":"실패"}하였습니다.");
     if(!isTargetIdPage) return [];
 
-    (await p.$$('a[href^="/p"]')).forEach((elementHandle) async => LogUtil.debug(await elementHandle.properties));
+    (await p.$$('a[href^="/p"]')).forEach((elementHandle) async => LogUtil.debug((await elementHandle.properties).toString()));
     return [];
     //이 페이지에서 a[href^="/p"](/p를 포함하는 태그)인 태그는 이미지가 포함된 링크이다.
     //해당 링크 데이터베이스에서 기록.

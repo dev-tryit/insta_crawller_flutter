@@ -97,7 +97,7 @@ class MainPageComponent extends KDHComponent<_MainPageState> {
           ),
           MyComponents.buttonDefault(
             child: const Text("브라우저 중지"),
-            onPressed: s.stopBrowser(),
+            onPressed: s.stopBrowser,
           ),
         ],
       ),

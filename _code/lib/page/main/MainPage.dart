@@ -56,7 +56,6 @@ class _MainPageState
 class MainPageComponent extends KDHComponent<_MainPageState> {
   final idController = TextEditingController();
   final pwController = TextEditingController();
-  final crawller = MyCrawller();
 
   MainPageComponent(_MainPageState state) : super(state);
 
@@ -82,22 +81,23 @@ class MainPageComponent extends KDHComponent<_MainPageState> {
           SizedBox(height: 100),
           MyComponents.buttonDefault(
             child: const Text("브라우저 열기"),
-            onPressed: () => crawller.startBrowser(),
+            onPressed: s.startBrowser,
           ),
           MyComponents.buttonDefault(
             child: const Text("로그인하기"),
-            onPressed: () =>
-                crawller.login(idController.text, pwController.text),
+            onPressed: s.login,
           ),
           MyComponents.buttonDefault(
             child: const Text("알림 설정 끄기"),
-            onPressed: () =>
-                crawller.turnOffAlarmDialog(),
-
+            onPressed: s.turnOffAlarmDialog,
+          ),
+          MyComponents.buttonDefault(
+            child: const Text("유머 포스트 저장하기"),
+            onPressed: s.saveHumorPost,
           ),
           MyComponents.buttonDefault(
             child: const Text("브라우저 중지"),
-            onPressed: () => crawller.stopBrowser(),
+            onPressed: s.stopBrowser(),
           ),
         ],
       ),
@@ -107,6 +107,8 @@ class MainPageComponent extends KDHComponent<_MainPageState> {
 
 class MainPageService extends KDHService<_MainPageState, MainPageComponent> {
   InstaUser? instaUser;
+  final crawller = MyCrawller();
+
   MainPageService(_MainPageState state, MainPageComponent c) : super(state, c);
 
   Future<void> loadInstaUser() async {
@@ -123,4 +125,24 @@ class MainPageService extends KDHService<_MainPageState, MainPageComponent> {
       MyComponents.snackBar(context, "저장 실패하였습니다.");
     }
   }
+
+  void saveHumorPost() {
+    crawller.getHumorPostUrl("inssa_unni_");
+  }
+
+  void startBrowser() {
+    crawller.startBrowser();
+  }
+  void stopBrowser() {
+    crawller.stopBrowser();
+  }
+
+  void login() {
+    crawller.login(c.idController.text, c.pwController.text);
+  }
+
+  void turnOffAlarmDialog() {
+    crawller.turnOffAlarmDialog();
+  }
+
 }

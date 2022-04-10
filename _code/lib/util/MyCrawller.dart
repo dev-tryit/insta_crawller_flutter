@@ -47,22 +47,6 @@ class MyCrawller {
     return !isLoginPage;
   }
 
-  Future<void> visitAccountAndGetPostLink() async {
-    //아래 계정 방문하기 기능 만들기
-    List<String> accountList = ["time_enter", "jdowni7"];
-    for (String account in accountList) {
-      await p.goto("https://www.instagram.com/$account");
-      //이 페이지가 account 페이지인지 확인하고 아니면 해당 페이지 내용 저장하고, 프로그램 종료
-      //[role="tablist"] > a[aria-selected="true"]의 text에 게시물이 있으면 성공.
-
-      //이 페이지에서 a[href^="/p"](/p를 포함하는 태그)인 태그는 이미지가 포함된 링크이다.
-      //해당 링크 데이터베이스에서 기록.
-
-      //https://sssinstagram.com/ko에다가, 해당 주소를 넣어서,
-      //이미지 및 비디오 주소 저장.
-    }
-  }
-
   Future<void> saveInfoAboutPost() async {
     //Post 내용 저장.
   }
@@ -74,6 +58,25 @@ class MyCrawller {
     if (existAlarmDialog) {
       await p.click('[role="dialog"] button:nth-child(2)');
     }
+  }
+
+  Future<List<String>> getHumorPostUrl(String targetId) async {
+    await p.goto("https://www.instagram.com/$targetId");
+    bool isTargetIdPage = await p
+            .existTag('[role="tablist"] > a[aria-selected="true"]') &&
+        (await p.html(
+                tag: await p.$('[role="tablist"] > a[aria-selected="true"]')))
+            .contains("게시물");
+    LogUtil.debug("해당 TargetId($targetId)로 이동에 ${isTargetIdPage?"성공":"실패"}하였습니다.");
+    if(!isTargetIdPage) return [];
+
+    (await p.$$('a[href^="/p"]')).forEach((elementHandle) async => LogUtil.debug(await elementHandle.properties));
+    return [];
+    //이 페이지에서 a[href^="/p"](/p를 포함하는 태그)인 태그는 이미지가 포함된 링크이다.
+    //해당 링크 데이터베이스에서 기록.
+
+    //https://sssinstagram.com/ko에다가, 해당 주소를 넣어서,
+    //이미지 및 비디오 주소 저장.
   }
 //
 // Future<void> _deleteRequest(ElementHandle tag) async {

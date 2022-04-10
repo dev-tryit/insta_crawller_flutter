@@ -9,6 +9,7 @@ import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/model/WidgetToGetSize.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/widget/EasyFade.dart';
+import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
 import 'package:insta_crawller_flutter/state/auth/AuthState.dart';
 import 'package:insta_crawller_flutter/util/MyColors.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
@@ -38,7 +39,9 @@ class _MainPageState
   MainPageService makeService() => MainPageService(this, c);
 
   @override
-  Future<void> onLoad() async {}
+  Future<void> onLoad() async {
+    await s.loadInstaUser();
+  }
 
   @override
   void mustRebuild() {
@@ -58,6 +61,8 @@ class MainPageComponent extends KDHComponent<_MainPageState> {
   MainPageComponent(_MainPageState state) : super(state);
 
   Widget body(MainPageService s) {
+    idController.text = s.instaUser?.id??"";
+    pwController.text = s.instaUser?.pw??"";
     return Scaffold(
       body: Column(
         children: [
@@ -70,6 +75,11 @@ class MainPageComponent extends KDHComponent<_MainPageState> {
             decoration: InputDecoration(isDense: true, labelText: "PW"),
             obscureText: true,
           ),
+          MyComponents.buttonDefault(
+            child: const Text("저장"),
+            onPressed: ()=>s.saveInstaUser(idController.text, pwController.text),
+          ),
+          SizedBox(height: 100),
           MyComponents.buttonDefault(
             child: const Text("브라우저 열기"),
             onPressed: () => crawller.startBrowser(),
@@ -90,5 +100,21 @@ class MainPageComponent extends KDHComponent<_MainPageState> {
 }
 
 class MainPageService extends KDHService<_MainPageState, MainPageComponent> {
+  InstaUser? instaUser;
   MainPageService(_MainPageState state, MainPageComponent c) : super(state, c);
+
+  Future<void> loadInstaUser() async {
+    instaUser = await InstaUserRepository().getOne();
+  }
+
+  Future<void> saveInstaUser(String id, String pw) async {
+    instaUser = InstaUser(id: id, pw: pw);
+    try {
+      await InstaUserRepository().save(instaUser: instaUser!);
+      MyComponents.snackBar(context, "저장 성공하였습니다.");
+    }
+    catch(e){
+      MyComponents.snackBar(context, "저장 실패하였습니다.");
+    }
+  }
 }

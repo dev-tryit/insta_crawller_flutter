@@ -13,18 +13,21 @@ class MyCrawller {
         this.delay = const Duration(milliseconds: 100),
         this.timeout = Duration(seconds: 20);
 
-  Future<void> start(String id, String pw) async {
-    await p.openBrowser(
-      () async {
-        await _login(id, pw);
-        await visitAccountAndGetPostLink();
-        await saveInfoAboutPost();
-      },
-      headless: false,
-    );
+  /*
+
+    await login(id, pw);
+    await visitAccountAndGetPostLink();
+    await saveInfoAboutPost();
+   */
+  Future<void> startBrowser() async {
+    await p.startBrowser(headless: false);
   }
 
-  Future<void> _login(String? id, String? pw) async {
+  Future<void> stopBrowser() async {
+    await p.stopBrowser();
+  }
+
+  Future<void> login(String? id, String? pw) async {
     const String loginPageUrl = "https://www.instagram.com/accounts/login/";
     for (int i = 0; i < 5; i++) {
       await p.goto(loginPageUrl);

@@ -94,7 +94,7 @@ class MainLayoutComponent extends KDHComponent<_MainLayoutState> {
       physics: const NeverScrollableScrollPhysics(),
       children: [
         KeywordAnalysisPage(),
-        RequestRemovalPage(s.showSettingDialog)
+        // RequestRemovalPage(s.showSettingDialog)
       ],
     );
   }

@@ -62,23 +62,30 @@ class MyCrawller {
 
   Future<List<String>> getHumorPostUrl(String targetId) async {
     await p.goto("https://www.instagram.com/$targetId");
-    bool isTargetIdPage = await p
-            .existTag('[role="tablist"] > a[aria-selected="true"]');
-    String contents = await p.html(
-        tag: await p.$('[role="tablist"] > a[aria-selected="true"]'));
-    LogUtil.debug("해당 TargetId($targetId)의 contents : $contents");
-    isTargetIdPage =
-        contents.contains("게시물");
-    LogUtil.debug("해당 TargetId($targetId)로 이동에 ${isTargetIdPage?"성공":"실패"}하였습니다.");
-    if(!isTargetIdPage) return [];
+    if (!await isTargetIdPage(targetId)) return [];
 
-    (await p.$$('a[href^="/p"]')).forEach((elementHandle) async => LogUtil.debug((await elementHandle.properties).toString()));
+    (await p.$$('a[href^="/p"]')).forEach((elementHandle) async =>
+        LogUtil.debug((await elementHandle.properties).toString()));
     return [];
     //이 페이지에서 a[href^="/p"](/p를 포함하는 태그)인 태그는 이미지가 포함된 링크이다.
     //해당 링크 데이터베이스에서 기록.
 
     //https://sssinstagram.com/ko에다가, 해당 주소를 넣어서,
     //이미지 및 비디오 주소 저장.
+  }
+
+  Future<bool> isTargetIdPage(String targetId) async {
+    const String selector = '[role="tablist"] > a[aria-selected="true"]';
+
+    bool valid = await p.existTag(selector);
+
+    String contents = await p.text(tag: await p.$(selector));
+    LogUtil.debug("해당 TargetId($targetId)의 contents : $contents");
+
+    valid = contents.contains("게시물") || contents.contains("Posts");
+    LogUtil.debug("해당 TargetId($targetId)로 이동에 ${valid ? "성공" : "실패"}하였습니다.");
+
+    return valid;
   }
 //
 // Future<void> _deleteRequest(ElementHandle tag) async {

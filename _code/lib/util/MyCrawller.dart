@@ -63,10 +63,12 @@ class MyCrawller {
   Future<List<String>> getHumorPostUrl(String targetId) async {
     await p.goto("https://www.instagram.com/$targetId");
     bool isTargetIdPage = await p
-            .existTag('[role="tablist"] > a[aria-selected="true"]') &&
-        (await p.html(
-                tag: await p.$('[role="tablist"] > a[aria-selected="true"]')))
-            .contains("게시물");
+            .existTag('[role="tablist"] > a[aria-selected="true"]');
+    String contents = await p.html(
+        tag: await p.$('[role="tablist"] > a[aria-selected="true"]'));
+    LogUtil.debug("해당 TargetId($targetId)의 contents : $contents");
+    isTargetIdPage =
+        contents.contains("게시물");
     LogUtil.debug("해당 TargetId($targetId)로 이동에 ${isTargetIdPage?"성공":"실패"}하였습니다.");
     if(!isTargetIdPage) return [];
 

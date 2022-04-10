@@ -15,8 +15,12 @@ import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 
 class AuthPage extends StatefulWidget {
-  static const String staticClassName= "AuthPage";
+  static const String staticClassName = "AuthPage";
   final className = staticClassName;
+  final Widget nextPage;
+
+  const AuthPage({Key? key, required this.nextPage}) : super(key: key);
+
   @override
   _AuthPageState createState() => _AuthPageState();
 }
@@ -277,15 +281,22 @@ class AuthPageService extends KDHService<_AuthPageState, AuthPageComponent> {
     String email = c.emailController.text.trim();
     String password = c.passwordController.text.trim();
 
+    var nextPage = state.widget.nextPage;
+
     if (authStateManager.state is AuthStateLogin) {
-      await authStateManager.state
-          .handle({'email': email, 'password': password, 'context': context});
+      await authStateManager.state.handle({
+        'email': email,
+        'password': password,
+        'nextPage': nextPage,
+        'context': context,
+      });
     } else if (authStateManager.state is AuthStateRegistration) {
       String passwordConfirm = c.passwordConfirmController.text.trim();
       await authStateManager.handle({
         'email': email,
         'password': password,
         'passwordConfirm': passwordConfirm,
+        'nextPage': nextPage,
         'context': context,
       });
     } else {

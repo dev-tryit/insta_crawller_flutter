@@ -55,7 +55,10 @@ class MyCrawller {
 
       //이 페이지에서 a[href^="/p"](/p를 포함하는 태그)인 태그는 이미지가 포함된 링크이다.
       //해당 링크 데이터베이스에서 기록.
-    }
+
+      //https://sssinstagram.com/ko에다가, 해당 주소를 넣어서,
+      //이미지 및 비디오 주소 저장.
+   }
   }
 
   Future<void> saveInfoAboutPost() async {

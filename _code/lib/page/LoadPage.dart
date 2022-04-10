@@ -7,7 +7,7 @@ import 'package:insta_crawller_flutter/_common/model/WidgetToGetSize.dart';
 import 'package:insta_crawller_flutter/_common/util/AuthUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/auth/AuthPage.dart';
-import 'package:insta_crawller_flutter/page/main/MainLayout.dart';
+import 'package:insta_crawller_flutter/page/main/MainPage.dart';
 import 'package:insta_crawller_flutter/util/MyColors.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 
@@ -74,6 +74,6 @@ class LoadPageService extends KDHService<_LoadPageState, LoadPageComponent> {
   Future<void> moveNextPage() async {
     await Future.delayed(const Duration(seconds: 1));
     PageUtil.replacementPage(
-        context, await AuthUtil().isLogin() ? MainLayout() : AuthPage());
+        context, await AuthUtil().isLogin() ? MainPage() : AuthPage(nextPage:MainPage()));
   }
 }

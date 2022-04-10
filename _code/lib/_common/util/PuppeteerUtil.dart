@@ -1,5 +1,7 @@
+import 'package:puppeteer/plugins/stealth.dart';
 import 'package:puppeteer/puppeteer.dart';
-import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
+
+import 'LogUtil.dart';
 
 class PuppeteerUtil {
   late Browser browser;
@@ -11,9 +13,10 @@ class PuppeteerUtil {
 
   Future<void> openBrowser(Future<void> Function() function,
       {int width = 1920,
-      int height = 1600,
-      bool headless = true, String? browserUrl}) async {
-    bool isConnect = (browserUrl??"").isNotEmpty;
+        int height = 1600,
+        bool headless = true,
+        String? browserUrl}) async {
+    bool isConnect = (browserUrl ?? "").isNotEmpty;
     LogUtil.debug("openBrowser isConnect : $isConnect");
 
     if (isConnect) {
@@ -31,10 +34,65 @@ class PuppeteerUtil {
           width: width,
           height: height,
         ),
+        plugins: [
+          StealthPlugin()
+        ], //스텔스 플러그인, 봇 아닌척하기 //https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth
       );
+
+      //const browser = await puppeteer.launch({ignoreDefaultArgs: ["--enable-automation"]}); 이걸로 웹드라이버인 것을 숨길 수 있다.
     }
     tab = await browser.newPage();
     tab.defaultTimeout = defaultTimeout;
+    // 이미지 로드 비활성화
+        await tab.setRequestInterception(true);
+    tab.onRequest.listen((request) {
+      if (request.resourceType == ResourceType.image) request.abort();
+      else request.continueRequest();
+    });
+    /*
+    애니메이션 멈추기
+     page.on("load", () => {
+    const content = `
+    *,
+    *::after,
+    *::before {
+        transition-delay: 0s !important;
+        transition-duration: 0s !important;
+        animation-delay: -0.0001s !important;
+        animation-duration: 0s !important;
+        animation-play-state: paused !important;
+        caret-color: transparent !important;
+    }`;
+
+    page.addStyleTag({ content });
+  });
+     */
+    // tab.emulate(puppeteer.devices.iPhone6);//모바일인척하기
+    // await page.emulateMediaType(MediaType.screen); //화면 타입 변경
+
+    //스크린샷찍고 저장하기
+    // var screenshot = await page.screenshot();
+    // await File('example/_github.png').writeAsBytes(screenshot);
+    //   await myPage.pdf(); //pdf 만들기
+    /*
+    await page.pdf(
+      format: PaperFormat.a4,
+      printBackground: true,
+      pageRanges: '1',
+      output: File('example/_dart.pdf').openWrite());
+     */
+
+    /*
+    여러 데이터 갖고오기
+      var links = await page.evaluate(r'''resultsSelector => {
+  const anchors = Array.from(document.querySelectorAll(resultsSelector));
+  return anchors.map(anchor => {
+    const title = anchor.textContent.split('|')[0].trim();
+    return `${title} - ${anchor.href}`;
+  });
+}''', args: [resultsSelector]);
+     */
+
     await setPageZoom();
 
     //process
@@ -50,11 +108,14 @@ class PuppeteerUtil {
   Future<Response> reload() async {
     return await tab.reload();
   }
+
   Future<void> goto(String url) async {
     await tab.goto(url, wait: Until.networkIdle, timeout: defaultTimeout);
   }
 
   Future<String> html({ElementHandle? tag}) async {
+    //다른방법
+    //var pageContent2 = await page.evaluate('document.documentElement.outerHTML');
     if (tag == null) {
       return await tab.content ?? "";
     } else {
@@ -102,8 +163,8 @@ class PuppeteerUtil {
 
   Future<bool> waitForSelector(String selector,
       {bool? visible,
-      bool? hidden,
-      Duration timeout = const Duration(seconds: 5)}) async {
+        bool? hidden,
+        Duration timeout = const Duration(seconds: 5)}) async {
     try {
       await tab.waitForSelector(selector,
           visible: visible, hidden: hidden, timeout: timeout);
@@ -166,7 +227,5 @@ class PuppeteerUtil {
     }''');
   }
 
-  Future<void> setPageZoom({int zoom=1}) async {
-
-  }
+  Future<void> setPageZoom({int zoom = 1}) async {}
 }

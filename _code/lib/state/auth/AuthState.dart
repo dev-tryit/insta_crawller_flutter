@@ -3,7 +3,6 @@ import 'package:insta_crawller_flutter/_common/model/exception/CommonException.d
 import 'package:insta_crawller_flutter/_common/util/AuthUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
-import 'package:insta_crawller_flutter/page/main/MainLayout.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 
 class AuthStateManager<COMPONENT> {
@@ -87,6 +86,7 @@ class AuthStateRegistration<COMPONENT> implements AuthState<COMPONENT> {
     String email = data['email'];
     String password = data['password'];
     String passwordConfirm = data['passwordConfirm'];
+    Widget nextPage = data['nextPage'];
 
 
     if (email.isEmpty) {
@@ -122,7 +122,7 @@ class AuthStateRegistration<COMPONENT> implements AuthState<COMPONENT> {
 
     MyComponents.dismissLoadingDialog();
     MyComponents.toastInfo(context, "회원가입이 완료되었습니다.");
-    PageUtil.movePage(context, MainLayout());
+    PageUtil.movePage(context, nextPage);
     return this;
   }
 }
@@ -138,6 +138,7 @@ class AuthStateLogin<COMPONENT> implements AuthState<COMPONENT> {
     BuildContext context = data['context'];
     String email = data['email'];
     String password = data['password'];
+    Widget nextPage = data['nextPage'];
 
     if (email.isEmpty) {
       MyComponents.toastError(context, "이메일이 비어있습니다");
@@ -159,7 +160,7 @@ class AuthStateLogin<COMPONENT> implements AuthState<COMPONENT> {
       return this;
     }
 
-    PageUtil.movePage(context, MainLayout());
+    PageUtil.movePage(context, nextPage);
     MyComponents.dismissLoadingDialog();
     return this;
   }

@@ -1,21 +1,14 @@
 import 'dart:async';
 
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:insta_crawller_flutter/MySetting.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHComponent.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHService.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/model/WidgetToGetSize.dart';
-import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
-import 'package:insta_crawller_flutter/_common/widget/EasyFade.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
-import 'package:insta_crawller_flutter/state/auth/AuthState.dart';
-import 'package:insta_crawller_flutter/util/MyColors.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyCrawller.dart';
-import 'package:insta_crawller_flutter/util/MyFonts.dart';
 
 class MainPage extends StatefulWidget {
   static const String staticClassName = "MainPage";

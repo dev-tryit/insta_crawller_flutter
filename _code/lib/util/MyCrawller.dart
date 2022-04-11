@@ -9,7 +9,7 @@ class MyCrawller {
 
   MyCrawller()
       : this.p = PuppeteerUtil(),
-        this.delay = const Duration(milliseconds: 100),
+        this.delay = const Duration(milliseconds: 50),
         this.timeout = Duration(seconds: 20);
 
   /*
@@ -40,9 +40,9 @@ class MyCrawller {
       await p.type('input[name="password"]', pw ?? "", delay: delay);
       await p.clickAndWaitForNavigation('[type="submit"]', timeout: timeout);
 
-
-      if(await p.existTag('#slfErrorAlert')) {
-        LogUtil.debug("[$id] 로그인에 실패하였습니다. 원인 : ${await p.text(tag:await p.$('#slfErrorAlert'))}");
+      if (await p.existTag('#slfErrorAlert')) {
+        LogUtil.debug(
+            "[$id] 로그인에 실패하였습니다. 원인 : ${await p.text(tag: await p.$('#slfErrorAlert'))}");
         break;
       }
     }

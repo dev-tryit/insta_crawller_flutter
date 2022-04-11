@@ -19,7 +19,7 @@ class MyCrawller {
     await saveInfoAboutPost();
    */
   Future<void> startBrowser() async {
-    await p.startBrowser(headless: false);
+    await p.startBrowser(headless: false, width: 1280, height: 1024);
   }
 
   Future<void> stopBrowser() async {
@@ -31,14 +31,20 @@ class MyCrawller {
     for (int i = 0; i < 5; i++) {
       await p.goto(loginPageUrl);
       if (await _isLoginSuccess()) {
-        LogUtil.info("[$id] 로그인 성공하였습니다.");
+        LogUtil.debug("[$id] 로그인 성공하였습니다.");
         break;
       }
 
-      LogUtil.info("[$id] 로그인에 실패하였습니다.");
+      LogUtil.debug("[$id] 로그인에 실패하였습니다.");
       await p.type('input[name="username"]', id ?? "", delay: delay);
       await p.type('input[name="password"]', pw ?? "", delay: delay);
       await p.clickAndWaitForNavigation('[type="submit"]', timeout: timeout);
+
+
+      if(await p.existTag('#slfErrorAlert')) {
+        LogUtil.debug("[$id] 로그인에 실패하였습니다. 원인 : ${await p.text(tag:await p.$('#slfErrorAlert'))}");
+        break;
+      }
     }
   }
 

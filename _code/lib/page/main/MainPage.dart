@@ -10,6 +10,7 @@ import 'package:insta_crawller_flutter/_common/model/WidgetToGetSize.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/widget/EasyFade.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
+import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/state/auth/AuthState.dart';
 import 'package:insta_crawller_flutter/util/MyColors.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
@@ -127,15 +128,16 @@ class MainPageService extends KDHService<_MainPageState, MainPageComponent> {
   }
 
   void saveHumorPost() async {
-    List<String> postUrlList = await crawller.getPostUrlList("inssa_unni_");
+    String instaUserId = "inssa_unni_";
+    List<String> postUrlList = await crawller.getPostUrlList(instaUserId);
+
     for(String postUrl in postUrlList) {
-      //TODO:해당 postUrl를 저장소에 저장. (URL 중복 관리를 위해서)
-      var mediaStrList = await crawller.getMediaStrListOf(postUrl: postUrl);
-      //TODO:해당 mediaStrList를 저장소에 저장. (나중에 다운로드를 위해서)
-      LogUtil.debug("[$postUrl] mediaStrList $mediaStrList");
+      if(await PostUrlRepository().getOneByUrl(postUrl) != null) continue;
+
+      List<String> mediaStrList = await crawller.getMediaStrListOf(postUrl: postUrl);
+      var postUrlObj = PostUrl(instaUserId: instaUserId, url: postUrl, mediaUrlList: mediaStrList);
+      await PostUrlRepository().save(postUrl: postUrlObj);
     }
-
-
   }
 
   void startBrowser() {

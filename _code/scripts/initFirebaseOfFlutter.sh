@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 echo "sudo apt install -y nodejs"
@@ -21,8 +20,8 @@ dart pub global activate flutterfire_cli
 
 export PATH="$PATH":"$HOME/.pub-cache/bin"
 
-echo "sudo firebase login --no-localhost"
-sudo firebase login --no-localhosty
+echo "firebase login"
+firebase login
 
 echo "flutterfire configure"
-sudo flutterfire configure
+flutterfire configure

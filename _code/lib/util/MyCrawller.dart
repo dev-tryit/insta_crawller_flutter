@@ -9,7 +9,7 @@ class MyCrawller {
 
   MyCrawller()
       : this.p = PuppeteerUtil(),
-        this.delay = const Duration(milliseconds: 50),
+        this.delay = const Duration(milliseconds: 25),
         this.timeout = Duration(seconds: 20);
 
   /*

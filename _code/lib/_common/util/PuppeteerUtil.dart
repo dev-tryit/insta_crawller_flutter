@@ -180,13 +180,13 @@ class PuppeteerUtil {
   Future<bool> waitForSelector(String selector,
       {bool? visible,
         bool? hidden,
-        Duration timeout = const Duration(seconds: 5)}) async {
+        Duration timeout = const Duration(seconds: 10)}) async {
     try {
       await tab.waitForSelector(selector,
           visible: visible, hidden: hidden, timeout: timeout);
       return true;
     } catch (e) {
-      LogUtil.info("$selector 가 없습니다.");
+      LogUtil.info("$selector 가 없습니다.: $e");
       return false;
     }
   }

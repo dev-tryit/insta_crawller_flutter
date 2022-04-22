@@ -56,12 +56,14 @@ class LoadPageComponent extends KDHComponent<_LoadPageState> {
   Widget body() {
     return Container(
       width: 350,
-      color: MyTheme.subColor,
+      color: MyTheme.mainColor,
       alignment: Alignment.center,
       child: Text(
         "Insta\nManager",
+        textAlign: TextAlign.center,
         style: MyFonts.coiny(
           fontSize: 35,
+          height: 1.1,
           color: MyTheme.subColor,
         ),
       ),

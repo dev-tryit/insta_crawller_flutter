@@ -13,12 +13,14 @@ class MyFonts {
     double? fontSize,
     FontWeight? fontWeight,
     FontStyle? fontStyle,
+    double? height,
   }) {
     return GoogleFonts.coiny(
       textStyle: textStyle,
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
+      height: height,
     );
   }
 }

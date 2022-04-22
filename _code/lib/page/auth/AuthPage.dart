@@ -10,7 +10,6 @@ import 'package:insta_crawller_flutter/_common/model/WidgetToGetSize.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/widget/EasyFade.dart';
 import 'package:insta_crawller_flutter/state/auth/AuthState.dart';
-import 'package:insta_crawller_flutter/util/MyColors.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
@@ -63,7 +62,7 @@ class AuthPageComponent extends KDHComponent<_AuthPageState> {
   bool emailTextFieldEnabled = true;
   String? emailValidationText = "인증 요청";
   String? nextButtonText;
-  Color emailValidationColor = MyTheme.subColor;
+  Color emailValidationColor = Colors.black;
 
   List<Widget> elementList = [];
 
@@ -84,7 +83,7 @@ class AuthPageComponent extends KDHComponent<_AuthPageState> {
                 child: SizedBox.expand(
                   child: ElevatedButton(
                     child: Text(nextButtonText!),
-                    style: ElevatedButton.styleFrom(primary:MyTheme.subColor),
+                    style: ElevatedButton.styleFrom(primary: MyTheme.mainColor),
                     onPressed: s.loginOrRegister,
                   ),
                 ),
@@ -100,8 +99,8 @@ class AuthPageComponent extends KDHComponent<_AuthPageState> {
               Text(
                 MySetting.appName,
                 style: MyFonts.coiny(
-                  fontSize: 35,
-                  color: MyTheme.subColor,
+                  fontSize: 27,
+                  color: MyTheme.mainColor,
                 ),
               ),
               const SizedBox(height: 69),
@@ -158,6 +157,19 @@ class AuthPageComponent extends KDHComponent<_AuthPageState> {
                   onChanged: onChanged,
                   enabled: textFieldEnabled,
                   obscureText: obscureText,
+                  cursorColor: MyTheme.mainColor,
+                  decoration: const InputDecoration(
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: MyTheme.mainColor),
+                    ),
+                    errorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: MyTheme.mainColor),
+                    ),
+                    focusedErrorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: MyTheme.mainColor),
+                    ),
+                    errorStyle: TextStyle(color: MyTheme.mainColor),
+                  ),
                 ),
               ),
               ...trailing != null
@@ -191,22 +203,22 @@ class AuthPageComponent extends KDHComponent<_AuthPageState> {
     if (authState is AuthStateNeedVerification) {
       emailValidationText = "인증 확인";
       emailTextFieldEnabled = false;
-      emailValidationColor = MyTheme.mainColor;
+      emailValidationColor = Colors.black;
       nextButtonText = null;
     } else if (authState is AuthStateSendEmail) {
       emailValidationText = "인증 요청";
       emailTextFieldEnabled = true;
-      emailValidationColor = MyTheme.subColor;
+      emailValidationColor = Colors.black;
       nextButtonText = null;
     } else if (authState is AuthStateLogin) {
       emailValidationText = null;
       emailTextFieldEnabled = false;
-      emailValidationColor = MyTheme.subColor;
+      emailValidationColor = Colors.black;
       nextButtonText = "로그인";
     } else if (authState is AuthStateRegistration) {
       emailValidationText = null;
       emailTextFieldEnabled = false;
-      emailValidationColor = MyTheme.subColor;
+      emailValidationColor = Colors.black;
       nextButtonText = "회원가입";
     }
 

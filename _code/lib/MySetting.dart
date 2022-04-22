@@ -10,7 +10,7 @@ class MySetting {
   static const int timeZoneOffset = 9;
 
   // App
-  static const String appName = "인스타그램 매니저";
+  static const String appName = "Insta Manager";
 
   // 중복 클릭 방지 시간
   static int milliSecondsForPreventingMultipleClicks = 300;

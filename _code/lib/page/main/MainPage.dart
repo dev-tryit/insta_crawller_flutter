@@ -5,6 +5,8 @@ import 'package:insta_crawller_flutter/_common/abstract/KDHComponent.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHService.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/model/WidgetToGetSize.dart';
+import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
+import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
@@ -90,6 +92,10 @@ class MainPageComponent extends KDHComponent<_MainPageState> {
             onPressed: s.saveHumorPost,
           ),
           MyComponents.buttonDefault(
+            child: const Text("유머 포스트 리스트 확인하기"),
+            onPressed: s.goPostListViewPage,
+          ),
+          MyComponents.buttonDefault(
             child: const Text("브라우저 중지"),
             onPressed: s.stopBrowser,
           ),
@@ -131,6 +137,11 @@ class MainPageService extends KDHService<_MainPageState, MainPageComponent> {
       var postUrlObj = PostUrl(instaUserId: instaUserId, url: postUrl, mediaUrlList: mediaStrList);
       await PostUrlRepository().save(postUrl: postUrlObj);
     }
+  }
+
+
+  void goPostListViewPage() async {
+    PageUtil.movePage(context, PostListViewPage());
   }
 
   void startBrowser() {

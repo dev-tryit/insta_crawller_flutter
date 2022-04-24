@@ -5,14 +5,14 @@ import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 
-class AuthStateManager<COMPONENT> {
-  AuthState<COMPONENT> state;
-  COMPONENT c;
+class AuthStateManager<STATE> {
+  AuthState<STATE> authState;
+  STATE state;
 
-  AuthStateManager(this.c) : state = AuthStateSendEmail<COMPONENT>(c);
+  AuthStateManager(this.state) : authState = AuthStateSendEmail<STATE>(state);
 
   Future<void> handle(Map<String, dynamic> data) async {
-    state = await state.handle(data);
+    authState = await authState.handle(data);
   }
 }
 

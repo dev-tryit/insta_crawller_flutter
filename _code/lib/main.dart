@@ -12,7 +12,6 @@ import 'package:insta_crawller_flutter/page/LoadPage.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyStoreUtil.dart';
-import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
 import 'firebase_options.dart';
 

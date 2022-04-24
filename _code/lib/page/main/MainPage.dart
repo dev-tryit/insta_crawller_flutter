@@ -1,10 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:insta_crawller_flutter/_common/abstract/KDHComponent.dart';
-import 'package:insta_crawller_flutter/_common/abstract/KDHService.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
-import 'package:insta_crawller_flutter/_common/model/WidgetToGetSize.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
@@ -21,44 +18,22 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState
-    extends KDHState<MainPage, MainPageComponent, MainPageService> {
-  @override
-  bool isPage() => true;
-
-  @override
-  List<WidgetToGetSize> makeWidgetListToGetSize() => [];
-
-  @override
-  MainPageComponent makeComponent() => MainPageComponent(this);
-
-  @override
-  MainPageService makeService() => MainPageService(this, c);
+    extends KDHState<MainPage> {
+  late MainPageService s;
+  final idController = TextEditingController();
+  final pwController = TextEditingController();
 
   @override
   Future<void> onLoad() async {
+    s = MainPageService(this);
     await s.loadInstaUser();
   }
 
   @override
   void mustRebuild() {
-    widgetToBuild = () => c.body(s);
-    rebuild();
-  }
-
-  @override
-  Future<void> afterBuild() async {}
-}
-
-class MainPageComponent extends KDHComponent<_MainPageState> {
-  final idController = TextEditingController();
-  final pwController = TextEditingController();
-
-  MainPageComponent(_MainPageState state) : super(state);
-
-  Widget body(MainPageService s) {
     idController.text = s.instaUser?.id??"";
     pwController.text = s.instaUser?.pw??"";
-    return Scaffold(
+    widgetToBuild = () => Scaffold(
       body: Column(
         children: [
           TextField(
@@ -101,15 +76,23 @@ class MainPageComponent extends KDHComponent<_MainPageState> {
           ),
         ],
       ),
-    );
+    );;
+    rebuild();
   }
+
+  @override
+  Future<void> afterBuild() async {}
 }
 
-class MainPageService extends KDHService<_MainPageState, MainPageComponent> {
+
+class MainPageService {
   InstaUser? instaUser;
   final crawller = MyCrawller();
+  _MainPageState state;
+  BuildContext get context => state.context;
+  void rebuild() => state.setState(() {});
 
-  MainPageService(_MainPageState state, MainPageComponent c) : super(state, c);
+  MainPageService(this.state);
 
   Future<void> loadInstaUser() async {
     instaUser = await InstaUserRepository().getOne();
@@ -152,7 +135,7 @@ class MainPageService extends KDHService<_MainPageState, MainPageComponent> {
   }
 
   void login() {
-    crawller.login(c.idController.text, c.pwController.text);
+    crawller.login(state.idController.text, state.pwController.text);
   }
 
   void turnOffAlarmDialog() {

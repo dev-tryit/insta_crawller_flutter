@@ -3,10 +3,7 @@ import 'dart:async';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/MySetting.dart';
-import 'package:insta_crawller_flutter/_common/abstract/KDHComponent.dart';
-import 'package:insta_crawller_flutter/_common/abstract/KDHService.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
-import 'package:insta_crawller_flutter/_common/model/WidgetToGetSize.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/widget/EasyFade.dart';
 import 'package:insta_crawller_flutter/state/auth/AuthState.dart';
@@ -26,33 +23,8 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState
-    extends KDHState<AuthPage, AuthPageComponent, AuthPageService> {
-  @override
-  bool isPage() => true;
-
-  @override
-  List<WidgetToGetSize> makeWidgetListToGetSize() => [];
-
-  @override
-  AuthPageComponent makeComponent() => AuthPageComponent(this);
-
-  @override
-  AuthPageService makeService() => AuthPageService(this, c);
-
-  @override
-  Future<void> onLoad() async {}
-
-  @override
-  void mustRebuild() {
-    widgetToBuild = () => c.body(s);
-    rebuild();
-  }
-
-  @override
-  Future<void> afterBuild() async {}
-}
-
-class AuthPageComponent extends KDHComponent<_AuthPageState> {
+    extends KDHState<AuthPage> {
+  late AuthPageService s;
   final _formKey = GlobalKey<FormState>();
 
   final emailController = TextEditingController();
@@ -66,29 +38,33 @@ class AuthPageComponent extends KDHComponent<_AuthPageState> {
 
   List<Widget> elementList = [];
 
-  AuthPageComponent(_AuthPageState state) : super(state);
+  @override
+  Future<void> onLoad() async {
+    s = AuthPageService(this);
+  }
 
-  Widget body(AuthPageService s) {
-    final authState = s.authStateManager.state;
+  @override
+  void mustRebuild() {
+    final authState = s.authStateManager.authState;
     setUIByAuthState(authState);
 
-    return Scaffold(
+    widgetToBuild = () => Scaffold(
       bottomSheet: nextButtonText != null
           ? AnimatedOpacity(
-              opacity: 1.0,
-              duration: const Duration(milliseconds: 1500),
-              child: Container(
-                height: 82,
-                padding: const EdgeInsets.only(left: 32, right: 32, bottom: 32),
-                child: SizedBox.expand(
-                  child: ElevatedButton(
-                    child: Text(nextButtonText!),
-                    style: ElevatedButton.styleFrom(primary: MyTheme.mainColor),
-                    onPressed: s.loginOrRegister,
-                  ),
-                ),
-              ),
-            )
+        opacity: 1.0,
+        duration: const Duration(milliseconds: 1500),
+        child: Container(
+          height: 82,
+          padding: const EdgeInsets.only(left: 32, right: 32, bottom: 32),
+          child: SizedBox.expand(
+            child: ElevatedButton(
+              child: Text(nextButtonText!),
+              style: ElevatedButton.styleFrom(primary: MyTheme.mainColor),
+              onPressed: s.loginOrRegister,
+            ),
+          ),
+        ),
+      )
           : null,
       body: Form(
         key: _formKey,
@@ -126,7 +102,12 @@ class AuthPageComponent extends KDHComponent<_AuthPageState> {
         ),
       ),
     );
+    rebuild();
   }
+
+  @override
+  Future<void> afterBuild() async {}
+
 
   Widget inputBox({
     required String label,
@@ -173,24 +154,24 @@ class AuthPageComponent extends KDHComponent<_AuthPageState> {
                 ),
               ),
               ...trailing != null
-                  ? [
-                      const SizedBox(width: 8),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25),
-                        child: InkWell(
-                          onTap: onTrailingTap,
-                          child: Text(
-                            trailing,
-                            style: MyFonts.coiny(
-                              color: trailingColor ?? MyTheme.subColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ]
-                  : [],
+              ? [
+              const SizedBox(width: 8),
+              Padding(
+                padding: const EdgeInsets.only(top: 25),
+                child: InkWell(
+                  onTap: onTrailingTap,
+                  child: Text(
+                    trailing,
+                    style: MyFonts.coiny(
+                      color: trailingColor ?? MyTheme.subColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ]
+                : [],
             ],
           ),
         ],
@@ -198,7 +179,7 @@ class AuthPageComponent extends KDHComponent<_AuthPageState> {
     );
   }
 
-  void setUIByAuthState(AuthState<AuthPageComponent> authState) {
+  void setUIByAuthState(AuthState authState) {
     // 상태별 위젯 상태 변경.
     if (authState is AuthStateNeedVerification) {
       emailValidationText = "인증 확인";
@@ -264,23 +245,25 @@ class AuthPageComponent extends KDHComponent<_AuthPageState> {
   }
 }
 
-class AuthPageService extends KDHService<_AuthPageState, AuthPageComponent> {
-  AuthStateManager<AuthPageComponent> authStateManager;
+class AuthPageService {
+  AuthStateManager authStateManager;
+  _AuthPageState state;
+  BuildContext get context => state.context;
+  void rebuild() => state.setState(() {});
 
-  AuthPageService(_AuthPageState state, AuthPageComponent c)
-      : authStateManager = AuthStateManager<AuthPageComponent>(c),
-        super(state, c);
+  AuthPageService(this.state)
+      : authStateManager = AuthStateManager(state);
 
   void sendEmailVerification() async {
     LogUtil.debug(
-        "sendEmailVerification authStateManager.authState:${authStateManager.state.runtimeType}");
+        "sendEmailVerification authStateManager.authState:${authStateManager.authState.runtimeType}");
 
-    String email = c.emailController.text.trim();
+    String email = state.emailController.text.trim();
 
     await MyComponents.showLoadingDialog(context);
-    if (authStateManager.state is AuthStateSendEmail) {
+    if (authStateManager.authState is AuthStateSendEmail) {
       await authStateManager.handle({'email': email, 'context': context});
-    } else if (authStateManager.state is AuthStateNeedVerification) {
+    } else if (authStateManager.authState is AuthStateNeedVerification) {
       await authStateManager.handle({'email': email, 'context': context});
     }
     await MyComponents.dismissLoadingDialog();
@@ -289,22 +272,22 @@ class AuthPageService extends KDHService<_AuthPageState, AuthPageComponent> {
 
   void loginOrRegister() async {
     LogUtil.debug(
-        "loginOrRegister authStateManager.authState:${authStateManager.state.runtimeType}");
+        "loginOrRegister authStateManager.authState:${authStateManager.authState.runtimeType}");
 
-    String email = c.emailController.text.trim();
-    String password = c.passwordController.text.trim();
+    String email = state.emailController.text.trim();
+    String password = state.passwordController.text.trim();
 
     var nextPage = state.widget.nextPage;
 
-    if (authStateManager.state is AuthStateLogin) {
-      await authStateManager.state.handle({
+    if (authStateManager.authState is AuthStateLogin) {
+      await authStateManager.authState.handle({
         'email': email,
         'password': password,
         'nextPage': nextPage,
         'context': context,
       });
-    } else if (authStateManager.state is AuthStateRegistration) {
-      String passwordConfirm = c.passwordConfirmController.text.trim();
+    } else if (authStateManager.authState is AuthStateRegistration) {
+      String passwordConfirm = state.passwordConfirmController.text.trim();
       await authStateManager.handle({
         'email': email,
         'password': password,

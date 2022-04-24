@@ -3,11 +3,8 @@ import 'package:insta_crawller_flutter/_common/model/WidgetToGetSize.dart';
 import 'package:insta_crawller_flutter/_common/util/MediaQueryUtil.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 
-abstract class KDHState<TargetWidget extends StatefulWidget, COMPONENT, SERVICE>
+abstract class KDHState<TargetWidget extends StatefulWidget>
     extends State<TargetWidget> {
-  late final COMPONENT c;
-  late final SERVICE s;
-
   Map<dynamic, WidgetToGetSize> widgetMap = {};
   Widget Function()? widgetToBuild;
   late Size screenSize;
@@ -15,16 +12,10 @@ abstract class KDHState<TargetWidget extends StatefulWidget, COMPONENT, SERVICE>
   bool _whenBuildCalledFirst = true;
   List<WidgetToGetSize> _widgetListToGetSize = [];
 
-  //호출순서 : super.initState->super.build->super.afterBuild->super.prepareRebuild
-  //                                                       ->onLoad->mustRebuild->super.build
-
-  bool isPage();
+  //호출순서 : super.initState->super.build->super.afterBuild->onLoad->mustRebuild->super.build
 
   List<WidgetToGetSize> makeWidgetListToGetSize() => [];
 
-  COMPONENT? makeComponent() => null;
-
-  SERVICE? makeService() => null;
 
   void rebuild({Function? afterBuild}) {
     if (afterBuild != null) {
@@ -54,7 +45,7 @@ abstract class KDHState<TargetWidget extends StatefulWidget, COMPONENT, SERVICE>
   */
 
   Widget loadingWidget() {
-    return Center(child: MyComponents.loadingWidget());
+    return Scaffold(body: Center(child: MyComponents.loadingWidget()));
   }
 
   @override
@@ -88,12 +79,6 @@ abstract class KDHState<TargetWidget extends StatefulWidget, COMPONENT, SERVICE>
       ],
     );
 
-    if (isPage()) {
-      returnWidget = Scaffold(
-        body: returnWidget,
-      );
-    }
-
     return returnWidget;
   }
 
@@ -101,15 +86,6 @@ abstract class KDHState<TargetWidget extends StatefulWidget, COMPONENT, SERVICE>
     // LogUtil.debug("super.prepareRebuild");
     if (_widgetListToGetSize.isNotEmpty) {
       _getSizeOfWidgetList();
-    }
-
-    var component = makeComponent();
-    if (component != null) {
-      c = component;
-    }
-    var service = makeService();
-    if (service != null) {
-      s = service;
     }
 
     await onLoad();

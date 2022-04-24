@@ -21,7 +21,9 @@ class PostListViewPage extends StatefulWidget {
 }
 
 class _PostListViewPageState
-    extends KDHState<PostListViewPage, PostListViewPageComponent, PostListViewPageService> {
+    extends KDHState<PostListViewPage,
+        PostListViewPageComponent,
+        PostListViewPageService> {
   @override
   bool isPage() => true;
 
@@ -54,23 +56,26 @@ class PostListViewPageComponent extends KDHComponent<_PostListViewPageState> {
 
   Widget body(PostListViewPageService s) {
     return Scaffold(
-      body: ListView(
-        children: s.mediaUrlList.map((e) => Image.network(e.toString())).toList(),
-      )
+        body: ListView(
+          children: s.mediaUrlList.map((e) => Image.network(e.toString()))
+              .toList(),
+        )
     );
   }
 }
 
-class PostListViewPageService extends KDHService<_PostListViewPageState, PostListViewPageComponent> {
+class PostListViewPageService
+    extends KDHService<_PostListViewPageState, PostListViewPageComponent> {
   List<PostUrl> postUrlList = [];
   List mediaUrlList = [];
 
-  PostListViewPageService(_PostListViewPageState state, PostListViewPageComponent c) : super(state, c);
+  PostListViewPageService(_PostListViewPageState state,
+      PostListViewPageComponent c) : super(state, c);
 
   Future<void> loadPostUrlList() async {
     postUrlList = await PostUrlRepository().getList();
     postUrlList.forEach((element) {
-      mediaUrlList.addAll(element.mediaUrlList??[]);
+      mediaUrlList.addAll(element.mediaUrlList ?? []);
     });
   }
 

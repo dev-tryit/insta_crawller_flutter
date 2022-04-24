@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:insta_crawller_flutter/MySetting.dart';
 import 'package:insta_crawller_flutter/_common/util/AnimationUtil.dart';
+import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
 class MyComponents {
   MyComponents._();
@@ -270,7 +271,7 @@ class MyComponents {
     EasyLoading.instance
       ..displayDuration = Duration(milliseconds: durationMilliseocnds)
       ..loadingStyle = EasyLoadingStyle.custom
-      ..backgroundColor = Colors.red
+      ..backgroundColor = MyTheme.mainColor
       ..textColor = Colors.white
       ..toastPosition = EasyLoadingToastPosition.center
       ..fontSize = 10

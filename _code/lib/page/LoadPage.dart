@@ -10,6 +10,7 @@ import 'package:insta_crawller_flutter/page/auth/AuthPage.dart';
 import 'package:insta_crawller_flutter/page/main/MainPage.dart';
 import 'package:insta_crawller_flutter/util/MyColors.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
+import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
 class LoadPage extends StatefulWidget {
   static const String staticClassName= "LoadPage";
@@ -55,13 +56,15 @@ class LoadPageComponent extends KDHComponent<_LoadPageState> {
   Widget body() {
     return Container(
       width: 350,
-      color: MyColors.deepBlue,
+      color: MyTheme.mainColor,
       alignment: Alignment.center,
       child: Text(
-        MySetting.appName,
-        style: MyFonts.blackHanSans(
+        "Insta\nManager",
+        textAlign: TextAlign.center,
+        style: MyFonts.coiny(
           fontSize: 35,
-          color: MyColors.white,
+          height: 1.1,
+          color: MyTheme.subColor,
         ),
       ),
     );

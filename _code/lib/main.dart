@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
       scrollBehavior: MyCustomScrollBehavior(),
       theme: ThemeData(
         brightness: Brightness.light,
-        canvasColor: MyTheme.backgroundColor,
+        canvasColor: Colors.white,
         // primaryColor: Colors.lightBlue[800],
         // Define the default font family.
         // fontFamily: 'Georgia',

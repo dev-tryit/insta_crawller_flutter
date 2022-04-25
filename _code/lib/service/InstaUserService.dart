@@ -12,10 +12,10 @@ import 'package:provider/provider.dart';
 
 class InstaUserService extends ChangeNotifier {
   InstaUser? instaUser;
-  final crawller = MyCrawller();
+  final MyCrawller crawller;
 
   BuildContext context;
-  InstaUserService(this.context);
+  InstaUserService(this.context) : crawller = MyCrawller();
 
   static ChangeNotifierProvider get provider =>
       ChangeNotifierProvider<InstaUserService>(
@@ -73,13 +73,3 @@ class InstaUserService extends ChangeNotifier {
     crawller.turnOffAlarmDialog();
   }
 }
-/*
-
-class TestPageService {
-  _TestPageState state;
-  BuildContext get context => state.context;
-  void rebuild() => state.setState(() {});
-
-  TestPageService(this.state);
-}
-*/

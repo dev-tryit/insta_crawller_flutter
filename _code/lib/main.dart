@@ -31,7 +31,7 @@ Future<void> main() async {
 
     await MyFonts.init();
     await MyStoreUtil.init();
-    await AuthUtil().init();
+    await AuthUtil.me.init();
 
     if (PlatformUtil.isComputer()) {
       DesktopUtil.setDesktopSetting(

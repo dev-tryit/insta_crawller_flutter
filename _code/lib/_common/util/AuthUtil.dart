@@ -11,14 +11,10 @@ import 'package:insta_crawller_flutter/page/LoadPage.dart';
 enum NeededAuthBehavior { NEED_LOGIN, NEED_VERIFICATION, NEED_REGISTRATION }
 
 class AuthUtil {
-  String? email;
-
   static final AuthUtil _singleton = AuthUtil._internal();
+  static AuthUtil get me => _singleton;
 
-  factory AuthUtil() {
-    return _singleton;
-  }
-
+  String? email;
   AuthUtil._internal();
 
   /*
@@ -37,8 +33,8 @@ class AuthUtil {
 
   Future<void> init() async {
     _firebaseAuthUtilInterface = PlatformUtil.isComputer()
-        ? FiredartAuthSingleton()
-        : FirebaseAuthSingleton();
+        ? FiredartAuthSingleton.me
+        : FirebaseAuthSingleton.me;
 
     await _firebaseAuthUtilInterface.init();
   }
@@ -61,8 +57,8 @@ class AuthUtil {
     // LogUtil.debug("isLogin 2");
 
     dynamic user = await _firebaseAuthUtilInterface.getUser();
-    if(user != null) {
-      this.email = user.email??"";
+    if (user != null) {
+      this.email = user.email ?? "";
     }
     LogUtil.debug("user : ${user}");
 
@@ -102,7 +98,7 @@ class AuthUtil {
 
   Future<void> logout({BuildContext? context}) async {
     await _firebaseAuthUtilInterface.logout();
-    if(context != null) {
+    if (context != null) {
       PageUtil.movePage(context, LoadPage());
     }
   }
@@ -116,7 +112,8 @@ class AuthUtil {
     await _firebaseAuthUtilInterface.loginWithEmail(
         email: email, password: password);
     this.email = email;
-    LogUtil.debug("loginWithEmail user : ${await _firebaseAuthUtilInterface.getUser()}");
+    LogUtil.debug(
+        "loginWithEmail user : ${await _firebaseAuthUtilInterface.getUser()}");
   }
 
   Future<void> delete() async {

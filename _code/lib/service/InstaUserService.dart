@@ -29,13 +29,14 @@ class InstaUserService extends ChangeNotifier {
   static Widget consumer(
           {required ConsumerBuilderType<InstaUserService> builder}) =>
       Consumer<InstaUserService>(builder: builder);
-  static InstaUserService read(BuildContext context) => context.read<InstaUserService>();
+  static InstaUserService read(BuildContext context) =>
+      context.read<InstaUserService>();
 
   String get id => idController.text;
   String get pw => pwController.text;
 
   Future<void> loadInstaUser() async {
-    InstaUser? instaUser = await InstaUserRepository().getOne();
+    InstaUser? instaUser = await InstaUserRepository.me.getOne();
     idController.text = instaUser?.id ?? "";
     pwController.text = instaUser?.pw ?? "";
     notifyListeners();
@@ -43,7 +44,7 @@ class InstaUserService extends ChangeNotifier {
 
   Future<void> saveInstaUser(String id, String pw) async {
     try {
-      await InstaUserRepository().save(instaUser: InstaUser(id: id, pw: pw));
+      await InstaUserRepository.me.save(instaUser: InstaUser(id: id, pw: pw));
       MyComponents.snackBar(context, "저장 성공하였습니다.");
     } catch (e) {
       MyComponents.snackBar(context, "저장 실패하였습니다.");
@@ -55,13 +56,13 @@ class InstaUserService extends ChangeNotifier {
     List<String> postUrlList = await crawller.getPostUrlList(instaUserId);
 
     for (String postUrl in postUrlList) {
-      if (await PostUrlRepository().getOneByUrl(postUrl) != null) continue;
+      if (await PostUrlRepository.me.getOneByUrl(postUrl) != null) continue;
 
       List<String> mediaStrList =
           await crawller.getMediaStrListOf(postUrl: postUrl);
       var postUrlObj = PostUrl(
           instaUserId: instaUserId, url: postUrl, mediaUrlList: mediaStrList);
-      await PostUrlRepository().save(postUrl: postUrlObj);
+      await PostUrlRepository.me.save(postUrl: postUrlObj);
     }
   }
 

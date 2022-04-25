@@ -7,10 +7,7 @@ import 'package:insta_crawller_flutter/_common/util/firebase/FirebaseAuthUtilInt
 class FirebaseAuthSingleton extends FirebaseAuthUtilInterface {
   static final FirebaseAuthSingleton _singleton =
       FirebaseAuthSingleton._internal();
-
-  factory FirebaseAuthSingleton() {
-    return _singleton;
-  }
+  static FirebaseAuthSingleton get me=>_singleton;
 
   FirebaseAuthSingleton._internal();
 

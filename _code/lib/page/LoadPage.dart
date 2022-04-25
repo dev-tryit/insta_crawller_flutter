@@ -18,8 +18,7 @@ class LoadPage extends StatefulWidget {
 
 class _LoadPageState extends KDHState<LoadPage> {
   @override
-  Future<void> onLoad() async {
-  }
+  Future<void> onLoad() async {}
 
   @override
   Future<void> mustRebuild() async {
@@ -38,12 +37,12 @@ class _LoadPageState extends KDHState<LoadPage> {
             ),
           ),
         ));
-        
+
     rebuild(afterBuild: () async {
       await Future.delayed(const Duration(seconds: 1));
       PageUtil.replacementPage(
           context,
-          await AuthUtil().isLogin()
+          await AuthUtil.me.isLogin()
               ? TestPage()
               : AuthPage(nextPage: TestPage()));
     });

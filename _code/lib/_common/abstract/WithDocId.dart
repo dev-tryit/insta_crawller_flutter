@@ -4,10 +4,10 @@ abstract class WithDocId {
   int? documentId;
   String? email;
 
-  WithDocId({this.documentId}){
-    email = AuthUtil().email;
+  WithDocId({this.documentId}) {
+    email = AuthUtil.me.email;
   }
-  
+
   @override
   bool operator ==(dynamic other) => documentId == other.documentId;
 }

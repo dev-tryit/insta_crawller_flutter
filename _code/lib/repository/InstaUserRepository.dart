@@ -36,9 +36,7 @@ class InstaUser extends WithDocId {
 
 class InstaUserRepository {
   static final InstaUserRepository _singleton = InstaUserRepository._internal();
-  factory InstaUserRepository() {
-    return _singleton;
-  }
+  static InstaUserRepository get me=>_singleton;
 
   InstaUserRepository._internal();
 

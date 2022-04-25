@@ -33,7 +33,7 @@ class AuthStateSendEmail<STATE> extends AuthState<STATE> {
 
     MyComponents.showLoadingDialog(context);
     NeededAuthBehavior neededAuthBehavior =
-        await AuthUtil().sendEmailVerification(email: data['email']);
+        await AuthUtil.me.sendEmailVerification(email: data['email']);
     LogUtil.info(
         "AuthStateSendEmail handle neededAuthBehavior:$neededAuthBehavior");
     if (neededAuthBehavior == NeededAuthBehavior.NEED_LOGIN) {
@@ -56,9 +56,9 @@ class AuthStateNeedVerification<STATE> extends AuthState<STATE> {
     BuildContext context = data['context'];
 
     MyComponents.showLoadingDialog(context);
-    await AuthUtil().loginWithEmailDefaultPassword(data['email']);
-    if (await AuthUtil().emailIsVerified()) {
-      await AuthUtil().delete();
+    await AuthUtil.me.loginWithEmailDefaultPassword(data['email']);
+    if (await AuthUtil.me.emailIsVerified()) {
+      await AuthUtil.me.delete();
       MyComponents.dismissLoadingDialog();
       return AuthStateRegistration<STATE>(state);
     } else {
@@ -103,7 +103,7 @@ class AuthStateRegistration<STATE> extends AuthState<STATE> {
     MyComponents.showLoadingDialog(context);
     //다른 안내는 파이어베이스에서 해준다.
     try {
-      await AuthUtil().registerWithEmail(email, password);
+      await AuthUtil.me.registerWithEmail(email, password);
     } on CommonException catch (e) {
       MyComponents.dismissLoadingDialog();
       MyComponents.toastError(context, e.message);
@@ -140,7 +140,7 @@ class AuthStateLogin<STATE> extends AuthState<STATE> {
     MyComponents.showLoadingDialog(context);
     //다른 안내는 파이어베이스에서 해준다.
     try {
-      await AuthUtil().loginWithEmail(email, password);
+      await AuthUtil.me.loginWithEmail(email, password);
     } on CommonException catch (e) {
       MyComponents.dismissLoadingDialog();
       MyComponents.toastError(context, e.message);

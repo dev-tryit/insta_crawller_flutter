@@ -58,46 +58,37 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   final GoRouter _router = GoRouter(
-    initialLocation: "/",
-    routerNeglect: true,
-    debugLogDiagnostics: true,
-    routes: <GoRoute>[
-      GoRoute(
-        path: '/',
-        builder: (BuildContext context, GoRouterState state) => LoadPage(),
-      ),
-      GoRoute(
-        path: '/ExitedPageForWep',
-        builder: (BuildContext context, GoRouterState state) =>
-            ExitedPageForWep(),
-      ),
-      GoRoute(
-        path: '/MainPage',
-        builder: (BuildContext context, GoRouterState state) => MainPage(),
-      ),
-      GoRoute(
-        path: '/AuthPage',
-        builder: (BuildContext context, GoRouterState state) =>
-            AuthPage(nextPagePath: TestPage.pagePath),
-      ),
-      GoRoute(
-        path: '/TestPage',
-        builder: (BuildContext context, GoRouterState state) => TestPage(),
-      ),
-      GoRoute(
-        path: '/PostListViewPage',
-        builder: (BuildContext context, GoRouterState state) => PostListViewPage(),
-      ),
-    ],
-    redirect: (GoRouterState state) {
-      if (state.extra == null) {
-        return null; //리다이렉트 할필요 없음
-      }
+      initialLocation: "/",
+      routerNeglect: true,
+      debugLogDiagnostics: true,
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (BuildContext context, GoRouterState state) {
+            if (state.extra == null) {
+              return LoadPage();
+            }
 
-      Map<String, dynamic> extraMap = state.extra as Map<String, dynamic>;
-      return !extraMap["isLogin"] ? "/AuthPage" : "/MainPage";
-    },
-  );
+            Map<String, dynamic> extraMap = state.extra as Map<String, dynamic>;
+            print("extraMap : $extraMap");
+            return !extraMap["isLogin"]
+                ? AuthPage(nextPagePath: TestPage.pagePath)
+                : MainPage();
+          },
+        ),
+        GoRoute(
+            path: '/ExitedPageForWep',
+            builder: (BuildContext context, GoRouterState state) => Scaffold(
+                  body: Center(
+                    child: Text("종료되었습니다."),
+                  ),
+                )),
+      ],
+      errorBuilder: (BuildContext context, GoRouterState state) => Scaffold(
+            body: Center(
+              child: Text("페이지를 찾을 수 없습니다."),
+            ),
+          ));
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(

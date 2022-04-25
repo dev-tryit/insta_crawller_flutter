@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
@@ -25,7 +24,7 @@ class _MainPageState extends KDHState<MainPage> {
           color: MyTheme.mainColor,
           alignment: Alignment.center,
           child: Text(
-            "Insta\nManager",
+            "MainPage",
             textAlign: TextAlign.center,
             style: MyFonts.coiny(
               fontSize: 35,

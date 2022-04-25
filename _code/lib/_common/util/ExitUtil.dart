@@ -22,21 +22,3 @@ class ExitUtil {
     }
   }
 }
-
-class ExitedPageForWep extends StatefulWidget {
-  const ExitedPageForWep({Key? key}) : super(key: key);
-
-  @override
-  _ExitedPageForWepState createState() => _ExitedPageForWepState();
-}
-
-class _ExitedPageForWepState extends State<ExitedPageForWep> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text("종료되었습니다"),
-      ),
-    );
-  }
-}

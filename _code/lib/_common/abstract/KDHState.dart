@@ -5,18 +5,72 @@ import 'package:insta_crawller_flutter/util/MyComponents.dart';
 
 abstract class KDHState<TargetWidget extends StatefulWidget>
     extends State<TargetWidget> {
-  Map<dynamic, WidgetToGetSize> widgetMap = {};
-  Widget Function()? widgetToBuild;
-  late Size screenSize;
-
-  bool _whenBuildCalledFirst = true;
-  List<WidgetToGetSize> _widgetListToGetSize = [];
-
-  //호출순서 : super.initState->super.build->super.afterBuild->onLoad->mustRebuild->super.build
-
-  List<WidgetToGetSize> makeWidgetListToGetSize() => [];
+  //호출순서 : super.initState->super.build->onLoad->mustRebuild->rebuild();
 
 
+  @override
+  void initState() {
+    // LogUtil.debug("super.initState");
+    super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      // LogUtil.debug("super.prepareRebuild");
+      if (buildedWidgets.isNotEmpty) {
+        _getSizeOfWidgetList();
+      }
+
+      await onLoad();
+
+      await mustRebuild();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    bool existtoBuild = toBuild != null;
+    if (existtoBuild) {
+      return toBuild!();
+    }
+
+    return Stack(
+      children: [
+        ...(buildedWidgets.isNotEmpty
+            ? buildedWidgets.values.map((w) => Opacity(
+                  opacity: 0,
+                  child: w.make(),
+                ))
+            : []),
+        loadingWidget(),
+      ],
+    );
+  }
+
+  //1. 인스턴스 미리 준비
+  Future<void> onLoad();
+
+  //2. UI의 크기를 미리 재기 위해 사용되는 구조
+  //widgetsToBuild 재정의하면, buildedWidgets 결과가 도출된다.
+  //buildedWidgets 결과
+  /*
+  [
+    WidgetToGetSize("maxContainer", maxContainerToGetSize)
+  ];
+  */
+  List<WidgetToGetSize> widgetsToBuild() => [];
+  Map<dynamic, WidgetToGetSize> buildedWidgets = {};
+  void _getSizeOfWidgetList() {
+    buildedWidgets.clear();
+    for (var e in widgetsToBuild()) {
+      e.calculateSize();
+      buildedWidgets[e.key] = e;
+    }
+  }
+
+  //3. 유연한 빌드
+  //mustRebuild에서 toBuild를 채우고 반드시 rebuild해야 한다.
+  //rebuild 할 때 afterBuild를 지정하면, 후 작업을 지정할 수 있다.
+  Widget Function()? toBuild;
+  Future<void> mustRebuild();
   void rebuild({Function? afterBuild}) {
     if (afterBuild != null) {
       //build 때, afterBuild 불리도록 요청.
@@ -30,89 +84,8 @@ abstract class KDHState<TargetWidget extends StatefulWidget>
     setState(() {});
   }
 
-  @override
-  void initState() {
-    // LogUtil.debug("super.initState");
-    super.initState();
-
-    _widgetListToGetSize = makeWidgetListToGetSize();
-  }
-
-  /*
-  [
-    WidgetToGetSize("maxContainer", maxContainerToGetSize)
-  ];
-  */
-
+  //4. 로딩위젯
   Widget loadingWidget() {
     return Scaffold(body: Center(child: MyComponents.loadingWidget()));
-  }
-
-  @override
-  void didChangeDependencies() {
-    if (_whenBuildCalledFirst) {
-      _whenBuildCalledFirst = false;
-      Future(() async {
-        await _prepareRebuild();
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    screenSize = MediaQueryUtil.getScreenSize(context);
-
-    bool existWidgetToBuild = widgetToBuild != null;
-    if (existWidgetToBuild) {
-      return widgetToBuild!();
-    }
-
-    Widget returnWidget = Stack(
-      children: [
-        ...(_widgetListToGetSize.isNotEmpty
-            ? _widgetListToGetSize.map((w) => Opacity(
-                  opacity: 0,
-                  child: w.make(),
-                ))
-            : []),
-        loadingWidget(),
-      ],
-    );
-
-    return returnWidget;
-  }
-
-  Future<void> _prepareRebuild() async {
-    // LogUtil.debug("super.prepareRebuild");
-    if (_widgetListToGetSize.isNotEmpty) {
-      _getSizeOfWidgetList();
-    }
-
-    await onLoad();
-
-    //build할 때, afterBuild 불리도록 작업.
-    WidgetsBinding.instance?.addPostFrameCallback((_) => afterBuild());
-
-    mustRebuild();
-  }
-  Future<void> onLoad();
-
-  //widgetToBuild를 채우고, rebuild();
-  void mustRebuild();
-
-  Future<void> afterBuild();
-
-  void _getSizeOfWidgetList() {
-    widgetMap.clear();
-    for (var e in _widgetListToGetSize) {
-      e.calculateSize();
-      widgetMap[e.key] = e;
-    }
-  }
-
-  @override
-  void dispose() {
-    // LogUtil.debug("super.dispose");
-    super.dispose();
   }
 }

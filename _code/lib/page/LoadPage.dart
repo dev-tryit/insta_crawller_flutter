@@ -25,8 +25,8 @@ class _LoadPageState
   }
 
   @override
-  void mustRebuild() {
-    widgetToBuild = () => Scaffold(body: Container(
+  Future<void> mustRebuild() async {
+    toBuild = () => Scaffold(body: Container(
       width: 350,
       color: MyTheme.mainColor,
       alignment: Alignment.center,

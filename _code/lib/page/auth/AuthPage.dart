@@ -43,8 +43,8 @@ class _AuthPageState extends KDHState<AuthPage> {
   }
 
   @override
-  void mustRebuild() {
-    widgetToBuild = () {
+  Future<void> mustRebuild() async {
+    toBuild = () {
       final authState = s.authStateManager.authState;
       setUIByAuthState(authState);
 

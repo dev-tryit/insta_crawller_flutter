@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:insta_crawller_flutter/_common/interface/Type.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
@@ -11,11 +12,15 @@ import 'package:insta_crawller_flutter/util/MyCrawller.dart';
 import 'package:provider/provider.dart';
 
 class InstaUserService extends ChangeNotifier {
-  InstaUser? instaUser;
   final MyCrawller crawller;
+  final TextEditingController idController;
+  final TextEditingController pwController;
 
   BuildContext context;
-  InstaUserService(this.context) : crawller = MyCrawller();
+  InstaUserService(this.context)
+      : crawller = MyCrawller(),
+        idController = TextEditingController(),
+        pwController = TextEditingController();
 
   static ChangeNotifierProvider get provider =>
       ChangeNotifierProvider<InstaUserService>(
@@ -24,14 +29,19 @@ class InstaUserService extends ChangeNotifier {
           {required ConsumerBuilderType<InstaUserService> builder}) =>
       Consumer<InstaUserService>(builder: builder);
 
+  String get id => idController.text;
+  String get pw => pwController.text;
+
   Future<void> loadInstaUser() async {
-    instaUser = await InstaUserRepository().getOne();
+    InstaUser? instaUser = await InstaUserRepository().getOne();
+    idController.text = instaUser?.id ?? "";
+    pwController.text = instaUser?.pw ?? "";
+    notifyListeners();
   }
 
   Future<void> saveInstaUser(String id, String pw) async {
-    instaUser = InstaUser(id: id, pw: pw);
     try {
-      await InstaUserRepository().save(instaUser: instaUser!);
+      await InstaUserRepository().save(instaUser: InstaUser(id: id, pw: pw));
       MyComponents.snackBar(context, "저장 성공하였습니다.");
     } catch (e) {
       MyComponents.snackBar(context, "저장 실패하였습니다.");

@@ -23,8 +23,8 @@ class _PostListViewPageState
   }
 
   @override
-  void mustRebuild() {
-    widgetToBuild = () => Scaffold(
+  Future<void> mustRebuild() async {
+    toBuild = () => Scaffold(
         body: ListView(
           children: s.mediaUrlList.map((e) => Image.network(e.toString()))
               .toList(),

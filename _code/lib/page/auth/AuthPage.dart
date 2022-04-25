@@ -108,9 +108,6 @@ class _AuthPageState extends KDHState<AuthPage> {
     rebuild();
   }
 
-  @override
-  Future<void> afterBuild() async {}
-
   Widget inputBox({
     required String label,
     String? trailing,

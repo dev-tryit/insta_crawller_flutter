@@ -5,7 +5,7 @@ import 'package:insta_crawller_flutter/util/MyComponents.dart';
 
 abstract class KDHState<TargetWidget extends StatefulWidget>
     extends State<TargetWidget> {
-  //호출순서 : super.initState->super.build->onLoad->mustRebuild->rebuild();
+  //호출순서 : onLoad->mustRebuild->rebuild(Function? afterBuild);
 
 
   @override

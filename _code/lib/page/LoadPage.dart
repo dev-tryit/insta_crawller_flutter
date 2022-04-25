@@ -8,7 +8,7 @@ import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
 class LoadPage extends StatefulWidget {
-  static const String staticClassName= "LoadPage";
+  static const String staticClassName = "LoadPage";
   final className = staticClassName;
   const LoadPage({Key? key}) : super(key: key);
 
@@ -16,49 +16,36 @@ class LoadPage extends StatefulWidget {
   _LoadPageState createState() => _LoadPageState();
 }
 
-class _LoadPageState
-    extends KDHState<LoadPage> {
-  late LoadPageService s;
+class _LoadPageState extends KDHState<LoadPage> {
   @override
   Future<void> onLoad() async {
-    s = LoadPageService(this);
   }
 
   @override
   Future<void> mustRebuild() async {
-    toBuild = () => Scaffold(body: Container(
-      width: 350,
-      color: MyTheme.mainColor,
-      alignment: Alignment.center,
-      child: Text(
-        "Insta\nManager",
-        textAlign: TextAlign.center,
-        style: MyFonts.coiny(
-          fontSize: 35,
-          height: 1.1,
-          color: MyTheme.subColor,
-        ),
-      ),
-    ));
-    rebuild();
-  }
-
-  @override
-  Future<void> afterBuild() async {
-    await s.moveNextPage();
-  }
-}
-
-class LoadPageService {
-  _LoadPageState state;
-  BuildContext get context => state.context;
-  void rebuild() => state.setState(() {});
-
-  LoadPageService(this.state);
-
-  Future<void> moveNextPage() async {
-    await Future.delayed(const Duration(seconds: 1));
-    PageUtil.replacementPage(
-        context, await AuthUtil().isLogin() ? TestPage() : AuthPage(nextPage:TestPage()));
+    toBuild = () => Scaffold(
+            body: Container(
+          width: 350,
+          color: MyTheme.mainColor,
+          alignment: Alignment.center,
+          child: Text(
+            "Insta\nManager",
+            textAlign: TextAlign.center,
+            style: MyFonts.coiny(
+              fontSize: 35,
+              height: 1.1,
+              color: MyTheme.subColor,
+            ),
+          ),
+        ));
+        
+    rebuild(afterBuild: () async {
+      await Future.delayed(const Duration(seconds: 1));
+      PageUtil.replacementPage(
+          context,
+          await AuthUtil().isLogin()
+              ? TestPage()
+              : AuthPage(nextPage: TestPage()));
+    });
   }
 }

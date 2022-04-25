@@ -78,7 +78,4 @@ class _TestPageState extends KDHState<TestPage> {
     };
     rebuild();
   }
-
-  @override
-  Future<void> afterBuild() async {}
 }

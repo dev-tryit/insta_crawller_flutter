@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import 'package:insta_crawller_flutter/_common/model/exception/CommonException.dart';
 import 'package:insta_crawller_flutter/_common/util/AuthUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
-import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 
 class AuthStateManager<STATE> {
@@ -78,7 +78,7 @@ class AuthStateRegistration<STATE> extends AuthState<STATE> {
     String email = data['email'];
     String password = data['password'];
     String passwordConfirm = data['passwordConfirm'];
-    Widget nextPage = data['nextPage'];
+    String nextPagePath = data['nextPagePath'];
 
     if (email.isEmpty) {
       MyComponents.toastError(context, "이메일이 비어있습니다");
@@ -112,7 +112,8 @@ class AuthStateRegistration<STATE> extends AuthState<STATE> {
 
     MyComponents.dismissLoadingDialog();
     MyComponents.toastInfo(context, "회원가입이 완료되었습니다.");
-    PageUtil.movePage(context, nextPage);
+
+    context.go(nextPagePath);
     return this;
   }
 }
@@ -125,7 +126,7 @@ class AuthStateLogin<STATE> extends AuthState<STATE> {
     BuildContext context = data['context'];
     String email = data['email'];
     String password = data['password'];
-    Widget nextPage = data['nextPage'];
+    String nextPagePath = data['nextPagePath'];
 
     if (email.isEmpty) {
       MyComponents.toastError(context, "이메일이 비어있습니다");
@@ -147,7 +148,7 @@ class AuthStateLogin<STATE> extends AuthState<STATE> {
       return this;
     }
 
-    PageUtil.movePage(context, nextPage);
+    context.go(nextPagePath);
     MyComponents.dismissLoadingDialog();
     return this;
   }

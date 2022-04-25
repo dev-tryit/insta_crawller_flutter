@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/util/AuthUtil.dart';
-import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/auth/AuthPage.dart';
 import 'package:insta_crawller_flutter/page/TestPage.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
@@ -40,11 +40,7 @@ class _LoadPageState extends KDHState<LoadPage> {
 
     rebuild(afterBuild: () async {
       await Future.delayed(const Duration(seconds: 1));
-      PageUtil.replacementPage(
-          context,
-          await AuthUtil.me.isLogin()
-              ? TestPage()
-              : AuthPage(nextPage: TestPage()));
+      context.go("/MainPage");
     });
   }
 }

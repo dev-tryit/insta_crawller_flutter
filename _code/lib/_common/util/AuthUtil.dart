@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import 'package:insta_crawller_flutter/_common/model/exception/CommonException.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
-import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PlatformUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/firebase/FirebaseAuthUtilInterface.dart';
 import 'package:insta_crawller_flutter/_common/util/firebase/firebase/FirebaseAuthSingleton.dart';
@@ -99,7 +99,7 @@ class AuthUtil {
   Future<void> logout({BuildContext? context}) async {
     await _firebaseAuthUtilInterface.logout();
     if (context != null) {
-      PageUtil.movePage(context, LoadPage());
+      context.go("/");
     }
   }
 

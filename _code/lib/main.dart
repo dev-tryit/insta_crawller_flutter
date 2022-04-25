@@ -78,13 +78,13 @@ class MyApp extends StatelessWidget {
         ),
         GoRoute(
             path: '/ExitedPageForWep',
-            builder: (BuildContext context, GoRouterState state) => Scaffold(
+            builder: (BuildContext context, GoRouterState state) => const Scaffold(
                   body: Center(
                     child: Text("종료되었습니다."),
                   ),
                 )),
       ],
-      errorBuilder: (BuildContext context, GoRouterState state) => Scaffold(
+      errorBuilder: (BuildContext context, GoRouterState state) => const Scaffold(
             body: Center(
               child: Text("페이지를 찾을 수 없습니다."),
             ),

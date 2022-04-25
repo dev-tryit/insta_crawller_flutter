@@ -17,8 +17,7 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState
-    extends KDHState<MainPage> {
+class _MainPageState extends KDHState<MainPage> {
   late MainPageService s;
   final idController = TextEditingController();
   final pwController = TextEditingController();
@@ -31,59 +30,61 @@ class _MainPageState
 
   @override
   void mustRebuild() {
-    idController.text = s.instaUser?.id??"";
-    pwController.text = s.instaUser?.pw??"";
-    widgetToBuild = () => Scaffold(
-      body: Column(
-        children: [
-          TextField(
-            controller: idController,
-            decoration: InputDecoration(isDense: true, labelText: "ID"),
-          ),
-          TextField(
-            controller: pwController,
-            decoration: InputDecoration(isDense: true, labelText: "PW"),
-            obscureText: true,
-          ),
-          MyComponents.buttonDefault(
-            child: const Text("저장"),
-            onPressed: ()=>s.saveInstaUser(idController.text, pwController.text),
-          ),
-          SizedBox(height: 100),
-          MyComponents.buttonDefault(
-            child: const Text("브라우저 열기"),
-            onPressed: s.startBrowser,
-          ),
-          MyComponents.buttonDefault(
-            child: const Text("로그인하기"),
-            onPressed: s.login,
-          ),
-          MyComponents.buttonDefault(
-            child: const Text("알림 설정 끄기"),
-            onPressed: s.turnOffAlarmDialog,
-          ),
-          MyComponents.buttonDefault(
-            child: const Text("유머 포스트 저장하기"),
-            onPressed: s.saveHumorPost,
-          ),
-          MyComponents.buttonDefault(
-            child: const Text("유머 포스트 리스트 확인하기"),
-            onPressed: s.goPostListViewPage,
-          ),
-          MyComponents.buttonDefault(
-            child: const Text("브라우저 중지"),
-            onPressed: s.stopBrowser,
-          ),
-        ],
-      ),
-    );;
+    widgetToBuild = () {
+      idController.text = s.instaUser?.id ?? "";
+      pwController.text = s.instaUser?.pw ?? "";
+      return Scaffold(
+        body: Column(
+          children: [
+            TextField(
+              controller: idController,
+              decoration: InputDecoration(isDense: true, labelText: "ID"),
+            ),
+            TextField(
+              controller: pwController,
+              decoration: InputDecoration(isDense: true, labelText: "PW"),
+              obscureText: true,
+            ),
+            MyComponents.buttonDefault(
+              child: const Text("저장"),
+              onPressed: () =>
+                  s.saveInstaUser(idController.text, pwController.text),
+            ),
+            SizedBox(height: 100),
+            MyComponents.buttonDefault(
+              child: const Text("브라우저 열기"),
+              onPressed: s.startBrowser,
+            ),
+            MyComponents.buttonDefault(
+              child: const Text("로그인하기"),
+              onPressed: s.login,
+            ),
+            MyComponents.buttonDefault(
+              child: const Text("알림 설정 끄기"),
+              onPressed: s.turnOffAlarmDialog,
+            ),
+            MyComponents.buttonDefault(
+              child: const Text("유머 포스트 저장하기"),
+              onPressed: s.saveHumorPost,
+            ),
+            MyComponents.buttonDefault(
+              child: const Text("유머 포스트 리스트 확인하기"),
+              onPressed: s.goPostListViewPage,
+            ),
+            MyComponents.buttonDefault(
+              child: const Text("브라우저 중지"),
+              onPressed: s.stopBrowser,
+            ),
+          ],
+        ),
+      );
+    };
     rebuild();
   }
 
   @override
   Future<void> afterBuild() async {}
 }
-
 
 class MainPageService {
   InstaUser? instaUser;
@@ -103,8 +104,7 @@ class MainPageService {
     try {
       await InstaUserRepository().save(instaUser: instaUser!);
       MyComponents.snackBar(context, "저장 성공하였습니다.");
-    }
-    catch(e){
+    } catch (e) {
       MyComponents.snackBar(context, "저장 실패하였습니다.");
     }
   }
@@ -113,15 +113,16 @@ class MainPageService {
     String instaUserId = "inssa_unni_";
     List<String> postUrlList = await crawller.getPostUrlList(instaUserId);
 
-    for(String postUrl in postUrlList) {
-      if(await PostUrlRepository().getOneByUrl(postUrl) != null) continue;
+    for (String postUrl in postUrlList) {
+      if (await PostUrlRepository().getOneByUrl(postUrl) != null) continue;
 
-      List<String> mediaStrList = await crawller.getMediaStrListOf(postUrl: postUrl);
-      var postUrlObj = PostUrl(instaUserId: instaUserId, url: postUrl, mediaUrlList: mediaStrList);
+      List<String> mediaStrList =
+          await crawller.getMediaStrListOf(postUrl: postUrl);
+      var postUrlObj = PostUrl(
+          instaUserId: instaUserId, url: postUrl, mediaUrlList: mediaStrList);
       await PostUrlRepository().save(postUrl: postUrlObj);
     }
   }
-
 
   void goPostListViewPage() async {
     PageUtil.movePage(context, PostListViewPage());
@@ -130,6 +131,7 @@ class MainPageService {
   void startBrowser() {
     crawller.startBrowser();
   }
+
   void stopBrowser() {
     crawller.stopBrowser();
   }
@@ -141,5 +143,4 @@ class MainPageService {
   void turnOffAlarmDialog() {
     crawller.turnOffAlarmDialog();
   }
-
 }

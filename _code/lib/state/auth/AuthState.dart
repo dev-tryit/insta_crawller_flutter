@@ -16,48 +16,43 @@ class AuthStateManager<STATE> {
   }
 }
 
-abstract class AuthState<COMPONENT> {
-  COMPONENT c;
+abstract class AuthState<STATE> {
+  STATE state;
 
-  AuthState(this.c);
+  AuthState(this.state);
 
-  Future<AuthState<COMPONENT>> handle(Map<String, dynamic> data);
+  Future<AuthState<STATE>> handle(Map<String, dynamic> data);
 }
 
-class AuthStateSendEmail<COMPONENT> implements AuthState<COMPONENT> {
-  @override
-  COMPONENT c;
-
-  AuthStateSendEmail(this.c);
+class AuthStateSendEmail<STATE> extends AuthState<STATE> {
+  AuthStateSendEmail(STATE state) : super(state);
 
   @override
-  Future<AuthState<COMPONENT>> handle(Map<String, dynamic> data) async {
+  Future<AuthState<STATE>> handle(Map<String, dynamic> data) async {
     BuildContext context = data['context'];
 
     MyComponents.showLoadingDialog(context);
     NeededAuthBehavior neededAuthBehavior =
         await AuthUtil().sendEmailVerification(email: data['email']);
-    LogUtil.info("AuthStateSendEmail handle neededAuthBehavior:$neededAuthBehavior");
+    LogUtil.info(
+        "AuthStateSendEmail handle neededAuthBehavior:$neededAuthBehavior");
     if (neededAuthBehavior == NeededAuthBehavior.NEED_LOGIN) {
-      return AuthStateLogin<COMPONENT>(c);
+      return AuthStateLogin<STATE>(state);
     } else if (neededAuthBehavior == NeededAuthBehavior.NEED_REGISTRATION) {
-      return AuthStateRegistration<COMPONENT>(c);
+      return AuthStateRegistration<STATE>(state);
     } else if (neededAuthBehavior == NeededAuthBehavior.NEED_VERIFICATION) {
-      return AuthStateNeedVerification<COMPONENT>(c);
+      return AuthStateNeedVerification<STATE>(state);
     }
     MyComponents.dismissLoadingDialog();
     return this;
   }
 }
 
-class AuthStateNeedVerification<COMPONENT> implements AuthState<COMPONENT> {
-  @override
-  COMPONENT c;
-
-  AuthStateNeedVerification(this.c);
+class AuthStateNeedVerification<STATE> extends AuthState<STATE> {
+  AuthStateNeedVerification(STATE state) : super(state);
 
   @override
-  Future<AuthState<COMPONENT>> handle(Map<String, dynamic> data) async {
+  Future<AuthState<STATE>> handle(Map<String, dynamic> data) async {
     BuildContext context = data['context'];
 
     MyComponents.showLoadingDialog(context);
@@ -65,7 +60,7 @@ class AuthStateNeedVerification<COMPONENT> implements AuthState<COMPONENT> {
     if (await AuthUtil().emailIsVerified()) {
       await AuthUtil().delete();
       MyComponents.dismissLoadingDialog();
-      return AuthStateRegistration<COMPONENT>(c);
+      return AuthStateRegistration<STATE>(state);
     } else {
       MyComponents.dismissLoadingDialog();
       MyComponents.toastError(data['context'], "이메일 인증이 필요합니다.");
@@ -74,20 +69,16 @@ class AuthStateNeedVerification<COMPONENT> implements AuthState<COMPONENT> {
   }
 }
 
-class AuthStateRegistration<COMPONENT> implements AuthState<COMPONENT> {
-  @override
-  COMPONENT c;
-
-  AuthStateRegistration(this.c);
+class AuthStateRegistration<STATE> extends AuthState<STATE> {
+  AuthStateRegistration(STATE state) : super(state);
 
   @override
-  Future<AuthState<COMPONENT>> handle(Map<String, dynamic> data) async {
+  Future<AuthState<STATE>> handle(Map<String, dynamic> data) async {
     BuildContext context = data['context'];
     String email = data['email'];
     String password = data['password'];
     String passwordConfirm = data['passwordConfirm'];
     Widget nextPage = data['nextPage'];
-
 
     if (email.isEmpty) {
       MyComponents.toastError(context, "이메일이 비어있습니다");
@@ -119,7 +110,6 @@ class AuthStateRegistration<COMPONENT> implements AuthState<COMPONENT> {
       return this;
     }
 
-
     MyComponents.dismissLoadingDialog();
     MyComponents.toastInfo(context, "회원가입이 완료되었습니다.");
     PageUtil.movePage(context, nextPage);
@@ -127,14 +117,11 @@ class AuthStateRegistration<COMPONENT> implements AuthState<COMPONENT> {
   }
 }
 
-class AuthStateLogin<COMPONENT> implements AuthState<COMPONENT> {
-  @override
-  COMPONENT c;
-
-  AuthStateLogin(this.c);
+class AuthStateLogin<STATE> extends AuthState<STATE> {
+  AuthStateLogin(STATE state) : super(state);
 
   @override
-  Future<AuthState<COMPONENT>> handle(Map<String, dynamic> data) async {
+  Future<AuthState<STATE>> handle(Map<String, dynamic> data) async {
     BuildContext context = data['context'];
     String email = data['email'];
     String password = data['password'];

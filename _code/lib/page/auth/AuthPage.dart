@@ -22,8 +22,7 @@ class AuthPage extends StatefulWidget {
   _AuthPageState createState() => _AuthPageState();
 }
 
-class _AuthPageState
-    extends KDHState<AuthPage> {
+class _AuthPageState extends KDHState<AuthPage> {
   late AuthPageService s;
   final _formKey = GlobalKey<FormState>();
 
@@ -45,69 +44,72 @@ class _AuthPageState
 
   @override
   void mustRebuild() {
-    final authState = s.authStateManager.authState;
-    setUIByAuthState(authState);
+    widgetToBuild = () {
+      final authState = s.authStateManager.authState;
+      setUIByAuthState(authState);
 
-    widgetToBuild = () => Scaffold(
-      bottomSheet: nextButtonText != null
-          ? AnimatedOpacity(
-        opacity: 1.0,
-        duration: const Duration(milliseconds: 1500),
-        child: Container(
-          height: 82,
-          padding: const EdgeInsets.only(left: 32, right: 32, bottom: 32),
-          child: SizedBox.expand(
-            child: ElevatedButton(
-              child: Text(nextButtonText!),
-              style: ElevatedButton.styleFrom(primary: MyTheme.mainColor),
-              onPressed: s.loginOrRegister,
+      return Scaffold(
+        bottomSheet: nextButtonText != null
+            ? AnimatedOpacity(
+                opacity: 1.0,
+                duration: const Duration(milliseconds: 1500),
+                child: Container(
+                  height: 82,
+                  padding:
+                      const EdgeInsets.only(left: 32, right: 32, bottom: 32),
+                  child: SizedBox.expand(
+                    child: ElevatedButton(
+                      child: Text(nextButtonText!),
+                      style:
+                          ElevatedButton.styleFrom(primary: MyTheme.mainColor),
+                      onPressed: s.loginOrRegister,
+                    ),
+                  ),
+                ),
+              )
+            : null,
+        body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 36),
+                Text(
+                  MySetting.appName,
+                  style: MyFonts.coiny(
+                    fontSize: 27,
+                    color: MyTheme.mainColor,
+                  ),
+                ),
+                const SizedBox(height: 69),
+                inputBox(
+                  label: "이메일",
+                  trailing: emailValidationText,
+                  trailingColor: emailValidationColor,
+                  onTrailingTap: s.sendEmailVerification,
+                  controller: emailController,
+                  textFieldEnabled: emailTextFieldEnabled,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (String? value) {
+                    if (value == null || !EmailValidator.validate(value)) {
+                      return "이메일 형식이 아닙니다.";
+                    }
+                    return null;
+                  },
+                  onChanged: (value) => _formKey.currentState?.validate(),
+                ),
+                ...elementList
+              ],
             ),
           ),
         ),
-      )
-          : null,
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 36),
-              Text(
-                MySetting.appName,
-                style: MyFonts.coiny(
-                  fontSize: 27,
-                  color: MyTheme.mainColor,
-                ),
-              ),
-              const SizedBox(height: 69),
-              inputBox(
-                label: "이메일",
-                trailing: emailValidationText,
-                trailingColor: emailValidationColor,
-                onTrailingTap: s.sendEmailVerification,
-                controller: emailController,
-                textFieldEnabled: emailTextFieldEnabled,
-                keyboardType: TextInputType.emailAddress,
-                validator: (String? value) {
-                  if (value == null || !EmailValidator.validate(value)) {
-                    return "이메일 형식이 아닙니다.";
-                  }
-                  return null;
-                },
-                onChanged: (value) => _formKey.currentState?.validate(),
-              ),
-              ...elementList
-            ],
-          ),
-        ),
-      ),
-    );
+      );
+    };
     rebuild();
   }
 
   @override
   Future<void> afterBuild() async {}
-
 
   Widget inputBox({
     required String label,
@@ -154,24 +156,24 @@ class _AuthPageState
                 ),
               ),
               ...trailing != null
-              ? [
-              const SizedBox(width: 8),
-              Padding(
-                padding: const EdgeInsets.only(top: 25),
-                child: InkWell(
-                  onTap: onTrailingTap,
-                  child: Text(
-                    trailing,
-                    style: MyFonts.coiny(
-                      color: trailingColor ?? MyTheme.subColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ]
-                : [],
+                  ? [
+                      const SizedBox(width: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25),
+                        child: InkWell(
+                          onTap: onTrailingTap,
+                          child: Text(
+                            trailing,
+                            style: MyFonts.coiny(
+                              color: trailingColor ?? MyTheme.subColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ]
+                  : [],
             ],
           ),
         ],
@@ -251,8 +253,7 @@ class AuthPageService {
   BuildContext get context => state.context;
   void rebuild() => state.setState(() {});
 
-  AuthPageService(this.state)
-      : authStateManager = AuthStateManager(state);
+  AuthPageService(this.state) : authStateManager = AuthStateManager(state);
 
   void sendEmailVerification() async {
     LogUtil.debug(

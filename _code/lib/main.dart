@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
             Map<String, dynamic> extraMap = state.extra as Map<String, dynamic>;
             print("/ => OtherPage [extraMap : $extraMap]");
             return !extraMap["isLogin"]
-                ? AuthPage(nextPagePath: TestPage.pagePath)
+                ? AuthPage(nextPagePath: MainPage.pagePath)
                 : MainPage();
           },
         ),

@@ -66,11 +66,12 @@ class MyApp extends StatelessWidget {
           path: '/',
           builder: (BuildContext context, GoRouterState state) {
             if (state.extra == null) {
+              print("/ => LoadPage");
               return LoadPage();
             }
 
             Map<String, dynamic> extraMap = state.extra as Map<String, dynamic>;
-            print("extraMap : $extraMap");
+            print("/ => OtherPage [extraMap : $extraMap]");
             return !extraMap["isLogin"]
                 ? AuthPage(nextPagePath: TestPage.pagePath)
                 : MainPage();
@@ -78,13 +79,23 @@ class MyApp extends StatelessWidget {
         ),
         GoRoute(
             path: '/ExitedPageForWep',
-            builder: (BuildContext context, GoRouterState state) => const Scaffold(
+            builder: (BuildContext context, GoRouterState state) =>
+                const Scaffold(
                   body: Center(
                     child: Text("종료되었습니다."),
                   ),
                 )),
+        //테스트용
+        GoRoute(
+            path: '/PostListViewPage',
+            builder: (BuildContext context, GoRouterState state) =>
+                PostListViewPage()),
+        GoRoute(
+            path: '/TestPage',
+            builder: (BuildContext context, GoRouterState state) => TestPage()),
       ],
-      errorBuilder: (BuildContext context, GoRouterState state) => const Scaffold(
+      errorBuilder: (BuildContext context, GoRouterState state) =>
+          const Scaffold(
             body: Center(
               child: Text("페이지를 찾을 수 없습니다."),
             ),

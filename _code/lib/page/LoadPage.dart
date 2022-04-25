@@ -40,7 +40,9 @@ class _LoadPageState extends KDHState<LoadPage> {
 
     rebuild(afterBuild: () async {
       await Future.delayed(const Duration(seconds: 1));
-      context.go("/MainPage");
+      context.go("/", extra: {
+        "isLogin": await AuthUtil.me.isLogin(),
+      });
     });
   }
 }

@@ -23,8 +23,8 @@ class AuthUtil {
   2. 회원가입이 되었다면, 기본값 회원가입+로그인이 실패할 것임,
   3. 회원가입이 안되었다면, 기본값 회원가입+로그인이 성공할 것임.
   4. 이메일 인증을 파악하기 위해서, 해당 유저의 user.displayName를 사용하기로 한다.
-      회원가입이 완료되면, user.displayName을 ""로 변경할 것임 (기본값 null)
-  5. 따라서, isLogin에서 displayName이 null이라면, 로그아웃시키고, 로그인안된것으로 처리해야한다.
+      회원가입이 완료되면, user.displayName을 "nameRegistered"로 변경할 것임
+  5. 따라서, isLogin의 checkIsRegistered에서 displayName이 nameRegistered가 아니라면, 로그아웃시키면서, Login 여부를 파악한다.
    */
 
   late final FirebaseAuthUtilInterface _firebaseAuthUtilInterface;

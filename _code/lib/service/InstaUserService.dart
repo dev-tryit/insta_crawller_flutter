@@ -1,18 +1,28 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:insta_crawller_flutter/_common/interface/Type.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
+import 'package:insta_crawller_flutter/service/PostUrlService.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyCrawller.dart';
+import 'package:provider/provider.dart';
 
-class InstaUserProvider extends ChangeNotifier {
+class InstaUserService extends ChangeNotifier {
   InstaUser? instaUser;
   final crawller = MyCrawller();
 
   BuildContext context;
-  InstaUserProvider(this.context);
+  InstaUserService(this.context);
+
+  static ChangeNotifierProvider get provider =>
+      ChangeNotifierProvider<InstaUserService>(
+          create: (context) => InstaUserService(context));
+  static Widget consumer(
+          {required ConsumerBuilderType<InstaUserService> builder}) =>
+      Consumer<InstaUserService>(builder: builder);
 
   Future<void> loadInstaUser() async {
     instaUser = await InstaUserRepository().getOne();
@@ -56,7 +66,7 @@ class InstaUserProvider extends ChangeNotifier {
   }
 
   void login(String id, String pw) {
-    crawller.login(id,pw);
+    crawller.login(id, pw);
   }
 
   void turnOffAlarmDialog() {

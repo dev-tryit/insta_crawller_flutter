@@ -9,8 +9,8 @@ import 'package:insta_crawller_flutter/_common/util/DesktopUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/ErrorUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PlatformUtil.dart';
 import 'package:insta_crawller_flutter/page/LoadPage.dart';
-import 'package:insta_crawller_flutter/provider/InstaUserProvider.dart';
-import 'package:insta_crawller_flutter/provider/PostUrlProvider.dart';
+import 'package:insta_crawller_flutter/service/InstaUserService.dart';
+import 'package:insta_crawller_flutter/service/PostUrlService.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyStoreUtil.dart';
@@ -40,7 +40,13 @@ Future<void> main() async {
           maximumSize: const Size(width, height),
           title: MySetting.appName);
     }
-    runApp(MyApp());
+    runApp(MultiProvider(
+      providers: [
+        InstaUserService.provider,
+        PostUrlService.provider,
+      ],
+      child: MyApp(),
+    ));
   });
 }
 
@@ -85,13 +91,7 @@ class MyApp extends StatelessWidget {
         child = MyComponents.easyLoadingBuilder()(context, child);
         return child;
       },
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider<InstaUserProvider>(create: (context) => InstaUserProvider(context)),
-          ChangeNotifierProvider<PostUrlProvider>(create: (context) => PostUrlProvider(context)),
-        ],
-        child: LoadPage(),
-      ),
+      home: LoadPage(),
     );
   }
 }

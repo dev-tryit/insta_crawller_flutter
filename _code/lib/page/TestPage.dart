@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
-import 'package:insta_crawller_flutter/provider/InstaUserProvider.dart';
+import 'package:insta_crawller_flutter/service/InstaUserService.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
@@ -28,7 +28,7 @@ class _TestPageState extends KDHState<TestPage> {
 
   @override
   void mustRebuild() {
-    widgetToBuild = () => Consumer<InstaUserProvider>(
+    widgetToBuild = () => InstaUserService.consumer(
           builder: (context, p, child) {
             p.loadInstaUser();
             idController.text = p.instaUser?.id ?? "";

@@ -10,7 +10,7 @@ import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyCrawller.dart';
 
 class TestPage extends StatefulWidget {
-  static const String staticClassName = "MainPage";
+  static const String staticClassName = "TestPage";
   final className = staticClassName;
 
   @override
@@ -18,13 +18,13 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends KDHState<TestPage> {
-  late MainPageService s;
+  late TestPageService s;
   final idController = TextEditingController();
   final pwController = TextEditingController();
 
   @override
   Future<void> onLoad() async {
-    s = MainPageService(this);
+    s = TestPageService(this);
     await s.loadInstaUser();
   }
 
@@ -86,14 +86,14 @@ class _TestPageState extends KDHState<TestPage> {
   Future<void> afterBuild() async {}
 }
 
-class MainPageService {
+class TestPageService {
   InstaUser? instaUser;
   final crawller = MyCrawller();
   _TestPageState state;
   BuildContext get context => state.context;
   void rebuild() => state.setState(() {});
 
-  MainPageService(this.state);
+  TestPageService(this.state);
 
   Future<void> loadInstaUser() async {
     instaUser = await InstaUserRepository().getOne();

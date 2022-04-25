@@ -87,8 +87,8 @@ class MyApp extends StatelessWidget {
       },
       home: MultiProvider(
         providers: [
-          ChangeNotifierProvider<InstaUserProvider>(create: (_) => InstaUserProvider()),
-          ChangeNotifierProvider<PostUrlProvider>(create: (_) => PostUrlProvider()),
+          ChangeNotifierProvider<InstaUserProvider>(create: (context) => InstaUserProvider(context)),
+          ChangeNotifierProvider<PostUrlProvider>(create: (context) => PostUrlProvider(context)),
         ],
         child: LoadPage(),
       ),

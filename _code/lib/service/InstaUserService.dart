@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'dart:core';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:insta_crawller_flutter/_common/interface/Type.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
@@ -28,6 +29,7 @@ class InstaUserService extends ChangeNotifier {
   static Widget consumer(
           {required ConsumerBuilderType<InstaUserService> builder}) =>
       Consumer<InstaUserService>(builder: builder);
+  static InstaUserService read(BuildContext context) => context.read<InstaUserService>();
 
   String get id => idController.text;
   String get pw => pwController.text;

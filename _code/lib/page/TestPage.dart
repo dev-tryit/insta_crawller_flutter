@@ -28,7 +28,6 @@ class _TestPageState extends KDHState<TestPage> {
     toBuild = () {
       return InstaUserService.consumer(
         builder: (context, p, child) {
-          p.loadInstaUser();
           return Scaffold(
             body: Column(
               children: [
@@ -76,6 +75,8 @@ class _TestPageState extends KDHState<TestPage> {
         },
       );
     };
-    rebuild();
+    rebuild(afterBuild: (){
+          InstaUserService.read(context).loadInstaUser();
+    });
   }
 }

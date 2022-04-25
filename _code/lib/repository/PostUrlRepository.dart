@@ -39,7 +39,6 @@ class PostUrl extends WithDocId {
 
 class PostUrlRepository {
   static final PostUrlRepository _singleton = PostUrlRepository._internal();
-
   factory PostUrlRepository() {
     return _singleton;
   }

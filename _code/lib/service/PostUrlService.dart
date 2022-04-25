@@ -4,6 +4,7 @@ import 'package:insta_crawller_flutter/_common/interface/Type.dart';
 import 'package:provider/provider.dart';
 
 class PostUrlService extends ChangeNotifier {
+
   BuildContext context;
   PostUrlService(this.context);
 
@@ -11,4 +12,5 @@ class PostUrlService extends ChangeNotifier {
       ChangeNotifierProvider<PostUrlService>(
           create: (context) => PostUrlService(context));
   static Widget consumer({required ConsumerBuilderType<PostUrlService> builder}) => Consumer<PostUrlService>(builder: builder);
+  static PostUrlService read(BuildContext context) => context.read<PostUrlService>();
 }

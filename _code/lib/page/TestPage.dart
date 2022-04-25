@@ -9,15 +9,15 @@ import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyCrawller.dart';
 
-class MainPage extends StatefulWidget {
+class TestPage extends StatefulWidget {
   static const String staticClassName = "MainPage";
   final className = staticClassName;
 
   @override
-  _MainPageState createState() => _MainPageState();
+  _TestPageState createState() => _TestPageState();
 }
 
-class _MainPageState extends KDHState<MainPage> {
+class _TestPageState extends KDHState<TestPage> {
   late MainPageService s;
   final idController = TextEditingController();
   final pwController = TextEditingController();
@@ -89,7 +89,7 @@ class _MainPageState extends KDHState<MainPage> {
 class MainPageService {
   InstaUser? instaUser;
   final crawller = MyCrawller();
-  _MainPageState state;
+  _TestPageState state;
   BuildContext get context => state.context;
   void rebuild() => state.setState(() {});
 

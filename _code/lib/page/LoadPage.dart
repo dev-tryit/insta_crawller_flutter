@@ -3,7 +3,7 @@ import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/util/AuthUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/auth/AuthPage.dart';
-import 'package:insta_crawller_flutter/page/main/MainPage.dart';
+import 'package:insta_crawller_flutter/page/TestPage.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
@@ -59,6 +59,6 @@ class LoadPageService {
   Future<void> moveNextPage() async {
     await Future.delayed(const Duration(seconds: 1));
     PageUtil.replacementPage(
-        context, await AuthUtil().isLogin() ? MainPage() : AuthPage(nextPage:MainPage()));
+        context, await AuthUtil().isLogin() ? TestPage() : AuthPage(nextPage:TestPage()));
   }
 }

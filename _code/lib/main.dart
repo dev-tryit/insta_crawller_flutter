@@ -78,21 +78,24 @@ class MyApp extends StatelessWidget {
           },
         ),
         GoRoute(
-            path: '/ExitedPageForWep',
-            builder: (BuildContext context, GoRouterState state) =>
-                const Scaffold(
-                  body: Center(
-                    child: Text("종료되었습니다."),
-                  ),
-                )),
-        //테스트용
+          path: '/ExitedPageForWep',
+          builder: (BuildContext context, GoRouterState state) =>
+              const Scaffold(
+            body: Center(
+              child: Text("종료되었습니다."),
+            ),
+          ),
+        ),
+        //테스트용 라우터들
         GoRoute(
-            path: '/PostListViewPage',
-            builder: (BuildContext context, GoRouterState state) =>
-                PostListViewPage()),
+          path: '/PostListViewPage',
+          builder: (BuildContext context, GoRouterState state) =>
+              PostListViewPage(),
+        ),
         GoRoute(
-            path: '/TestPage',
-            builder: (BuildContext context, GoRouterState state) => TestPage()),
+          path: '/TestPage',
+          builder: (BuildContext context, GoRouterState state) => TestPage(),
+        ),
       ],
       errorBuilder: (BuildContext context, GoRouterState state) =>
           const Scaffold(

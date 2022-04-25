@@ -86,16 +86,20 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+
         //테스트용 라우터들
-        GoRoute(
-          path: '/PostListViewPage',
-          builder: (BuildContext context, GoRouterState state) =>
-              PostListViewPage(),
-        ),
-        GoRoute(
-          path: '/TestPage',
-          builder: (BuildContext context, GoRouterState state) => TestPage(),
-        ),
+        ...(!MySetting.isRelease
+            ? [
+                GoRoute(
+                    path: '/PostListViewPage',
+                    builder: (BuildContext context, GoRouterState state) =>
+                        PostListViewPage()),
+                GoRoute(
+                    path: '/TestPage',
+                    builder: (BuildContext context, GoRouterState state) =>
+                        TestPage()),
+              ]
+            : []),
       ],
       errorBuilder: (BuildContext context, GoRouterState state) =>
           const Scaffold(

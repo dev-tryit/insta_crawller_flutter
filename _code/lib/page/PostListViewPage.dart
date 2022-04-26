@@ -7,6 +7,7 @@ import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 class PostListViewPage extends StatefulWidget {
   static const String staticClassName = "PostListViewPage";
   final className = staticClassName;
+  static const String pagePath = "/$staticClassName";
 
   @override
   _PostListViewPageState createState() => _PostListViewPageState();

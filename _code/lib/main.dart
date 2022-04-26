@@ -8,7 +8,6 @@ import 'package:insta_crawller_flutter/_common/config/MyCustomScrollBehavior.dar
 import 'package:insta_crawller_flutter/_common/util/AuthUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/DesktopUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/ErrorUtil.dart';
-import 'package:insta_crawller_flutter/_common/util/ExitUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PlatformUtil.dart';
 import 'package:insta_crawller_flutter/page/LoadPage.dart';
 import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
@@ -63,7 +62,7 @@ class MyApp extends StatelessWidget {
       debugLogDiagnostics: true,
       routes: [
         GoRoute(
-          path: '/',
+          path: LoadPage.pagePath,
           builder: (BuildContext context, GoRouterState state) {
             if (state.extra == null) {
               print("/ => LoadPage");
@@ -73,7 +72,7 @@ class MyApp extends StatelessWidget {
             Map<String, dynamic> extraMap = state.extra as Map<String, dynamic>;
             print("/ => OtherPage [extraMap : $extraMap]");
             return !extraMap["isLogin"]
-                ? AuthPage(nextPagePath: MainPage.pagePath)
+                ? AuthPage(nextPagePath: LoadPage.pagePath)
                 : MainPage();
           },
         ),
@@ -91,11 +90,11 @@ class MyApp extends StatelessWidget {
         ...(!MySetting.isRelease
             ? [
                 GoRoute(
-                    path: '/PostListViewPage',
+                    path: PostListViewPage.pagePath,
                     builder: (BuildContext context, GoRouterState state) =>
                         PostListViewPage()),
                 GoRoute(
-                    path: '/TestPage',
+                    path: TestPage.pagePath,
                     builder: (BuildContext context, GoRouterState state) =>
                         TestPage()),
               ]

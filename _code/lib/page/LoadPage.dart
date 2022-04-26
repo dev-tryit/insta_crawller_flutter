@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/util/AuthUtil.dart';
-import 'package:insta_crawller_flutter/page/auth/AuthPage.dart';
-import 'package:insta_crawller_flutter/page/TestPage.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
 class LoadPage extends StatefulWidget {
   static const String staticClassName = "LoadPage";
   final className = staticClassName;
+  static const String pagePath = "/";
   const LoadPage({Key? key}) : super(key: key);
 
   @override

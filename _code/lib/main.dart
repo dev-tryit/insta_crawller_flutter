@@ -65,14 +65,13 @@ class MyApp extends StatelessWidget {
           path: LoadPage.pagePath,
           builder: (BuildContext context, GoRouterState state) {
             if (state.extra == null) {
-              print("/ => LoadPage");
               return LoadPage();
             }
 
             Map<String, dynamic> extraMap = state.extra as Map<String, dynamic>;
             print("/ => OtherPage [extraMap : $extraMap]");
             return !extraMap["isLogin"]
-                ? AuthPage(nextPagePath: LoadPage.pagePath)
+                ? AuthPage(nextPage: MainPage())
                 : MainPage();
           },
         ),

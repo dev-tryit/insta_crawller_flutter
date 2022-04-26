@@ -2,19 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
-import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
 import 'package:insta_crawller_flutter/service/InstaUserService.dart';
-import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
-import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
-import 'package:insta_crawller_flutter/util/MyCrawller.dart';
-import 'package:provider/provider.dart';
 
 class TestPage extends StatefulWidget {
   static const String staticClassName = "TestPage";
   final className = staticClassName;
-  
-  static const String pagePath = "/$staticClassName";
+
 
   @override
   _TestPageState createState() => _TestPageState();

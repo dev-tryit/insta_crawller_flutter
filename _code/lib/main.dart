@@ -10,8 +10,6 @@ import 'package:insta_crawller_flutter/_common/util/DesktopUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/ErrorUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PlatformUtil.dart';
 import 'package:insta_crawller_flutter/page/LoadPage.dart';
-import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
-import 'package:insta_crawller_flutter/page/TestPage.dart';
 import 'package:insta_crawller_flutter/page/main/MainPage.dart';
 import 'package:insta_crawller_flutter/service/InstaUserService.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
@@ -58,22 +56,20 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   final GoRouter _router = GoRouter(
       initialLocation: "/",
-      routerNeglect: true,
       debugLogDiagnostics: true,
+      urlPathStrategy: UrlPathStrategy.path,
+      routerNeglect: true,
       routes: [
         GoRoute(
-          path: LoadPage.pagePath,
-          builder: (BuildContext context, GoRouterState state) {
-            if (state.extra == null) {
-              return LoadPage();
-            }
+            path: "/",
+            builder: (BuildContext context, GoRouterState state) {
+              if (state.extra != null) {
+                Map<String, dynamic> extraMap = state.extra as Map<String, dynamic>;
+                return !extraMap["isLogin"] ? AuthPage(nextPagePath: "/") : MainPage();
+              }
 
-            Map<String, dynamic> extraMap = state.extra as Map<String, dynamic>;
-            print("/ => OtherPage [extraMap : $extraMap]");
-            return !extraMap["isLogin"]
-                ? AuthPage(nextPage: MainPage())
-                : MainPage();
-          },
+              return LoadPage();
+            },
         ),
         GoRoute(
           path: '/ExitedPageForWep',
@@ -84,20 +80,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-
-        //테스트용 라우터들
-        ...(!MySetting.isRelease
-            ? [
-                GoRoute(
-                    path: PostListViewPage.pagePath,
-                    builder: (BuildContext context, GoRouterState state) =>
-                        PostListViewPage()),
-                GoRoute(
-                    path: TestPage.pagePath,
-                    builder: (BuildContext context, GoRouterState state) =>
-                        TestPage()),
-              ]
-            : []),
       ],
       errorBuilder: (BuildContext context, GoRouterState state) =>
           const Scaffold(

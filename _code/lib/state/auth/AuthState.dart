@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:insta_crawller_flutter/_common/model/exception/CommonException.dart';
 import 'package:insta_crawller_flutter/_common/util/AuthUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
@@ -78,7 +79,7 @@ class AuthStateRegistration<STATE> extends AuthState<STATE> {
     String email = data['email'];
     String password = data['password'];
     String passwordConfirm = data['passwordConfirm'];
-    Widget nextPage = data['nextPage'];
+    String nextPagePath = data['nextPagePath'];
 
     if (email.isEmpty) {
       MyComponents.toastError(context, "이메일이 비어있습니다");
@@ -113,12 +114,9 @@ class AuthStateRegistration<STATE> extends AuthState<STATE> {
     MyComponents.dismissLoadingDialog();
     MyComponents.toastInfo(context, "회원가입이 완료되었습니다.");
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) => nextPage,
-      ),
-    );
+    Router.neglect(context, () async => context.go(nextPagePath, extra: {
+      "isLogin": await AuthUtil.me.isLogin(),
+    }));
     return this;
   }
 }
@@ -131,7 +129,7 @@ class AuthStateLogin<STATE> extends AuthState<STATE> {
     BuildContext context = data['context'];
     String email = data['email'];
     String password = data['password'];
-    Widget nextPage = data['nextPage'];
+    String nextPagePath = data['nextPagePath'];
 
     if (email.isEmpty) {
       MyComponents.toastError(context, "이메일이 비어있습니다");
@@ -153,12 +151,9 @@ class AuthStateLogin<STATE> extends AuthState<STATE> {
       return this;
     }
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) => nextPage,
-      ),
-    );
+    Router.neglect(context, () async => context.go(nextPagePath, extra: {
+      "isLogin": await AuthUtil.me.isLogin(),
+    }));
     MyComponents.dismissLoadingDialog();
     return this;
   }

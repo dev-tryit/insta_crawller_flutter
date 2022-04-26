@@ -8,7 +8,7 @@ import 'package:insta_crawller_flutter/util/MyTheme.dart';
 class LoadPage extends StatefulWidget {
   static const String staticClassName = "LoadPage";
   final className = staticClassName;
-  static const String pagePath = "/";
+
   const LoadPage({Key? key}) : super(key: key);
 
   @override
@@ -17,12 +17,27 @@ class LoadPage extends StatefulWidget {
 
 class _LoadPageState extends KDHState<LoadPage> {
   @override
-  Future<void> onLoad() async {}
+  Future<void> onLoad() async {
+    //로딩 작업
+
+  }
 
   @override
   Future<void> mustRebuild() async {
-    toBuild = () => Scaffold(
-            body: Container(
+    toBuild = () => loadingWidget();
+
+    rebuild(afterBuild: () async {
+      await Future.delayed(const Duration(seconds: 1));
+      context.go("/", extra: {
+        "isLogin": await AuthUtil.me.isLogin(),
+      });
+    });
+  }
+
+  @override
+  Widget loadingWidget() {
+    return Scaffold(
+        body: Container(
           width: 350,
           color: MyTheme.mainColor,
           alignment: Alignment.center,
@@ -36,12 +51,5 @@ class _LoadPageState extends KDHState<LoadPage> {
             ),
           ),
         ));
-
-    rebuild(afterBuild: () async {
-      await Future.delayed(const Duration(seconds: 1));
-      context.go("/", extra: {
-        "isLogin": await AuthUtil.me.isLogin(),
-      });
-    });
   }
 }

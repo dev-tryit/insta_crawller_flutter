@@ -38,23 +38,28 @@ class _MainPageState extends KDHState<MainPage> {
 
   Widget appBar() {
     return Padding(
-      padding: const EdgeInsets.only(left:18),
+      padding: const EdgeInsets.only(left:18, top:18),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 "Insta Manager",
                 style: MyFonts.coiny(
                   fontSize: 28,
+                  height: 1.0,
                   color: MyTheme.subColor,
                 ),
               ),
               Spacer(),
-              Icon(Icons.error),
+              Image(width:16,height:20,image: AssetImage('images/notes_icon.png'), fit: BoxFit.contain),
+              SizedBox(width: 26),
             ],
           ),
-          Divider(),
+          Divider(thickness: 1.3, color: MyTheme.subColor),
         ],
       ),
     );
@@ -72,7 +77,7 @@ class _MainPageState extends KDHState<MainPage> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.only(left:18, right: 31),
+          padding: const EdgeInsets.only(left:18, right: 24),
           child: Column(
             children: [
               Row(

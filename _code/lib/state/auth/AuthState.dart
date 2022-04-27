@@ -79,7 +79,7 @@ class AuthStateRegistration<STATE> extends AuthState<STATE> {
     String email = data['email'];
     String password = data['password'];
     String passwordConfirm = data['passwordConfirm'];
-    String nextPagePath = data['nextPagePath'];
+    String nextPageName = data['nextPageName'];
 
     if (email.isEmpty) {
       MyComponents.toastError(context, "이메일이 비어있습니다");
@@ -113,9 +113,8 @@ class AuthStateRegistration<STATE> extends AuthState<STATE> {
 
     MyComponents.dismissLoadingDialog();
     MyComponents.toastInfo(context, "회원가입이 완료되었습니다.");
-
-    Router.neglect(context, () async => context.go(nextPagePath, extra: {
-      "isLogin": await AuthUtil.me.isLogin(),
+    Router.neglect(context, () async => context.go("/",  extra: {
+      "pageName": nextPageName
     }));
     return this;
   }
@@ -129,7 +128,7 @@ class AuthStateLogin<STATE> extends AuthState<STATE> {
     BuildContext context = data['context'];
     String email = data['email'];
     String password = data['password'];
-    String nextPagePath = data['nextPagePath'];
+    String nextPageName = data['nextPageName'];
 
     if (email.isEmpty) {
       MyComponents.toastError(context, "이메일이 비어있습니다");
@@ -151,8 +150,8 @@ class AuthStateLogin<STATE> extends AuthState<STATE> {
       return this;
     }
 
-    Router.neglect(context, () async => context.go(nextPagePath, extra: {
-      "isLogin": await AuthUtil.me.isLogin(),
+    Router.neglect(context, () async => context.go("/",  extra: {
+      "pageName": nextPageName
     }));
     MyComponents.dismissLoadingDialog();
     return this;

@@ -6,7 +6,7 @@ import 'package:insta_crawller_flutter/_common/util/PlatformUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/firebase/FirebaseAuthUtilInterface.dart';
 import 'package:insta_crawller_flutter/_common/util/firebase/firebase/FirebaseAuthSingleton.dart';
 import 'package:insta_crawller_flutter/_common/util/firebase/firedart/FiredartAuthSingleton.dart';
-import 'package:insta_crawller_flutter/page/LoadPage.dart';
+import 'package:insta_crawller_flutter/page/auth/AuthPage.dart';
 
 enum NeededAuthBehavior { NEED_LOGIN, NEED_VERIFICATION, NEED_REGISTRATION }
 
@@ -99,7 +99,7 @@ class AuthUtil {
   Future<void> logout({BuildContext? context}) async {
     await _firebaseAuthUtilInterface.logout();
     if (context != null) {
-      context.go("/");
+      context.go("/", extra: {"pageName":AuthPage.staticClassName});
     }
   }
 

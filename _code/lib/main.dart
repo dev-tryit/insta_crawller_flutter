@@ -10,6 +10,8 @@ import 'package:insta_crawller_flutter/_common/util/DesktopUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/ErrorUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PlatformUtil.dart';
 import 'package:insta_crawller_flutter/page/LoadPage.dart';
+import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
+import 'package:insta_crawller_flutter/page/TestPage.dart';
 import 'package:insta_crawller_flutter/page/main/MainPage.dart';
 import 'package:insta_crawller_flutter/service/InstaUserService.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
@@ -58,14 +60,21 @@ class MyApp extends StatelessWidget {
       initialLocation: "/",
       debugLogDiagnostics: true,
       urlPathStrategy: UrlPathStrategy.path,
-      routerNeglect: true,
       routes: [
+        //앱은 웹과 네비게이션이 달라야 한다.
+        //앱을 위한 네비게이션.
         GoRoute(
             path: "/",
             builder: (BuildContext context, GoRouterState state) {
               if (state.extra != null) {
                 Map<String, dynamic> extraMap = state.extra as Map<String, dynamic>;
-                return !extraMap["isLogin"] ? AuthPage(nextPagePath: "/") : MainPage();
+                if(extraMap.containsKey("pageName")) {
+                  String pageName = extraMap["pageName"];
+                  if(pageName == AuthPage.staticClassName) return AuthPage(nextPageName: MainPage.staticClassName);
+                  if(pageName == MainPage.staticClassName) return MainPage();
+                  if(pageName == TestPage.staticClassName) return TestPage();
+                  if(pageName == PostListViewPage.staticClassName) return PostListViewPage();
+                }
               }
 
               return LoadPage();

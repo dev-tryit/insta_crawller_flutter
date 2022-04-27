@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/util/AuthUtil.dart';
+import 'package:insta_crawller_flutter/page/auth/AuthPage.dart';
+import 'package:insta_crawller_flutter/page/main/MainPage.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
@@ -19,7 +21,6 @@ class _LoadPageState extends KDHState<LoadPage> {
   @override
   Future<void> onLoad() async {
     //로딩 작업
-
   }
 
   @override
@@ -29,7 +30,9 @@ class _LoadPageState extends KDHState<LoadPage> {
     rebuild(afterBuild: () async {
       await Future.delayed(const Duration(seconds: 1));
       context.go("/", extra: {
-        "isLogin": await AuthUtil.me.isLogin(),
+        "pageName": !(await AuthUtil.me.isLogin())
+            ? AuthPage.staticClassName
+            : MainPage.staticClassName
       });
     });
   }
@@ -38,18 +41,18 @@ class _LoadPageState extends KDHState<LoadPage> {
   Widget loadingWidget() {
     return Scaffold(
         body: Container(
-          width: 350,
-          color: MyTheme.mainColor,
-          alignment: Alignment.center,
-          child: Text(
-            "Insta\nManager",
-            textAlign: TextAlign.center,
-            style: MyFonts.coiny(
-              fontSize: 35,
-              height: 1.1,
-              color: MyTheme.subColor,
-            ),
-          ),
-        ));
+      width: 350,
+      color: MyTheme.mainColor,
+      alignment: Alignment.center,
+      child: Text(
+        "Insta\nManager",
+        textAlign: TextAlign.center,
+        style: MyFonts.coiny(
+          fontSize: 35,
+          height: 1.1,
+          color: MyTheme.subColor,
+        ),
+      ),
+    ));
   }
 }

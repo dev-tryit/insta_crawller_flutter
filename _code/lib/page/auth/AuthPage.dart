@@ -14,9 +14,9 @@ import 'package:insta_crawller_flutter/util/MyTheme.dart';
 class AuthPage extends StatefulWidget {
   static const String staticClassName = "AuthPage";
   final className = staticClassName;
-  final String nextPagePath;
+  final String nextPageName;
 
-  const AuthPage({Key? key, required this.nextPagePath}) : super(key: key);
+  const AuthPage({Key? key, required this.nextPageName}) : super(key: key);
 
   @override
   _AuthPageState createState() => _AuthPageState();
@@ -275,13 +275,13 @@ class AuthPageService {
     String email = state.emailController.text.trim();
     String password = state.passwordController.text.trim();
 
-    var nextPagePath = state.widget.nextPagePath;
+    var nextPageName = state.widget.nextPageName;
 
     if (authStateManager.authState is AuthStateLogin) {
       await authStateManager.authState.handle({
         'email': email,
         'password': password,
-        'nextPagePath': nextPagePath,
+        'nextPageName': nextPageName,
         'context': context,
       });
     } else if (authStateManager.authState is AuthStateRegistration) {
@@ -290,7 +290,7 @@ class AuthPageService {
         'email': email,
         'password': password,
         'passwordConfirm': passwordConfirm,
-        'nextPagePath': nextPagePath,
+        'nextPageName': nextPageName,
         'context': context,
       });
     } else {

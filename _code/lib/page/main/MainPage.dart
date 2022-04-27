@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
+import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
 class MainPage extends StatefulWidget {
@@ -26,7 +27,6 @@ class _MainPageState extends KDHState<MainPage> {
           child: Column(
             children: [
               appBar(),
-              Divider(),
               Expanded(child: scrollView()),
             ],
           ),
@@ -37,19 +37,33 @@ class _MainPageState extends KDHState<MainPage> {
   }
 
   Widget appBar() {
-    return Row(
-      children: [
-        Text("appBar"),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(left:18),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text(
+                "Insta Manager",
+                style: MyFonts.coiny(
+                  fontSize: 28,
+                  color: MyTheme.subColor,
+                ),
+              ),
+              Spacer(),
+              Icon(Icons.error),
+            ],
+          ),
+          Divider(),
+        ],
+      ),
     );
   }
 
   Widget scrollView() {
     return SingleChildScrollView(
       child: Column(
-        children: [
-          instaCardGroup(),
-        ],
+        children: List.generate(12, (index) => instaCardGroup()),
       ),
     );
   }
@@ -58,7 +72,7 @@ class _MainPageState extends KDHState<MainPage> {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.only(left:18, right: 31),
           child: Column(
             children: [
               Row(
@@ -75,7 +89,7 @@ class _MainPageState extends KDHState<MainPage> {
             ],
           ),
         ),
-        Divider(),
+        Divider(endIndent: 94),
       ],
     );
   }

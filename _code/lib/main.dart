@@ -58,7 +58,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   final GoRouter _router = GoRouter(
       initialLocation: "/",
-      debugLogDiagnostics: true,
       urlPathStrategy: UrlPathStrategy.path,
       routes: [
         //앱은 웹과 네비게이션이 달라야 한다.

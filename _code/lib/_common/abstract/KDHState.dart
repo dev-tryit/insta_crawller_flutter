@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/model/WidgetToGetSize.dart';
-import 'package:insta_crawller_flutter/_common/util/MediaQueryUtil.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 
 abstract class KDHState<TargetWidget extends StatefulWidget>
@@ -27,8 +26,8 @@ abstract class KDHState<TargetWidget extends StatefulWidget>
 
   @override
   Widget build(BuildContext context) {
-    bool existtoBuild = toBuild != null;
-    if (existtoBuild) {
+    bool existToBuild = toBuild != null;
+    if (existToBuild) {
       return toBuild!();
     }
 

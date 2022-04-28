@@ -150,6 +150,6 @@ class _MainPageState extends KDHState<MainPage> {
   }
 
   void moveNavigationPage() {
-    context.go("/", extra: {"pageName":NavigationPage.staticClassName});
+    context.go("/${NavigationPage.staticClassName}");
   }
 }

@@ -66,6 +66,7 @@ class MyApp extends StatelessWidget {
         GoRoute(
             path: "/",
             builder: (BuildContext context, GoRouterState state) {
+              print("/ builder state fullpath: ${state.fullpath}, path: ${state.path}, subloc: ${state.subloc}");
               if (state.extra != null) {
                 Map<String, dynamic> extraMap = state.extra as Map<String, dynamic>;
                 if(extraMap.containsKey("pageName")) {
@@ -74,12 +75,23 @@ class MyApp extends StatelessWidget {
                   if(pageName == MainPage.staticClassName) return MainPage();
                   if(pageName == TestPage.staticClassName) return TestPage();
                   if(pageName == PostListViewPage.staticClassName) return PostListViewPage();
-                  if(pageName == NavigationPage.staticClassName) return NavigationPage();
                 }
               }
 
-              return LoadPage();
+              //TODO: 음.... GoRoute는, 아래 하위 PageRoute가 실행되면, 자동으로 상위 라우트가 불리게 된다. 여기에 로드 기능을 넣어도될듯하다.
+
+              return LoadPage(); //TODO: LoadPage에서 몇초뒤에 실행하도록 해놓았기 때문에. NavigationPage 다음에 LoadPage가 켜진다~
             },
+            routes: [
+              GoRoute(
+                path: NavigationPage.staticClassName,
+                builder: (BuildContext context, GoRouterState state) {
+                  print("NavigationPage builder state fullpath: ${state.fullpath}, path: ${state.path}, subloc: ${state.subloc}");
+
+                  return NavigationPage();
+                },
+              ),
+            ]
         ),
         GoRoute(
           path: '/ExitedPageForWep',

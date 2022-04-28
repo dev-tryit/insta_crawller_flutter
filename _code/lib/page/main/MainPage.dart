@@ -1,8 +1,10 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/extension/RandomExtension.dart';
+import 'package:insta_crawller_flutter/page/main/NavigationPage.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
@@ -71,9 +73,7 @@ class _MainPageState extends KDHState<MainPage> {
                   image: MyImage.notesIcon,
                   fit: BoxFit.contain,
                 ),
-                onTap: () {
-                  print("InkWell onTap");
-                },
+                onTap: moveNavigationPage,
               ),
               SizedBox(width: 26),
             ],
@@ -147,5 +147,9 @@ class _MainPageState extends KDHState<MainPage> {
         Divider(endIndent: 94),
       ],
     );
+  }
+
+  void moveNavigationPage() {
+    context.go("/", extra: {"pageName":NavigationPage.staticClassName});
   }
 }

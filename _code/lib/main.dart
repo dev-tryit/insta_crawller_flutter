@@ -13,6 +13,7 @@ import 'package:insta_crawller_flutter/page/LoadPage.dart';
 import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
 import 'package:insta_crawller_flutter/page/TestPage.dart';
 import 'package:insta_crawller_flutter/page/main/MainPage.dart';
+import 'package:insta_crawller_flutter/page/main/NavigationPage.dart';
 import 'package:insta_crawller_flutter/service/InstaUserService.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
                   if(pageName == MainPage.staticClassName) return MainPage();
                   if(pageName == TestPage.staticClassName) return TestPage();
                   if(pageName == PostListViewPage.staticClassName) return PostListViewPage();
+                  if(pageName == NavigationPage.staticClassName) return NavigationPage();
                 }
               }
 

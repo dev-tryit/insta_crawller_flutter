@@ -2,6 +2,8 @@ import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/extension/RandomExtension.dart';
+import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
+import 'package:insta_crawller_flutter/service/PostUrlService.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyImage.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
@@ -17,11 +19,14 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends KDHState<MainPage> {
+  List<PostUrl> postUrlList = [];
   @override
   Future<void> onLoad() async {}
 
   @override
   Future<void> mustRebuild() async {
+    postUrlList = await PostUrlService.read(context).getPostUrlList();
+
     toBuild = () {
       return Scaffold(
         body: Container(
@@ -79,21 +84,20 @@ class _MainPageState extends KDHState<MainPage> {
   }
 
   Widget scrollView() {
-    List<Widget> children = [];
-
-
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.only(top:34),
         child: Column(
-          children: List.generate(12, (index) => instaCardGroup()),
+          children: postUrlList.map((postUrl) => instaCardGroup(postUrl)).toList(),
         ),
       ),
     );
   }
 
-  Widget instaCardGroup() {
+  Widget instaCardGroup(PostUrl postUrl) {
+    List mediaUrlList = (postUrl.mediaUrlList ?? []);
     String emojiChar = Emoji.byGroup(EmojiGroup.smileysEmotion).toList().getRandomElement().char;
+    print("instaCardGroup mediaUrlList:$mediaUrlList");
 
     return Column(
       children: [
@@ -105,7 +109,7 @@ class _MainPageState extends KDHState<MainPage> {
                 children: [
                   Text(emojiChar),
                   SizedBox(width: 5),
-                  Text("abc__"),
+                  Text(postUrl.instaUserId??""),
                   SizedBox(width: 5),
                   InkWell(
                     child: Image(

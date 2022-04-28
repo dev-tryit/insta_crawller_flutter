@@ -12,14 +12,10 @@ import 'package:provider/provider.dart';
 
 class InstaUserService extends ChangeNotifier {
   final MyCrawller crawller;
-  final TextEditingController idController;
-  final TextEditingController pwController;
 
   BuildContext context;
   InstaUserService(this.context)
-      : crawller = MyCrawller(),
-        idController = TextEditingController(),
-        pwController = TextEditingController();
+      : crawller = MyCrawller();
 
   static ChangeNotifierProvider get provider =>
       ChangeNotifierProvider<InstaUserService>(
@@ -30,14 +26,9 @@ class InstaUserService extends ChangeNotifier {
   static InstaUserService read(BuildContext context) =>
       context.read<InstaUserService>();
 
-  String get id => idController.text;
-  String get pw => pwController.text;
 
-  Future<void> loadInstaUser() async {
-    InstaUser? instaUser = await InstaUserRepository.me.getOne();
-    idController.text = instaUser?.id ?? "";
-    pwController.text = instaUser?.pw ?? "";
-    notifyListeners();
+  Future<InstaUser?> getInstaUser() async {
+    return await InstaUserRepository.me.getOne();
   }
 
   Future<void> saveInstaUser(String id, String pw) async {

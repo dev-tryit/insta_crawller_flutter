@@ -15,15 +15,15 @@ class PostListViewPage extends StatefulWidget {
 class _PostListViewPageState extends KDHState<PostListViewPage> {
   @override
   Future<void> onLoad() async {
-    PostUrlService.read(context).loadMediaUrlList();
   }
 
   @override
   Future<void> mustRebuild() async {
+    List mediaUrlList = await PostUrlService.read(context)
+        .getMediaUrlList();
     toBuild = () => Scaffold(
             body: ListView(
-          children: PostUrlService.read(context)
-              .mediaUrlList
+          children: mediaUrlList
               .map((e) => Image.network(e.toString()))
               .toList(),
         ));

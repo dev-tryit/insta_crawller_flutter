@@ -15,6 +15,9 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends KDHState<TestPage> {
+  final idController = TextEditingController();
+  final pwController = TextEditingController();
+
   @override
   Future<void> onLoad() async {}
 
@@ -27,17 +30,17 @@ class _TestPageState extends KDHState<TestPage> {
             body: Column(
               children: [
                 TextField(
-                  controller: p.idController,
+                  controller: idController,
                   decoration: InputDecoration(isDense: true, labelText: "ID"),
                 ),
                 TextField(
-                  controller: p.pwController,
+                  controller: pwController,
                   decoration: InputDecoration(isDense: true, labelText: "PW"),
                   obscureText: true,
                 ),
                 MyComponents.buttonDefault(
                   child: const Text("저장"),
-                  onPressed: () => p.saveInstaUser(p.id, p.pw),
+                  onPressed: () => p.saveInstaUser(idController.text, pwController.text),
                 ),
                 SizedBox(height: 100),
                 MyComponents.buttonDefault(
@@ -46,7 +49,7 @@ class _TestPageState extends KDHState<TestPage> {
                 ),
                 MyComponents.buttonDefault(
                   child: const Text("로그인하기"),
-                  onPressed: () => p.login(p.id, p.pw),
+                  onPressed: () => p.login(idController.text, pwController.text),
                 ),
                 MyComponents.buttonDefault(
                   child: const Text("알림 설정 끄기"),
@@ -70,8 +73,14 @@ class _TestPageState extends KDHState<TestPage> {
         },
       );
     };
-    rebuild(afterBuild: (){
-          InstaUserService.read(context).loadInstaUser();
+    rebuild(afterBuild: () async {
+      InstaUserService service = InstaUserService.read(context);
+      service.getInstaUser().then((instaUser) {
+        idController.text = instaUser?.id ?? "";
+        pwController.text = instaUser?.pw ?? "";
+        service.notifyListeners();
+      });
+
     });
   }
 }

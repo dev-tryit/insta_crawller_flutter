@@ -5,8 +5,6 @@ import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:provider/provider.dart';
 
 class PostUrlService extends ChangeNotifier {
-  List mediaUrlList = [];
-
   BuildContext context;
   PostUrlService(this.context);
 
@@ -16,10 +14,16 @@ class PostUrlService extends ChangeNotifier {
   static Widget consumer({required ConsumerBuilderType<PostUrlService> builder}) => Consumer<PostUrlService>(builder: builder);
   static PostUrlService read(BuildContext context) => context.read<PostUrlService>();
 
-  Future<void> loadMediaUrlList() async {
-    List<PostUrl> postUrlList = await PostUrlRepository.me.getList();
+  Future<List<PostUrl>> getPostUrlList() async {
+    return await PostUrlRepository.me.getList();
+  }
+  Future<List> getMediaUrlList() async {
+    List mediaUrlList = [];
+    List<PostUrl> postUrlList = await getPostUrlList();
     for (var element in postUrlList) {
       mediaUrlList.addAll(element.mediaUrlList ?? []);
     }
+
+    return mediaUrlList;
   }
 }

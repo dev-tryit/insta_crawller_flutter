@@ -1,3 +1,4 @@
+import 'package:card_swiper/card_swiper.dart';
 import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
@@ -127,7 +128,18 @@ class _MainPageState extends KDHState<MainPage> {
               SizedBox(height: 8),
               Container(
                 height: 215,
-                color: Colors.blue,
+                child: Swiper(
+                  itemCount: mediaUrlList.length,
+                  itemBuilder: (BuildContext context, int i) {
+                    String mediaUrl = mediaUrlList[i];
+                    return Image.network(
+                      mediaUrl,
+                      fit: BoxFit.fill,
+                    );
+                  },
+                  itemWidth: 300.0,
+                  layout: SwiperLayout.STACK,
+                ),
               ),
             ],
           ),

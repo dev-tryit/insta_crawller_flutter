@@ -79,6 +79,9 @@ class _MainPageState extends KDHState<MainPage> {
   }
 
   Widget scrollView() {
+    List<Widget> children = [];
+
+
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.only(top:34),

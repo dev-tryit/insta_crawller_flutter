@@ -9,7 +9,7 @@ import 'package:insta_crawller_flutter/_common/util/DesktopUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/ErrorUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PlatformUtil.dart';
 import 'package:insta_crawller_flutter/page/SplashPage.dart';
-import 'package:insta_crawller_flutter/service/InstaUserService.dart';
+import 'package:insta_crawller_flutter/service/CrawllerService.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
@@ -42,8 +42,8 @@ Future<void> main() async {
     }
     runApp(MultiProvider(
       providers: [
-        InstaUserService.provider,
         PostUrlService.provider,
+        CrawllerService.provider,
       ],
       child: MyApp(),
     ));

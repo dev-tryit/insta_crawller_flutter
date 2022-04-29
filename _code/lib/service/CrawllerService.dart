@@ -1,16 +1,61 @@
+import 'package:flutter/material.dart';
+import 'package:insta_crawller_flutter/_common/interface/Type.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
+import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PuppeteerUtil.dart';
-import 'package:puppeteer/puppeteer.dart';
+import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
+import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
+import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
+import 'package:insta_crawller_flutter/util/MyComponents.dart';
+import 'package:provider/provider.dart';
 
-class MyCrawller {
+class CrawllerService extends ChangeNotifier {
   final PuppeteerUtil p;
   final Duration delay;
   final Duration timeout;
 
-  MyCrawller()
+  BuildContext context;
+  CrawllerService(this.context)
       : this.p = PuppeteerUtil(),
         this.delay = const Duration(milliseconds: 25),
         this.timeout = Duration(seconds: 20);
+
+  static ChangeNotifierProvider get provider =>
+      ChangeNotifierProvider<CrawllerService>(
+          create: (context) => CrawllerService(context));
+  static Widget consumer({required ConsumerBuilderType<CrawllerService> builder}) => Consumer<CrawllerService>(builder: builder);
+  static CrawllerService read(BuildContext context) => context.read<CrawllerService>();
+
+
+  void saveHumorPost() async {
+    String instaUserId = "inssa_unni_";
+    List<String> postUrlList = await getPostUrlList(instaUserId);
+
+    for (String postUrl in postUrlList) {
+      if (await PostUrlRepository.me.getOneByUrl(postUrl) != null) continue;
+
+      List<String> mediaStrList =
+      await getMediaStrListOf(postUrl: postUrl);
+      var postUrlObj = PostUrl(
+          instaUserId: instaUserId, url: postUrl, mediaUrlList: mediaStrList);
+      await PostUrlRepository.me.save(postUrl: postUrlObj);
+    }
+  }
+  Future<InstaUser?> getInstaUser() async {
+    return await InstaUserRepository.me.getOne();
+  }
+
+  Future<void> saveInstaUser(String id, String pw) async {
+    try {
+      await InstaUserRepository.me.save(instaUser: InstaUser(id: id, pw: pw));
+      MyComponents.snackBar(context, "저장 성공하였습니다.");
+    } catch (e) {
+      MyComponents.snackBar(context, "저장 실패하였습니다.");
+    }
+  }
+  void goPostListViewPage() async {
+    PageUtil.go(context, PostListViewPage());
+  }
 
   /*
 

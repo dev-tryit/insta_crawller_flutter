@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/extension/RandomExtension.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
-import 'package:insta_crawller_flutter/page/main/NavigationPage.dart';
+import 'package:insta_crawller_flutter/page/NavigationPage.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';

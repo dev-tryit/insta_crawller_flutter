@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
+import 'package:insta_crawller_flutter/page/InstaAccountSettingPage.dart';
+import 'package:insta_crawller_flutter/service/CrawllerService.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
@@ -22,24 +24,30 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends KDHState<NavigationPage> {
+  late CrawllerService s;
   late List<ButtonState> buttonStateList;
 
   @override
   Future<void> mustRebuild() async {
+    s = CrawllerService.read(context);
     List<ButtonState> buttonStateList = [
-      ButtonState("Collect Posts", () {
+      ButtonState("Collect Posts", () async {
+        // await s.saveHumorPost();
+      }),
+      ButtonState("Set My Insta Account", () async {
+        await PageUtil.back(context);
+        await PageUtil.go(context, InstaAccountSettingPage());
+      }),
+      ButtonState("Set Target Insta Account", () async {
+        await PageUtil.back(context);
 
       }),
-      ButtonState("Set My Insta Account", () {
+      ButtonState("View BookMarked Post", () async {
+        await PageUtil.back(context);
 
       }),
-      ButtonState("Set Target Insta Account", () {
-
-      }),
-      ButtonState("View BookMarked Post", () {
-
-      }),
-      ButtonState("Move Auto Like & Follow Page", () {
+      ButtonState("Move Auto Like & Follow Page", () async {
+        await PageUtil.back(context);
 
       }),
     ];

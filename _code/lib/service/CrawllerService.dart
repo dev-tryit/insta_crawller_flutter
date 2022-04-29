@@ -5,7 +5,6 @@ import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PuppeteerUtil.dart';
 import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
-import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:provider/provider.dart';
 
@@ -28,18 +27,28 @@ class CrawllerService extends ChangeNotifier {
 
 
   void saveHumorPost() async {
-    String instaUserId = "inssa_unni_";
-    List<String> postUrlList = await getPostUrlList(instaUserId);
 
-    for (String postUrl in postUrlList) {
-      if (await PostUrlRepository.me.getOneByUrl(postUrl) != null) continue;
-
-      List<String> mediaStrList =
-      await getMediaStrListOf(postUrl: postUrl);
-      var postUrlObj = PostUrl(
-          instaUserId: instaUserId, url: postUrl, mediaUrlList: mediaStrList);
-      await PostUrlRepository.me.save(postUrl: postUrlObj);
-    }
+    // await p.startBrowser(headless: false, width: 1280, height: 1024);
+    //
+    // await login(idController.text, pwController.text);
+    // await turnOffAlarmDialog;
+    //
+    //
+    // String instaUserId = "inssa_unni_";
+    // List<String> postUrlList = await getPostUrlList(instaUserId);
+    //
+    // for (String postUrl in postUrlList) {
+    //   if (await PostUrlRepository.me.getOneByUrl(postUrl) != null) continue;
+    //
+    //   List<String> mediaStrList =
+    //   await getMediaStrListOf(postUrl: postUrl);
+    //   var postUrlObj = PostUrl(
+    //       instaUserId: instaUserId, url: postUrl, mediaUrlList: mediaStrList);
+    //   await PostUrlRepository.me.save(postUrl: postUrlObj);
+    // }
+    //
+    //
+    // await p.stopBrowser();
   }
   Future<InstaUser?> getInstaUser() async {
     return await InstaUserRepository.me.getOne();
@@ -63,13 +72,7 @@ class CrawllerService extends ChangeNotifier {
     await visitAccountAndGetPostLink();
     await saveInfoAboutPost();
    */
-  Future<void> startBrowser() async {
-    await p.startBrowser(headless: false, width: 1280, height: 1024);
-  }
 
-  Future<void> stopBrowser() async {
-    await p.stopBrowser();
-  }
 
   Future<void> login(String? id, String? pw) async {
     const String loginPageUrl = "https://www.instagram.com/accounts/login/";

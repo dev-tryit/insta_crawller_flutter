@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/util/AuthUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
+import 'package:insta_crawller_flutter/page/MainPage.dart';
 import 'package:insta_crawller_flutter/page/auth/AuthPage.dart';
-import 'package:insta_crawller_flutter/page/main/MainPage.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 

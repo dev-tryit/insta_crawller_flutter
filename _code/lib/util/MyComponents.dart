@@ -23,6 +23,7 @@ class MyComponents {
   static Widget inputBox({
     required String label,
     TextStyle? textStyle,
+    TextStyle? textFieldTextStyle,
     String? trailing,
     Color? trailingColor,
     GestureTapCallback? onTrailingTap,
@@ -53,7 +54,8 @@ class MyComponents {
                   enabled: textFieldEnabled,
                   obscureText: obscureText,
                   cursorColor: MyTheme.mainColor,
-              decoration: decoration,
+                  style: textFieldTextStyle,
+                  decoration: decoration,
                 ),
               ),
               ...trailing != null

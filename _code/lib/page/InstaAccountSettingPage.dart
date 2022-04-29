@@ -51,6 +51,7 @@ class InstaAccountSettingPage extends StatelessWidget {
             MyComponents.inputBox(
               label: "Insta PW",
               textStyle: textStyle,
+              obscureText: true,
               decoration: inputBoxDecoration,
             ),
           ],

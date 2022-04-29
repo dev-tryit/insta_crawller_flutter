@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:page_transition/page_transition.dart';
+
 class MySetting {
   static const bool isRelease = false;
 
@@ -14,6 +16,8 @@ class MySetting {
 
   // 중복 클릭 방지 시간
   static int milliSecondsForPreventingMultipleClicks = 300;
+
+  static const PageTransitionType? defaultPageTransitionType = PageTransitionType.fade;
 
 // static String appVersion = "";
 //

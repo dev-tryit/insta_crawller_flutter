@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:insta_crawller_flutter/MySetting.dart';
 import 'package:insta_crawller_flutter/_common/util/ExitUtil.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -58,7 +59,7 @@ class PageUtil {
   }
 
   static PageRoute _route(Widget nextPage,
-      {PageTransitionType? pageTransitionType,
+      {PageTransitionType? pageTransitionType=MySetting.defaultPageTransitionType,
       Duration? duration,
       Duration? reverseDuration}) {
     // return MaterialPageRoute(

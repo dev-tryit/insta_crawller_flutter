@@ -11,9 +11,14 @@ class MyComponents {
 
   static DateTime? _lastClickDateTime;
 
-  static Widget scaffold({required Widget body, Widget? bottomSheet, AppBar? appBar}) {
+  static Widget scaffold(
+      {required Widget body,
+      Widget? bottomSheet,
+      AppBar? appBar,
+      bool? resizeToAvoidBottomInset}) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
         body: body,
         bottomSheet: bottomSheet,
         appBar: appBar,

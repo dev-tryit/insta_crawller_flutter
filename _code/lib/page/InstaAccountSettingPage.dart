@@ -31,6 +31,8 @@ class InstaAccountSettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isKeyboardUp = MediaQuery.of(context).viewInsets.bottom>0;
+
     return MyComponents.scaffold(
       appBar: AppBar(
         title: Text("Set My Insta Account", style: MyFonts.coiny()),
@@ -57,9 +59,10 @@ class InstaAccountSettingPage extends StatelessWidget {
           ],
         ),
       ),
-      bottomSheet: SizedBox(
+      bottomSheet: Container(
         width: double.infinity,
         height: 50,
+        margin: EdgeInsets.only(bottom: isKeyboardUp?45:0), //TODO: 음... 어떻게 키보드 위에 위젯을 위치시키는지 방법 찾아야함.
         child: ElevatedButton(
           child: const Text("저장"),
           style: ElevatedButton.styleFrom(

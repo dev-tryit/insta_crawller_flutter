@@ -8,18 +8,26 @@ class PageUtil {
       GlobalKey<NavigatorState>();
 
   static Future<void> go(BuildContext context, Widget nextPage,
-      {PageTransitionType? pageTransitionType}) async {
+      {PageTransitionType? pageTransitionType,
+      Duration? duration,
+      Duration? reverseDuration}) async {
     await Navigator.of(context).push(_route(
       nextPage,
       pageTransitionType: pageTransitionType,
+      duration: duration,
+      reverseDuration: reverseDuration,
     ));
   }
 
   static Future<void> goReplacement(BuildContext context, Widget nextPage,
-      {PageTransitionType? pageTransitionType}) async {
+      {PageTransitionType? pageTransitionType,
+      Duration? duration,
+      Duration? reverseDuration}) async {
     await Navigator.of(context).pushReplacement(_route(
       nextPage,
       pageTransitionType: pageTransitionType,
+      duration: duration,
+      reverseDuration: reverseDuration,
     ));
   }
 
@@ -50,7 +58,9 @@ class PageUtil {
   }
 
   static PageRoute _route(Widget nextPage,
-      {PageTransitionType? pageTransitionType}) {
+      {PageTransitionType? pageTransitionType,
+      Duration? duration,
+      Duration? reverseDuration}) {
     // return MaterialPageRoute(
     //   builder: (context) => nextPage,
     //   settings: RouteSettings(
@@ -58,7 +68,15 @@ class PageUtil {
     //   ),
     // );
     if (pageTransitionType != null) {
-      return PageTransition(type: pageTransitionType, child: nextPage);
+      return PageTransition(
+        type: pageTransitionType,
+        child: nextPage,
+        duration: duration ?? const Duration(milliseconds: 300),
+        reverseDuration: reverseDuration ?? const Duration(milliseconds: 300),
+        settings: RouteSettings(
+          name: makePagePath(nextPage),
+        ),
+      );
     } else {
       return PageRouteBuilder(
         pageBuilder: (context, animation, anotherAnimation) => nextPage,

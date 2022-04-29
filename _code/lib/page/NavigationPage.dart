@@ -36,11 +36,15 @@ class _NavigationPageState extends KDHState<NavigationPage> {
         // await s.saveHumorPost();
       }),
       ButtonState("Set My Insta Account", () async {
+        Duration duration = const Duration(milliseconds: 200);
+
         await PageUtil.back(context);
         await PageUtil.go(
           context,
           InstaAccountSettingPage(),
-          pageTransitionType: PageTransitionType.bottomToTop,
+          pageTransitionType: PageTransitionType.fade,
+          duration: duration,
+          reverseDuration: duration,
         );
       }),
       ButtonState("Set Target Insta Account", () async {

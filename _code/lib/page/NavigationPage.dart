@@ -5,6 +5,7 @@ import 'package:insta_crawller_flutter/page/InstaAccountSettingPage.dart';
 import 'package:insta_crawller_flutter/service/CrawllerService.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
+import 'package:page_transition/page_transition.dart';
 
 class ButtonState {
   String label;
@@ -35,14 +36,16 @@ class _NavigationPageState extends KDHState<NavigationPage> {
         // await s.saveHumorPost();
       }),
       ButtonState("Set My Insta Account", () async {
-        Duration duration = const Duration(milliseconds: 200);
-
         await PageUtil.back(context);
         await PageUtil.go(
           context,
           InstaAccountSettingPage(),
-          duration: duration,
-          reverseDuration: duration,
+          pageTransitionBuilder: (nextPage) => PageTransition(
+            type: PageTransitionType.bottomToTop,
+            duration: const Duration(milliseconds: 130),
+            reverseDuration: const Duration(milliseconds: 130),
+            child: nextPage,
+          ),
         );
       }),
       ButtonState("Set Target Insta Account", () async {

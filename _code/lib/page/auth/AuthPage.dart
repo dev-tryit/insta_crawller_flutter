@@ -13,7 +13,7 @@ import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
 class AuthPage extends StatefulWidget {
   static const String staticClassName = "AuthPage";
-  final className = staticClassName;
+  String className()=>staticClassName;
   final Widget nextPage;
 
   const AuthPage({Key? key, required this.nextPage}) : super(key: key);

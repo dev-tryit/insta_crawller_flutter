@@ -13,7 +13,7 @@ import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
 class MainPage extends StatefulWidget {
   static const String staticClassName = "MainPage";
-  final className = staticClassName;
+  String className()=>staticClassName;
 
   const MainPage({Key? key}) : super(key: key);
 

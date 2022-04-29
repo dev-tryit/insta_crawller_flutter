@@ -9,7 +9,8 @@ import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
 class LoadPage extends StatefulWidget {
   static const String staticClassName = "SplashPage";
-  final className = staticClassName;
+
+  String className()=>staticClassName;
 
   const LoadPage({Key? key}) : super(key: key);
 

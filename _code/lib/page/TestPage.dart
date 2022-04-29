@@ -7,8 +7,7 @@ import 'package:insta_crawller_flutter/util/MyComponents.dart';
 
 class TestPage extends StatefulWidget {
   static const String staticClassName = "TestPage";
-  final className = staticClassName;
-
+  String className()=>staticClassName;
 
   @override
   _TestPageState createState() => _TestPageState();

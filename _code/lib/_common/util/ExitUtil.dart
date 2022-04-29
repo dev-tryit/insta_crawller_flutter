@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 
 class ExitUtil {
   static Future<void> exit(BuildContext context, {Widget? exitedPage}) async {
@@ -10,13 +9,12 @@ class ExitUtil {
       // window.close();//웹 종료. 크롬은 탭을 종료시키는게 불가능하다.
 
       //대응코드1
-      PageUtil.removeUntilAndGo(
-          context, exitedPage ?? ExitedPageForWep());
       await Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => exitedPage ?? ExitedPageForWep(),
-          ),
-          (Route<dynamic> route) => route.isFirst);
+        MaterialPageRoute(
+          builder: (context) => exitedPage ?? ExitedPageForWep(),
+        ),
+        (Route<dynamic> route) => route.isFirst,
+      );
 
       //대응코드2
       //Web은 exit가 안되서, 맨 첫화면으로 이동시키는 코드를 만들었따.

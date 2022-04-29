@@ -6,7 +6,7 @@ import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
 class NavigationPage extends StatefulWidget {
   static const String staticClassName = "NavigationPage";
-  final className = staticClassName;
+  String className()=>staticClassName;
 
   const NavigationPage({Key? key}) : super(key: key);
 
@@ -78,7 +78,7 @@ class _NavigationPageState extends KDHState<NavigationPage> {
         padding: EdgeInsets.all(20),
         child: Icon(Icons.close, color: MyTheme.subColor),
       ),
-      onTap: ()=>PageUtil.goBack(context),
+      onTap: ()=>PageUtil.back(context),
     );
   }
 }

@@ -19,9 +19,6 @@ class _TestPageState extends KDHState<TestPage> {
   final pwController = TextEditingController();
 
   @override
-  Future<void> onLoad() async {}
-
-  @override
   Future<void> mustRebuild() async {
     toBuild = () {
       return InstaUserService.consumer(

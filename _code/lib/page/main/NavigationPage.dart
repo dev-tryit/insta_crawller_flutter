@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
@@ -13,7 +14,7 @@ class NavigationPage extends StatefulWidget {
   State<NavigationPage> createState() => _NavigationPageState();
 }
 
-class _NavigationPageState extends State<NavigationPage> {
+class _NavigationPageState extends KDHState<NavigationPage> {
 
   List<String> menuStrList = [
     "Collect Posts",
@@ -24,8 +25,8 @@ class _NavigationPageState extends State<NavigationPage> {
   ];
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Future<void> mustRebuild() async {
+    toBuild = () => Scaffold(
       body: SizedBox.expand(
         child: Container(
             color: MyTheme.mainColor,
@@ -65,7 +66,9 @@ class _NavigationPageState extends State<NavigationPage> {
             )),
       ),
     );
+    rebuild();
   }
+
 
   Widget closeButton() {
     return InkWell(

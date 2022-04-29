@@ -7,21 +7,17 @@ import 'package:insta_crawller_flutter/page/main/MainPage.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
-class LoadPage extends StatefulWidget {
+class SplashPage extends StatefulWidget {
   static const String staticClassName = "LoadPage";
   final className = staticClassName;
 
-  const LoadPage({Key? key}) : super(key: key);
+  const SplashPage({Key? key}) : super(key: key);
 
   @override
-  _LoadPageState createState() => _LoadPageState();
+  _SplashPageState createState() => _SplashPageState();
 }
 
-class _LoadPageState extends KDHState<LoadPage> {
-  @override
-  Future<void> onLoad() async {
-    //로딩 작업
-  }
+class _SplashPageState extends KDHState<SplashPage> {
 
   @override
   Future<void> mustRebuild() async {

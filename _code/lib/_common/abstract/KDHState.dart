@@ -4,7 +4,7 @@ import 'package:insta_crawller_flutter/util/MyComponents.dart';
 
 abstract class KDHState<TargetWidget extends StatefulWidget>
     extends State<TargetWidget> {
-  //호출순서 : onLoad->mustRebuild->rebuild(Function? afterBuild);
+  //호출순서 : mustRebuild->rebuild(Function? afterBuild);
 
 
   @override
@@ -17,8 +17,6 @@ abstract class KDHState<TargetWidget extends StatefulWidget>
       if (buildedWidgets.isNotEmpty) {
         _getSizeOfWidgetList();
       }
-
-      await onLoad();
 
       await mustRebuild();
     });
@@ -44,10 +42,7 @@ abstract class KDHState<TargetWidget extends StatefulWidget>
     );
   }
 
-  //1. 인스턴스 미리 준비
-  Future<void> onLoad();
-
-  //2. UI의 크기를 미리 재기 위해 사용되는 구조
+  //1. UI의 크기를 미리 재기 위해 사용되는 구조
   //widgetsToBuild 재정의하면, buildedWidgets 결과가 도출된다.
   //buildedWidgets 결과
   /*
@@ -65,7 +60,7 @@ abstract class KDHState<TargetWidget extends StatefulWidget>
     }
   }
 
-  //3. 유연한 빌드
+  //2. 유연한 빌드
   //mustRebuild에서 toBuild를 채우고 반드시 rebuild해야 한다.
   //rebuild 할 때 afterBuild를 지정하면, 후 작업을 지정할 수 있다.
   Widget Function()? toBuild;
@@ -83,7 +78,7 @@ abstract class KDHState<TargetWidget extends StatefulWidget>
     setState(() {});
   }
 
-  //4. 로딩위젯
+  //3. 로딩위젯
   Widget loadingWidget() {
     return Scaffold(body: Center(child: MyComponents.loadingWidget()));
   }

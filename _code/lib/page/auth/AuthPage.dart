@@ -38,12 +38,8 @@ class _AuthPageState extends KDHState<AuthPage> {
   List<Widget> elementList = [];
 
   @override
-  Future<void> onLoad() async {
-    s = AuthPageService(this);
-  }
-
-  @override
   Future<void> mustRebuild() async {
+    s = AuthPageService(this);
     toBuild = () {
       final authState = s.authStateManager.authState;
       setUIByAuthState(authState);

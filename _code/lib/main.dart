@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,8 @@ import 'package:insta_crawller_flutter/_common/util/AuthUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/DesktopUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/ErrorUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PlatformUtil.dart';
-import 'package:insta_crawller_flutter/page/LoadPage.dart';
 import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
+import 'package:insta_crawller_flutter/page/SplashPage.dart';
 import 'package:insta_crawller_flutter/page/TestPage.dart';
 import 'package:insta_crawller_flutter/page/main/MainPage.dart';
 import 'package:insta_crawller_flutter/page/main/NavigationPage.dart';
@@ -78,9 +79,11 @@ class MyApp extends StatelessWidget {
                 }
               }
 
+              sleep(Duration(seconds: 5));
+
               //TODO: 음.... GoRoute는, 아래 하위 PageRoute가 실행되면, 자동으로 상위 라우트가 불리게 된다. 여기에 로드 기능을 넣어도될듯하다.
 
-              return LoadPage(); //TODO: LoadPage에서 몇초뒤에 실행하도록 해놓았기 때문에. NavigationPage 다음에 LoadPage가 켜진다~
+              return SplashPage(); //TODO: LoadPage에서 몇초뒤에 실행하도록 해놓았기 때문에. NavigationPage 다음에 LoadPage가 켜진다~
             },
             routes: [
               GoRoute(

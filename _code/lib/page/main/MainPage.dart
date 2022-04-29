@@ -23,8 +23,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends KDHState<MainPage> {
   List<PostUrl> postUrlList = [];
-  @override
-  Future<void> onLoad() async {}
 
   @override
   Future<void> mustRebuild() async {

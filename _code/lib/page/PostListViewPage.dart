@@ -13,9 +13,6 @@ class PostListViewPage extends StatefulWidget {
 }
 
 class _PostListViewPageState extends KDHState<PostListViewPage> {
-  @override
-  Future<void> onLoad() async {
-  }
 
   @override
   Future<void> mustRebuild() async {

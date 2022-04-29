@@ -22,6 +22,7 @@ class MyComponents {
 
   static Widget inputBox({
     required String label,
+    TextStyle? textStyle,
     String? trailing,
     Color? trailingColor,
     GestureTapCallback? onTrailingTap,
@@ -38,7 +39,8 @@ class MyComponents {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label),
+          Text(label, style: textStyle),
+          const SizedBox(height: 3),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

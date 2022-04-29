@@ -9,6 +9,26 @@ class InstaAccountSettingPage extends StatelessWidget {
 
   const InstaAccountSettingPage({Key? key}) : super(key: key);
 
+  static const TextStyle textStyle = TextStyle(color: MyTheme.mainColor );
+  static const InputDecoration inputBoxDecoration = InputDecoration(
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: MyTheme.mainColor),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: MyTheme.mainColor),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: MyTheme.mainColor),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: MyTheme.mainColor),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: MyTheme.mainColor),
+    ),
+    errorStyle: TextStyle(color: MyTheme.mainColor),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,8 +41,18 @@ class InstaAccountSettingPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            MyComponents.inputBox(label: "Insta ID"),
-            MyComponents.inputBox(label: "Insta PW"),
+            const SizedBox(height: 50),
+            MyComponents.inputBox(
+              label: "Insta ID",
+              textStyle: textStyle,
+              decoration: inputBoxDecoration,
+            ),
+            const SizedBox(height: 25),
+            MyComponents.inputBox(
+              label: "Insta PW",
+              textStyle: textStyle,
+              decoration: inputBoxDecoration,
+            ),
           ],
         ),
       ),

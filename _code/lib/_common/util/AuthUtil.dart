@@ -1,12 +1,9 @@
-import 'package:flutter/cupertino.dart';
-import 'package:go_router/go_router.dart';
 import 'package:insta_crawller_flutter/_common/model/exception/CommonException.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PlatformUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/firebase/FirebaseAuthUtilInterface.dart';
 import 'package:insta_crawller_flutter/_common/util/firebase/firebase/FirebaseAuthSingleton.dart';
 import 'package:insta_crawller_flutter/_common/util/firebase/firedart/FiredartAuthSingleton.dart';
-import 'package:insta_crawller_flutter/page/auth/AuthPage.dart';
 
 enum NeededAuthBehavior { NEED_LOGIN, NEED_VERIFICATION, NEED_REGISTRATION }
 
@@ -96,11 +93,8 @@ class AuthUtil {
     return NeededAuthBehavior.NEED_VERIFICATION;
   }
 
-  Future<void> logout({BuildContext? context}) async {
+  Future<void> logout() async {
     await _firebaseAuthUtilInterface.logout();
-    if (context != null) {
-      context.go("/", extra: {"pageName":AuthPage.staticClassName});
-    }
   }
 
   Future<void> loginWithEmailDefaultPassword(String email) async {

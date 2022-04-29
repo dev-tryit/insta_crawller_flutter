@@ -1,9 +1,9 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/extension/RandomExtension.dart';
+import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/main/NavigationPage.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
@@ -148,6 +148,6 @@ class _MainPageState extends KDHState<MainPage> {
   }
 
   void moveNavigationPage() {
-    context.go("/${NavigationPage.staticClassName}");
+    PageUtil.go(context, NavigationPage());
   }
 }

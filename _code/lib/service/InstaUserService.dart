@@ -1,8 +1,8 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:insta_crawller_flutter/_common/interface/Type.dart';
+import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
@@ -56,7 +56,7 @@ class InstaUserService extends ChangeNotifier {
   }
 
   void goPostListViewPage() async {
-    context.go("/", extra: {"pageName":PostListViewPage.staticClassName});
+    PageUtil.go(context, PostListViewPage());
   }
 
   void startBrowser() {

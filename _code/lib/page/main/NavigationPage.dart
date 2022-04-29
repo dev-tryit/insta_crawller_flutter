@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
+import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
@@ -78,7 +78,7 @@ class _NavigationPageState extends KDHState<NavigationPage> {
         padding: EdgeInsets.all(20),
         child: Icon(Icons.close, color: MyTheme.subColor),
       ),
-      onTap: context.pop,
+      onTap: ()=>PageUtil.goBack(context),
     );
   }
 }

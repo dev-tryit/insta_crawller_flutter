@@ -9,12 +9,18 @@ class PageUtil {
 
   static Future<void> go(BuildContext context, Widget nextPage,
       {PageTransitionType? pageTransitionType}) async {
-    await Navigator.of(context).push(_route(nextPage));
+    await Navigator.of(context).push(_route(
+      nextPage,
+      pageTransitionType: pageTransitionType,
+    ));
   }
 
   static Future<void> goReplacement(BuildContext context, Widget nextPage,
       {PageTransitionType? pageTransitionType}) async {
-    await Navigator.of(context).pushReplacement(_route(nextPage));
+    await Navigator.of(context).pushReplacement(_route(
+      nextPage,
+      pageTransitionType: pageTransitionType,
+    ));
   }
 
   static Future<void> back(BuildContext context) async {

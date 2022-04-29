@@ -5,6 +5,7 @@ import 'package:insta_crawller_flutter/page/InstaAccountSettingPage.dart';
 import 'package:insta_crawller_flutter/service/CrawllerService.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
+import 'package:page_transition/page_transition.dart';
 
 class ButtonState {
   String label;
@@ -36,19 +37,20 @@ class _NavigationPageState extends KDHState<NavigationPage> {
       }),
       ButtonState("Set My Insta Account", () async {
         await PageUtil.back(context);
-        await PageUtil.go(context, InstaAccountSettingPage());
+        await PageUtil.go(
+          context,
+          InstaAccountSettingPage(),
+          pageTransitionType: PageTransitionType.bottomToTop,
+        );
       }),
       ButtonState("Set Target Insta Account", () async {
         await PageUtil.back(context);
-
       }),
       ButtonState("View BookMarked Post", () async {
         await PageUtil.back(context);
-
       }),
       ButtonState("Move Auto Like & Follow Page", () async {
         await PageUtil.back(context);
-
       }),
     ];
     toBuild = () => Scaffold(

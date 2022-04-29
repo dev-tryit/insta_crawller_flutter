@@ -9,7 +9,7 @@ class InstaAccountSettingPage extends StatelessWidget {
 
   const InstaAccountSettingPage({Key? key}) : super(key: key);
 
-  static const TextStyle textStyle = TextStyle(color: MyTheme.mainColor );
+  static const TextStyle textStyle = TextStyle(color: MyTheme.mainColor);
   static const InputDecoration inputBoxDecoration = InputDecoration(
     border: OutlineInputBorder(
       borderSide: BorderSide(color: MyTheme.mainColor),
@@ -55,6 +55,21 @@ class InstaAccountSettingPage extends StatelessWidget {
               decoration: inputBoxDecoration,
             ),
           ],
+        ),
+      ),
+      bottomSheet: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          child: Padding(
+            padding: const EdgeInsets.all(11.0),
+            child: const Text("저장"),
+          ),
+          style: ElevatedButton.styleFrom(
+            shape: const RoundedRectangleBorder(),
+            primary: MyTheme.mainColor,
+            onPrimary: MyTheme.subColor,
+          ),
+          onPressed: () {},
         ),
       ),
     );

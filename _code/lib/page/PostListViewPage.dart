@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
+import 'package:insta_crawller_flutter/util/MyComponents.dart';
 
 class PostListViewPage extends StatefulWidget {
   static const String staticClassName = "PostListViewPage";
@@ -19,7 +20,7 @@ class _PostListViewPageState extends KDHState<PostListViewPage> {
   Future<void> mustRebuild() async {
     List mediaUrlList = await PostUrlService.read(context)
         .getMediaUrlList();
-    toBuild = () => Scaffold(
+    toBuild = () => MyComponents.scaffold(
             body: ListView(
           children: mediaUrlList
               .map((e) => Image.network(e.toString()))

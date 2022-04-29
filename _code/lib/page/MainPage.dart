@@ -7,6 +7,7 @@ import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/NavigationPage.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
+import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyImage.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
@@ -29,7 +30,7 @@ class _MainPageState extends KDHState<MainPage> {
     postUrlList = await PostUrlService.read(context).getPostUrlList();
 
     toBuild = () {
-      return Scaffold(
+      return MyComponents.scaffold(
         body: Container(
           color: MyTheme.mainColor,
           alignment: Alignment.center,

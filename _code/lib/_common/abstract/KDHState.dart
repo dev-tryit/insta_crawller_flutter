@@ -80,6 +80,6 @@ abstract class KDHState<TargetWidget extends StatefulWidget>
 
   //3. 로딩위젯
   Widget loadingWidget() {
-    return Scaffold(body: Center(child: MyComponents.loadingWidget()));
+    return MyComponents.scaffold(body: Center(child: MyComponents.loadingWidget()));
   }
 }

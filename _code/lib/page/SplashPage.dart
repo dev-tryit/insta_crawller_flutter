@@ -4,6 +4,7 @@ import 'package:insta_crawller_flutter/_common/util/AuthUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/MainPage.dart';
 import 'package:insta_crawller_flutter/page/auth/AuthPage.dart';
+import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
@@ -31,7 +32,7 @@ class _LoadPageState extends KDHState<LoadPage> {
 
   @override
   Widget loadingWidget() {
-    return Scaffold(
+    return MyComponents.scaffold(
         body: Container(
       width: 350,
       color: MyTheme.mainColor,

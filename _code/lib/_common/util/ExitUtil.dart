@@ -37,9 +37,11 @@ class ExitedPageForWep extends StatefulWidget {
 class _ExitedPageForWepState extends State<ExitedPageForWep> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text("종료되었습니다"),
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: Text("종료되었습니다"),
+        ),
       ),
     );
   }

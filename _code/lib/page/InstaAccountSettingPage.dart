@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
@@ -13,10 +14,18 @@ class InstaAccountSettingPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Set My Insta Account", style: MyFonts.coiny()),
-        backgroundColor: MyTheme.mainColor,
-        foregroundColor: MyTheme.subColor,
+        backgroundColor: MyTheme.subColor,
+        foregroundColor: MyTheme.mainColor,
+        shadowColor: Colors.transparent,
       ),
-      body: Text("InstaAccountSettingPage"),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            MyComponents.inputBox(label: "Insta ID"),
+            MyComponents.inputBox(label: "Insta PW"),
+          ],
+        ),
+      ),
     );
   }
 }

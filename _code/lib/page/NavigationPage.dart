@@ -3,6 +3,7 @@ import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/InstaAccountSettingPage.dart';
 import 'package:insta_crawller_flutter/service/CrawllerService.dart';
+import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 import 'package:page_transition/page_transition.dart';
@@ -58,7 +59,7 @@ class _NavigationPageState extends KDHState<NavigationPage> {
         await PageUtil.back(context);
       }),
     ];
-    toBuild = () => Scaffold(
+    toBuild = () => MyComponents.scaffold(
           body: SizedBox.expand(
             child: Container(
                 color: MyTheme.mainColor,

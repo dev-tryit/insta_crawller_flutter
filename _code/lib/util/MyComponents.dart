@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:insta_crawller_flutter/MySetting.dart';
 import 'package:insta_crawller_flutter/_common/util/AnimationUtil.dart';
+import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
 class MyComponents {
@@ -10,10 +11,71 @@ class MyComponents {
 
   static DateTime? _lastClickDateTime;
 
-  static Widget scaffold({required Widget body}) {
+  static Widget scaffold({required Widget body, Widget? bottomSheet}) {
     return SafeArea(
       child: Scaffold(
         body: body,
+        bottomSheet: bottomSheet,
+      ),
+    );
+  }
+
+  static Widget inputBox({
+    required String label,
+    String? trailing,
+    Color? trailingColor,
+    GestureTapCallback? onTrailingTap,
+    TextEditingController? controller,
+    TextInputType? keyboardType,
+    FormFieldValidator<String>? validator,
+    ValueChanged<String>? onChanged,
+    bool? textFieldEnabled,
+    bool obscureText = false,
+    InputDecoration? decoration,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32, right: 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: controller,
+                  keyboardType: keyboardType,
+                  validator: validator,
+                  onChanged: onChanged,
+                  enabled: textFieldEnabled,
+                  obscureText: obscureText,
+                  cursorColor: MyTheme.mainColor,
+              decoration: decoration,
+                ),
+              ),
+              ...trailing != null
+                  ? [
+                      const SizedBox(width: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25),
+                        child: InkWell(
+                          onTap: onTrailingTap,
+                          child: Text(
+                            trailing,
+                            style: MyFonts.coiny(
+                              color: trailingColor ?? MyTheme.subColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ]
+                  : [],
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -131,7 +193,7 @@ class MyComponents {
     bool showHorizontalScrollbar = true,
     bool showVerticalScrollbar = true,
   }) {
-    return scaffold(
+    return MyComponents.scaffold(
       body: bidirectionalScroll(
         widgetList: widgetList,
         screenSize: screenSize,
@@ -365,7 +427,7 @@ class MyComponents {
   static Widget buttonDefault(
       {required Widget child,
       required VoidCallback onPressed,
-        ButtonStyle? style}) {
+      ButtonStyle? style}) {
     return _buttonToPreventMultipleClicks(
       child: child,
       onPressed: onPressed,

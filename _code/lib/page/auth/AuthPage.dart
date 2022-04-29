@@ -37,6 +37,19 @@ class _AuthPageState extends KDHState<AuthPage> {
 
   List<Widget> elementList = [];
 
+  static const InputDecoration inputBoxDecoration = InputDecoration(
+    focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: MyTheme.mainColor),
+    ),
+    errorBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: MyTheme.mainColor),
+    ),
+    focusedErrorBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: MyTheme.mainColor),
+    ),
+    errorStyle: TextStyle(color: MyTheme.mainColor),
+  );
+
   @override
   Future<void> mustRebuild() async {
     s = AuthPageService(this);
@@ -44,7 +57,7 @@ class _AuthPageState extends KDHState<AuthPage> {
       final authState = s.authStateManager.authState;
       setUIByAuthState(authState);
 
-      return Scaffold(
+      return MyComponents.scaffold(
         bottomSheet: nextButtonText != null
             ? AnimatedOpacity(
                 opacity: 1.0,
@@ -78,7 +91,7 @@ class _AuthPageState extends KDHState<AuthPage> {
                   ),
                 ),
                 const SizedBox(height: 69),
-                inputBox(
+                MyComponents.inputBox(
                   label: "이메일",
                   trailing: emailValidationText,
                   trailingColor: emailValidationColor,
@@ -93,6 +106,7 @@ class _AuthPageState extends KDHState<AuthPage> {
                     return null;
                   },
                   onChanged: (value) => _formKey.currentState?.validate(),
+                  decoration: inputBoxDecoration,
                 ),
                 ...elementList
               ],
@@ -102,76 +116,6 @@ class _AuthPageState extends KDHState<AuthPage> {
       );
     };
     rebuild();
-  }
-
-  Widget inputBox({
-    required String label,
-    String? trailing,
-    Color? trailingColor,
-    GestureTapCallback? onTrailingTap,
-    TextEditingController? controller,
-    TextInputType? keyboardType,
-    FormFieldValidator<String>? validator,
-    ValueChanged<String>? onChanged,
-    bool? textFieldEnabled,
-    bool obscureText = false,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32, right: 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: TextFormField(
-                  controller: controller,
-                  keyboardType: keyboardType,
-                  validator: validator,
-                  onChanged: onChanged,
-                  enabled: textFieldEnabled,
-                  obscureText: obscureText,
-                  cursorColor: MyTheme.mainColor,
-                  decoration: const InputDecoration(
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: MyTheme.mainColor),
-                    ),
-                    errorBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: MyTheme.mainColor),
-                    ),
-                    focusedErrorBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: MyTheme.mainColor),
-                    ),
-                    errorStyle: TextStyle(color: MyTheme.mainColor),
-                  ),
-                ),
-              ),
-              ...trailing != null
-                  ? [
-                      const SizedBox(width: 8),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25),
-                        child: InkWell(
-                          onTap: onTrailingTap,
-                          child: Text(
-                            trailing,
-                            style: MyFonts.coiny(
-                              color: trailingColor ?? MyTheme.subColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ]
-                  : [],
-            ],
-          ),
-        ],
-      ),
-    );
   }
 
   void setUIByAuthState(AuthState authState) {
@@ -205,11 +149,12 @@ class _AuthPageState extends KDHState<AuthPage> {
         const SizedBox(height: 30),
         EasyFade(
           afterAFewMilliseconds: 500,
-          child: inputBox(
+          child: MyComponents.inputBox(
             label: "비밀번호",
             controller: passwordController,
             onChanged: (value) => _formKey.currentState?.validate(),
             obscureText: true,
+            decoration: inputBoxDecoration,
           ),
         ),
       ]);
@@ -218,21 +163,23 @@ class _AuthPageState extends KDHState<AuthPage> {
         const SizedBox(height: 30),
         EasyFade(
           afterAFewMilliseconds: 500,
-          child: inputBox(
+          child: MyComponents.inputBox(
             label: "비밀번호",
             controller: passwordController,
             onChanged: (value) => _formKey.currentState?.validate(),
             obscureText: true,
+            decoration: inputBoxDecoration,
           ),
         ),
         const SizedBox(height: 30),
         EasyFade(
           afterAFewMilliseconds: 1000,
-          child: inputBox(
+          child: MyComponents.inputBox(
             label: "비밀번호 확인",
             controller: passwordConfirmController,
             onChanged: (value) => _formKey.currentState?.validate(),
             obscureText: true,
+            decoration: inputBoxDecoration,
           ),
         ),
       ]);

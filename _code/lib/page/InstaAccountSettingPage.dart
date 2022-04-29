@@ -31,7 +31,7 @@ class InstaAccountSettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MyComponents.scaffold(
       appBar: AppBar(
         title: Text("Set My Insta Account", style: MyFonts.coiny()),
         backgroundColor: MyTheme.subColor,

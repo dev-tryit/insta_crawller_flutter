@@ -19,6 +19,10 @@ class MySetting {
 
   static const PageTransitionType? defaultPageTransitionType = PageTransitionType.fade;
 
+  static const Duration duration = Duration(milliseconds: 300);
+
+  static const Duration reverseDuration = Duration(milliseconds: 300);
+
 // static String appVersion = "";
 //
 // static String appBuildNumber = "";

@@ -72,8 +72,8 @@ class PageUtil {
       return PageTransition(
         type: pageTransitionType,
         child: nextPage,
-        duration: duration ?? const Duration(milliseconds: 300),
-        reverseDuration: reverseDuration ?? const Duration(milliseconds: 300),
+        duration: duration ?? MySetting.duration,
+        reverseDuration: reverseDuration ?? MySetting.reverseDuration,
         settings: RouteSettings(
           name: makePagePath(nextPage),
         ),

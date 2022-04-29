@@ -5,7 +5,6 @@ import 'package:insta_crawller_flutter/page/InstaAccountSettingPage.dart';
 import 'package:insta_crawller_flutter/service/CrawllerService.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
-import 'package:page_transition/page_transition.dart';
 
 class ButtonState {
   String label;
@@ -42,7 +41,6 @@ class _NavigationPageState extends KDHState<NavigationPage> {
         await PageUtil.go(
           context,
           InstaAccountSettingPage(),
-          pageTransitionType: PageTransitionType.fade,
           duration: duration,
           reverseDuration: duration,
         );

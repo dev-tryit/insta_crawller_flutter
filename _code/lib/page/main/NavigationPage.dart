@@ -6,7 +6,7 @@ import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
 class NavigationPage extends StatefulWidget {
   static const String staticClassName = "NavigationPage";
-  String className()=>staticClassName;
+  final String className = staticClassName;
 
   const NavigationPage({Key? key}) : super(key: key);
 

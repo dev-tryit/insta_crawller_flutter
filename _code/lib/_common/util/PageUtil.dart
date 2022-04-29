@@ -50,12 +50,6 @@ class PageUtil {
   }
 
   static String makePagePath(Widget page) {
-    return "/" + page.className();
-  }
-}
-
-extension WidgetWithClassName on Widget {
-  String className(){
-    throw UnimplementedError("위젯은 라우팅하기 위해서 className()을 재정의해야합니다. 해당 위젯은 : ${this.toString()}");
+    return "/" + (page as dynamic).className;
   }
 }

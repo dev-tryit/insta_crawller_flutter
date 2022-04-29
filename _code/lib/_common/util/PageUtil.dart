@@ -59,7 +59,7 @@ class PageUtil {
   }
 
   static PageRoute _route(Widget nextPage,
-      {PageTransitionType? pageTransitionType=MySetting.defaultPageTransitionType,
+      {PageTransitionType? pageTransitionType,
       Duration? duration,
       Duration? reverseDuration}) {
     // return MaterialPageRoute(
@@ -68,9 +68,20 @@ class PageUtil {
     //     name: makePagePath(nextPage),
     //   ),
     // );
+
     if (pageTransitionType != null) {
       return PageTransition(
         type: pageTransitionType,
+        child: nextPage,
+        duration: duration ?? MySetting.duration,
+        reverseDuration: reverseDuration ?? MySetting.reverseDuration,
+        settings: RouteSettings(
+          name: makePagePath(nextPage),
+        ),
+      );
+    } else if (MySetting.defaultPageTransitionType != null) {
+      return PageTransition(
+        type: MySetting.defaultPageTransitionType!,
         child: nextPage,
         duration: duration ?? MySetting.duration,
         reverseDuration: reverseDuration ?? MySetting.reverseDuration,

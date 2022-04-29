@@ -59,11 +59,9 @@ class InstaAccountSettingPage extends StatelessWidget {
       ),
       bottomSheet: SizedBox(
         width: double.infinity,
+        height: 50,
         child: ElevatedButton(
-          child: Padding(
-            padding: const EdgeInsets.all(11.0),
-            child: const Text("저장"),
-          ),
+          child: const Text("저장"),
           style: ElevatedButton.styleFrom(
             shape: const RoundedRectangleBorder(),
             primary: MyTheme.mainColor,

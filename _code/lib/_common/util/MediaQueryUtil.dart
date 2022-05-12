@@ -5,4 +5,9 @@ class MediaQueryUtil {
     return MediaQuery.of(context).size;
   }
 
+
+  static double getKeyboardHeight(BuildContext context) {
+    return MediaQuery.of(context).viewInsets.bottom;
+  }
+
 }

@@ -25,7 +25,7 @@ class _LoadPageState extends KDHState<LoadPage> {
 
     rebuild(afterBuild: () async {
       await Future.delayed(const Duration(seconds: 1));
-      PageUtil.go(
+      PageUtil.goReplacement(
           context, !(await AuthUtil.me.isLogin()) ? AuthPage(nextPage: MainPage()) : MainPage());
     });
   }

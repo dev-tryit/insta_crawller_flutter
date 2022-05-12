@@ -42,7 +42,7 @@ class _NavigationPageState extends KDHState<NavigationPage> {
           context,
           InstaAccountSettingPage(),
           pageTransitionBuilder: (nextPage) => PageTransition(
-            type: PageTransitionType.bottomToTop,
+            type: PageTransitionType.fade,
             duration: const Duration(milliseconds: 130),
             reverseDuration: const Duration(milliseconds: 130),
             child: nextPage,

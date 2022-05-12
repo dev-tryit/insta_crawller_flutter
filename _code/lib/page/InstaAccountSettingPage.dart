@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:insta_crawller_flutter/_common/util/MediaQueryUtil.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
@@ -31,9 +32,8 @@ class InstaAccountSettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isKeyboardUp = MediaQuery.of(context).viewInsets.bottom>0;
-
     return MyComponents.scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text("Set My Insta Account", style: MyFonts.coiny()),
         backgroundColor: MyTheme.subColor,
@@ -59,18 +59,23 @@ class InstaAccountSettingPage extends StatelessWidget {
           ],
         ),
       ),
-      bottomSheet: Container(
-        width: double.infinity,
-        height: 50,
-        margin: EdgeInsets.only(bottom: isKeyboardUp?45:0), //TODO: 음... 어떻게 키보드 위에 위젯을 위치시키는지 방법 찾아야함.
-        child: ElevatedButton(
-          child: const Text("저장"),
-          style: ElevatedButton.styleFrom(
-            shape: const RoundedRectangleBorder(),
-            primary: MyTheme.mainColor,
-            onPrimary: MyTheme.subColor,
+      bottomSheet: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+              bottom: MediaQueryUtil.getKeyboardHeight(context)),
+          child: SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              child: const Text("저장"),
+              style: ElevatedButton.styleFrom(
+                shape: const RoundedRectangleBorder(),
+                primary: MyTheme.mainColor,
+                onPrimary: MyTheme.subColor,
+              ),
+              onPressed: () {},
+            ),
           ),
-          onPressed: () {},
         ),
       ),
     );

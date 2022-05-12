@@ -73,21 +73,21 @@ class MyApp extends StatelessWidget {
         // ),
       ),
       builder: (context, child) {
-        // 1. FittedBox는 부모와 크기가 같게 만드는 성질이 있다.
-        // 2. FittedBox + SizedBox를 사용하면,
-        // Sizedbox를 통해 비율이 결정되고,
-        // FittedBox를 통해 크기를 부모에 맞추려고 하여, 축적(확대,축소)가 변경된다.
-        child = FittedBox(
-          alignment: Alignment.center,
-          child: Container(
-            width: width,
-            height: height,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 1),
-            ),
-            child: child!,
-          ),
-        );
+        // // 1. FittedBox는 부모와 크기가 같게 만드는 성질이 있다.
+        // // 2. FittedBox + SizedBox를 사용하면,
+        // // Sizedbox를 통해 비율이 결정되고,
+        // // FittedBox를 통해 크기를 부모에 맞추려고 하여, 축적(확대,축소)가 변경된다.
+        // child = FittedBox(
+        //   alignment: Alignment.center,
+        //   child: Container(
+        //     width: width,
+        //     height: height,
+        //     decoration: BoxDecoration(
+        //       border: Border.all(color: Colors.black, width: 1),
+        //     ),
+        //     child: child!,
+        //   ),
+        // );
         child = DialogUtil.easyLoadingBuilder()(context, child);
         return child;
       },

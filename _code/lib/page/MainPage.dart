@@ -84,19 +84,34 @@ class _MainPageState extends KDHState<MainPage> {
   }
 
   Widget scrollView() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.only(top:34),
-        child: Column(
-          children: postUrlList.map((postUrl) => instaCardGroup(postUrl)).toList(),
-        ),
-      ),
-    );
+    return postUrlList.isNotEmpty
+        ? SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 34),
+              child: Column(
+                children: postUrlList
+                    .map((postUrl) => instaCardGroup(postUrl))
+                    .toList(),
+              ),
+            ),
+          )
+        : Center(
+            child: Text(
+              "There are no Posts collected",
+              style: MyFonts.coiny(
+                color: MyTheme.subColor,
+                fontWeight: FontWeight.w100,
+              ),
+            ),
+          );
   }
 
   Widget instaCardGroup(PostUrl postUrl) {
     List mediaUrlList = (postUrl.mediaUrlList ?? []);
-    String emojiChar = Emoji.byGroup(EmojiGroup.smileysEmotion).toList().getRandomElement().char;
+    String emojiChar = Emoji.byGroup(EmojiGroup.smileysEmotion)
+        .toList()
+        .getRandomElement()
+        .char;
     print("instaCardGroup mediaUrlList:$mediaUrlList");
 
     return Column(
@@ -109,7 +124,7 @@ class _MainPageState extends KDHState<MainPage> {
                 children: [
                   Text(emojiChar),
                   SizedBox(width: 5),
-                  Text(postUrl.instaUserId??""),
+                  Text(postUrl.instaUserId ?? ""),
                   SizedBox(width: 5),
                   InkWell(
                     child: Image(
@@ -118,7 +133,7 @@ class _MainPageState extends KDHState<MainPage> {
                       image: MyImage.downloadsIcon,
                       fit: BoxFit.fill,
                     ),
-                    onTap: (){
+                    onTap: () {
                       print("downloadsIcon click");
                     },
                   )

@@ -4,6 +4,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/MySetting.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
+import 'package:insta_crawller_flutter/_common/util/DialogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/widget/EasyFade.dart';
 import 'package:insta_crawller_flutter/state/auth/AuthState.dart';
@@ -202,14 +203,18 @@ class AuthPageService {
         "sendEmailVerification authStateManager.authState:${authStateManager.authState.runtimeType}");
 
     String email = state.emailController.text.trim();
+    if(!EmailValidator.validate(email)) {
+      DialogUtil.toastError(context, "이메일 형식이 잘못되었습니다.");
+      return;
+    }
 
-    await MyComponents.showLoadingDialog(context);
+    await DialogUtil.showLoadingDialog(context);
     if (authStateManager.authState is AuthStateSendEmail) {
       await authStateManager.handle({'email': email, 'context': context});
     } else if (authStateManager.authState is AuthStateNeedVerification) {
       await authStateManager.handle({'email': email, 'context': context});
     }
-    await MyComponents.dismissLoadingDialog();
+    await DialogUtil.dismissLoadingDialog();
     rebuild();
   }
 
@@ -239,7 +244,7 @@ class AuthPageService {
         'context': context,
       });
     } else {
-      MyComponents.toastError(
+      DialogUtil.toastError(
         context,
         "loginOrRegister에 에러가 있습니다. 회원가입, 로그인 상태가 아닙니다.",
       );

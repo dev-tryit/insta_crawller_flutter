@@ -6,12 +6,12 @@ import 'package:insta_crawller_flutter/MySetting.dart';
 import 'package:insta_crawller_flutter/_common/config/MyCustomScrollBehavior.dart';
 import 'package:insta_crawller_flutter/_common/util/AuthUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/DesktopUtil.dart';
+import 'package:insta_crawller_flutter/_common/util/DialogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/ErrorUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PlatformUtil.dart';
 import 'package:insta_crawller_flutter/page/SplashPage.dart';
 import 'package:insta_crawller_flutter/service/CrawllerService.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
-import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyStoreUtil.dart';
 import 'package:provider/provider.dart';
@@ -88,7 +88,7 @@ class MyApp extends StatelessWidget {
             child: child!,
           ),
         );
-        child = MyComponents.easyLoadingBuilder()(context, child);
+        child = DialogUtil.easyLoadingBuilder()(context, child);
         return child;
       },
       home: LoadPage(),

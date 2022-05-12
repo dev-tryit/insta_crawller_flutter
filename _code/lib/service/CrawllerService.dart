@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/interface/Type.dart';
+import 'package:insta_crawller_flutter/_common/util/DialogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PuppeteerUtil.dart';
 import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
-import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:provider/provider.dart';
 
 class CrawllerService extends ChangeNotifier {
@@ -57,9 +57,9 @@ class CrawllerService extends ChangeNotifier {
   Future<void> saveInstaUser(String id, String pw) async {
     try {
       await InstaUserRepository.me.save(instaUser: InstaUser(id: id, pw: pw));
-      MyComponents.snackBar(context, "저장 성공하였습니다.");
+      DialogUtil.snackBar(context, "저장 성공하였습니다.");
     } catch (e) {
-      MyComponents.snackBar(context, "저장 실패하였습니다.");
+      DialogUtil.snackBar(context, "저장 실패하였습니다.");
     }
   }
   void goPostListViewPage() async {

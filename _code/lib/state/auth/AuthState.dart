@@ -32,7 +32,7 @@ class AuthStateSendEmail<STATE> extends AuthState<STATE> {
   Future<AuthState<STATE>> handle(Map<String, dynamic> data) async {
     BuildContext context = data['context'];
 
-    DialogUtil.showLoadingDialog(context);
+    DialogUtil.showLoadingDialog();
     NeededAuthBehavior neededAuthBehavior =
         await AuthUtil.me.sendEmailVerification(email: data['email']);
     LogUtil.info(
@@ -56,7 +56,7 @@ class AuthStateNeedVerification<STATE> extends AuthState<STATE> {
   Future<AuthState<STATE>> handle(Map<String, dynamic> data) async {
     BuildContext context = data['context'];
 
-    DialogUtil.showLoadingDialog(context);
+    DialogUtil.showLoadingDialog();
     await AuthUtil.me.loginWithEmailDefaultPassword(data['email']);
     if (await AuthUtil.me.emailIsVerified()) {
       await AuthUtil.me.delete();
@@ -101,7 +101,7 @@ class AuthStateRegistration<STATE> extends AuthState<STATE> {
       return this;
     }
 
-    DialogUtil.showLoadingDialog(context);
+    DialogUtil.showLoadingDialog();
     //다른 안내는 파이어베이스에서 해준다.
     try {
       await AuthUtil.me.registerWithEmail(email, password);
@@ -138,7 +138,7 @@ class AuthStateLogin<STATE> extends AuthState<STATE> {
       return this;
     }
 
-    DialogUtil.showLoadingDialog(context);
+    DialogUtil.showLoadingDialog();
     //다른 안내는 파이어베이스에서 해준다.
     try {
       await AuthUtil.me.loginWithEmail(email, password);

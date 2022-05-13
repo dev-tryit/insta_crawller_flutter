@@ -207,18 +207,18 @@ class AuthPageService {
         "sendEmailVerification authStateManager.authState:${authStateManager.authState.runtimeType}");
 
     String email = state.emailController.text.trim();
-    if(!EmailValidator.validate(email)) {
+    if (!EmailValidator.validate(email)) {
       DialogUtil.toastError(context, "이메일 형식이 잘못되었습니다.");
       return;
     }
 
-    await DialogUtil.showLoadingDialog(context);
+    DialogUtil.showLoadingDialog();
     if (authStateManager.authState is AuthStateSendEmail) {
       await authStateManager.handle({'email': email, 'context': context});
     } else if (authStateManager.authState is AuthStateNeedVerification) {
       await authStateManager.handle({'email': email, 'context': context});
     }
-    await DialogUtil.dismissLoadingDialog();
+    DialogUtil.dismissLoadingDialog();
     rebuild();
   }
 

@@ -1,69 +1,27 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class DialogUtil {
-  static TransitionBuilder easyLoadingBuilder() {
-    return EasyLoading.init();
+  static TransitionBuilder botToastBuilder() {
+    return BotToastInit();
   }
 
   static void toastInfo(BuildContext context, String text,
       {int durationMilliseocnds = 1500}) {
-    EasyLoading.instance
-      ..displayDuration = Duration(milliseconds: durationMilliseocnds)
-      ..loadingStyle = EasyLoadingStyle.custom
-      ..progressColor = Colors.white
-      ..indicatorColor = Colors.white
-      ..backgroundColor = Colors.blue
-      ..textColor = Colors.white
-      ..toastPosition = EasyLoadingToastPosition.center
-      ..fontSize = 16
-      ..radius = 25
-      ..boxShadow = [
-        const BoxShadow(color: Colors.transparent, spreadRadius: 1)
-      ] //테두리 색
-      ..dismissOnTap = false
-      ..userInteractions = true;
-
-    EasyLoading.showToast(text);
+    BotToast.showText(text: text);
   }
 
   static void toastError(BuildContext context, String? text,
       {int durationMilliseocnds = 1500}) {
-    EasyLoading.instance
-      ..displayDuration = Duration(milliseconds: durationMilliseocnds)
-      ..loadingStyle = EasyLoadingStyle.custom
-      ..progressColor = Colors.white
-      ..indicatorColor = Colors.white
-      ..backgroundColor = Colors.red
-      ..textColor = Colors.white
-      ..toastPosition = EasyLoadingToastPosition.center
-      ..fontSize = 16
-      ..radius = 25
-      ..boxShadow = [
-        const BoxShadow(color: Colors.transparent, spreadRadius: 1)
-      ] //테두리 색
-      ..dismissOnTap = false
-      ..userInteractions = true;
-
-    EasyLoading.showToast(text ?? "에러가 발생하였습니다");
+    BotToast.showText(text: text ?? "에러가 발생하였습니다");
   }
 
-  static Future<void> showLoadingDialog(BuildContext context) async {
-    EasyLoading.instance
-      // ..displayDuration = const Duration(milliseconds: 2000)
-      ..radius = 8
-      ..loadingStyle = EasyLoadingStyle.dark
-      ..dismissOnTap = false
-      ..userInteractions = false;
-
-    await EasyLoading.show(
-      status: "조금만 기다려주세요",
-      maskType: EasyLoadingMaskType.black,
-    );
+  static CancelFunc showLoadingDialog() {
+    return BotToast.showLoading();
   }
 
-  static Future<void> dismissLoadingDialog() async {
-    return await EasyLoading.dismiss();
+  static void dismissLoadingDialog() {
+    BotToast.closeAllLoading();
   }
 
   static void snackBar(BuildContext context, String text) {

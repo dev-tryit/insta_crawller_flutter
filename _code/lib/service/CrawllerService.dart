@@ -5,7 +5,9 @@ import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PuppeteerUtil.dart';
 import 'package:insta_crawller_flutter/page/InstaAccountSettingPage.dart';
+import 'package:insta_crawller_flutter/page/NavigationPage.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class CrawllerService extends ChangeNotifier {
@@ -19,8 +21,7 @@ class CrawllerService extends ChangeNotifier {
         this.timeout = Duration(seconds: 20);
 
   static ChangeNotifierProvider get provider =>
-      ChangeNotifierProvider<CrawllerService>(
-          create: (_) => CrawllerService());
+      ChangeNotifierProvider<CrawllerService>(create: (_) => CrawllerService());
 
   static Widget consumer(
           {required ConsumerBuilderType<CrawllerService> builder}) =>
@@ -29,7 +30,7 @@ class CrawllerService extends ChangeNotifier {
   static CrawllerService read(BuildContext context) =>
       context.read<CrawllerService>();
 
-  void saveHumorPost() async {
+  void saveHumorPost(NavigationPageComponent c) async {
     // await p.startBrowser(headless: false, width: 1280, height: 1024);
     //
     // await login(idController.text, pwController.text);
@@ -64,7 +65,9 @@ class CrawllerService extends ChangeNotifier {
 
   Future<void> saveInstaUser(InstaAccountSettingPageComponent c) async {
     try {
-      await InstaUserRepository.me.save(instaUser: InstaUser(id: c.idController.text, pw: c.pwController.text));
+      await InstaUserRepository.me.save(
+          instaUser:
+              InstaUser(id: c.idController.text, pw: c.pwController.text));
       InteractionUtil.success(c.context, "저장 성공하였습니다.");
       PageUtil.back(c.context);
     } catch (e) {
@@ -162,6 +165,7 @@ class CrawllerService extends ChangeNotifier {
       ),
     );
   }
+
 //
 // Future<void> _deleteRequest(ElementHandle tag) async {
 //   await p.click('.quote-btn.del', tag: tag);
@@ -320,4 +324,19 @@ class CrawllerService extends ChangeNotifier {
 //     await delete();
 //   }
 // }
+
+  void goInstaAccountSettingPage(NavigationPageComponent c) async {
+    var context = c.context;
+    await PageUtil.back(context);
+    await PageUtil.go(
+      context,
+      InstaAccountSettingPage(),
+      pageTransitionBuilder: (nextPage) => PageTransition(
+        type: PageTransitionType.fade,
+        duration: const Duration(milliseconds: 130),
+        reverseDuration: const Duration(milliseconds: 130),
+        child: nextPage,
+      ),
+    );
+  }
 }

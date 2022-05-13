@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:insta_crawller_flutter/_common/abstract/KDHComponent.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
-import 'package:insta_crawller_flutter/page/InstaAccountSettingPage.dart';
 import 'package:insta_crawller_flutter/service/CrawllerService.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
-import 'package:page_transition/page_transition.dart';
 
 class ButtonState {
   String label;
@@ -25,30 +24,23 @@ class NavigationPage extends StatefulWidget {
   State<NavigationPage> createState() => _NavigationPageState();
 }
 
+class NavigationPageComponent extends KDHComponent<_NavigationPageState> {
+  NavigationPageComponent(_NavigationPageState state) : super(state);
+}
+
+
 class _NavigationPageState extends KDHState<NavigationPage> {
+  late final NavigationPageComponent c;
   late CrawllerService s;
-  late List<ButtonState> buttonStateList;
 
   @override
   Future<void> mustRebuild() async {
+    c = NavigationPageComponent(this);
     s = CrawllerService.read(context);
+
     List<ButtonState> buttonStateList = [
-      ButtonState("Collect Posts", () async {
-        // await s.saveHumorPost();
-      }),
-      ButtonState("Set My Insta Account", () async {
-        await PageUtil.back(context);
-        await PageUtil.go(
-          context,
-          InstaAccountSettingPage(),
-          pageTransitionBuilder: (nextPage) => PageTransition(
-            type: PageTransitionType.fade,
-            duration: const Duration(milliseconds: 130),
-            reverseDuration: const Duration(milliseconds: 130),
-            child: nextPage,
-          ),
-        );
-      }),
+      ButtonState("Collect Posts", ()=>s.saveHumorPost(c)),
+      ButtonState("Set My Insta Account", ()=>s.goInstaAccountSettingPage(c)),
       ButtonState("Set Target Insta Account", () async {
         await PageUtil.back(context);
       }),
@@ -119,4 +111,5 @@ class _NavigationPageState extends KDHState<NavigationPage> {
       onTap: () => PageUtil.back(context),
     );
   }
+
 }

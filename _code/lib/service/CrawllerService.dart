@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/interface/Type.dart';
-import 'package:insta_crawller_flutter/_common/util/DialogUtil.dart';
+import 'package:insta_crawller_flutter/_common/util/InteractionUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PuppeteerUtil.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:insta_crawller_flutter/_common/abstract/KDHComponent.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/util/MediaQueryUtil.dart';
 import 'package:insta_crawller_flutter/service/CrawllerService.dart';
@@ -13,13 +14,15 @@ class InstaAccountSettingPage extends StatefulWidget {
   const InstaAccountSettingPage({Key? key}) : super(key: key);
 
   @override
-  State<InstaAccountSettingPage> createState() => _InstaAccountSettingPageState();
+  State<InstaAccountSettingPage> createState() =>
+      _InstaAccountSettingPageState();
 }
 
-class InstaAccountSettingPageComponent {
-  final _InstaAccountSettingPageState state;
-  InstaAccountSettingPageComponent(this.state);
-  BuildContext get context => state.context;
+class InstaAccountSettingPageComponent
+    extends KDHComponent<_InstaAccountSettingPageState> {
+  InstaAccountSettingPageComponent(_InstaAccountSettingPageState state)
+      : super(state);
+
   final TextStyle textStyle = const TextStyle(color: MyTheme.mainColor);
   final InputDecoration inputBoxDecoration = const InputDecoration(
     border: OutlineInputBorder(
@@ -90,8 +93,7 @@ class _InstaAccountSettingPageState extends KDHState<InstaAccountSettingPage> {
             ),
             bottomSheet: SafeArea(
               child: Padding(
-                padding: EdgeInsets.only(
-                    bottom: height),
+                padding: EdgeInsets.only(bottom: height),
                 child: SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -102,7 +104,7 @@ class _InstaAccountSettingPageState extends KDHState<InstaAccountSettingPage> {
                       primary: MyTheme.mainColor,
                       onPrimary: MyTheme.subColor,
                     ),
-                    onPressed: ()=>s.saveInstaUser(c),
+                    onPressed: () => s.saveInstaUser(c),
                   ),
                 ),
               ),

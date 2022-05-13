@@ -7,6 +7,7 @@ import 'package:insta_crawller_flutter/_common/util/PuppeteerUtil.dart';
 import 'package:insta_crawller_flutter/page/InstaAccountSettingPage.dart';
 import 'package:insta_crawller_flutter/page/NavigationPage.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
+import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
@@ -30,32 +31,39 @@ class CrawllerService extends ChangeNotifier {
   static CrawllerService read(BuildContext context) =>
       context.read<CrawllerService>();
 
+  Future<InstaUser?> _getInstaUser() async {
+    return await InstaUserRepository.me.getOne();
+  }
+
   void saveHumorPost(NavigationPageComponent c) async {
-    // await p.startBrowser(headless: false, width: 1280, height: 1024);
-    //
-    // await login(idController.text, pwController.text);
-    // await turnOffAlarmDialog;
-    //
-    //
-    // String instaUserId = "inssa_unni_";
-    // List<String> postUrlList = await getPostUrlList(instaUserId);
-    //
-    // for (String postUrl in postUrlList) {
-    //   if (await PostUrlRepository.me.getOneByUrl(postUrl) != null) continue;
-    //
-    //   List<String> mediaStrList =
-    //   await getMediaStrListOf(postUrl: postUrl);
-    //   var postUrlObj = PostUrl(
-    //       instaUserId: instaUserId, url: postUrl, mediaUrlList: mediaStrList);
-    //   await PostUrlRepository.me.save(postUrl: postUrlObj);
-    // }
-    //
-    //
-    // await p.stopBrowser();
+    await p.startBrowser(headless: false, width: 1280, height: 1024);
+
+    InstaUser? instaUser = await _getInstaUser();
+    if (instaUser == null) {
+      InteractionUtil.error(c.context, "Need to set my insta account");
+      return;
+    }
+
+    await _login(instaUser);
+    await _turnOffAlarmDialog();
+
+    var id = instaUser.id ?? "";
+    List<String> postUrlList = await getPostUrlList(id);
+
+    for (String postUrl in postUrlList) {
+      if (await PostUrlRepository.me.getOneByUrl(postUrl) != null) continue;
+
+      List<String> mediaStrList = await getMediaStrListOf(postUrl: postUrl);
+      var postUrlObj =
+          PostUrl(instaUserId: id, url: postUrl, mediaUrlList: mediaStrList);
+      await PostUrlRepository.me.save(postUrl: postUrlObj);
+    }
+
+    await p.stopBrowser();
   }
 
   Future<void> setInstaUser(InstaAccountSettingPageComponent c) async {
-    InstaUser? instaUser = await InstaUserRepository.me.getOne();
+    InstaUser? instaUser = await getInstaUser();
     if (instaUser != null) {
       c.idController.text = instaUser.id ?? "";
       c.pwController.text = instaUser.pw ?? "";
@@ -86,7 +94,10 @@ class CrawllerService extends ChangeNotifier {
     await saveInfoAboutPost();
    */
 
-  Future<void> login(String? id, String? pw) async {
+  Future<void> _login(InstaUser instaUser) async {
+    var id = instaUser.id;
+    var pw = instaUser.pw;
+
     const String loginPageUrl = "https://www.instagram.com/accounts/login/";
     for (int i = 0; i < 5; i++) {
       await p.goto(loginPageUrl);
@@ -117,7 +128,7 @@ class CrawllerService extends ChangeNotifier {
     //Post 내용 저장.
   }
 
-  Future<void> turnOffAlarmDialog() async {
+  Future<void> _turnOffAlarmDialog() async {
     bool existAlarmDialog = await p.existTag(
         'img[src="/static/images/ico/xxhdpi_launcher.png/99cf3909d459.png"]');
     LogUtil.debug("turnOffAlarmDialog existAlarmDialog : $existAlarmDialog");

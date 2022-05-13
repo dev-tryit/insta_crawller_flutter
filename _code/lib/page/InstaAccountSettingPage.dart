@@ -17,6 +17,9 @@ class InstaAccountSettingPage extends StatefulWidget {
 }
 
 class InstaAccountSettingPageComponent {
+  final _InstaAccountSettingPageState state;
+  InstaAccountSettingPageComponent(this.state);
+  BuildContext get context => state.context;
   final TextStyle textStyle = const TextStyle(color: MyTheme.mainColor);
   final InputDecoration inputBoxDecoration = const InputDecoration(
     border: OutlineInputBorder(
@@ -42,12 +45,13 @@ class InstaAccountSettingPageComponent {
 }
 
 class _InstaAccountSettingPageState extends KDHState<InstaAccountSettingPage> {
-  late final CrawllerService service;
-  final c = InstaAccountSettingPageComponent();
+  late final CrawllerService s;
+  late final InstaAccountSettingPageComponent c;
 
   @override
   Future<void> mustRebuild() async {
-    service = CrawllerService.read(context);
+    c = InstaAccountSettingPageComponent(this);
+    s = CrawllerService.read(context);
 
     toBuild = () {
       return CrawllerService.consumer(
@@ -98,7 +102,7 @@ class _InstaAccountSettingPageState extends KDHState<InstaAccountSettingPage> {
                       primary: MyTheme.mainColor,
                       onPrimary: MyTheme.subColor,
                     ),
-                    onPressed: ()=>service.saveInstaUser(c),
+                    onPressed: ()=>s.saveInstaUser(c),
                   ),
                 ),
               ),
@@ -108,7 +112,7 @@ class _InstaAccountSettingPageState extends KDHState<InstaAccountSettingPage> {
       );
     };
     rebuild(afterBuild: () async {
-      service.setInstaUser(c);
+      s.setInstaUser(c);
     });
   }
 }

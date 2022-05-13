@@ -5,7 +5,6 @@ import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PuppeteerUtil.dart';
 import 'package:insta_crawller_flutter/page/InstaAccountSettingPage.dart';
-import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
 import 'package:provider/provider.dart';
 
@@ -14,16 +13,14 @@ class CrawllerService extends ChangeNotifier {
   final Duration delay;
   final Duration timeout;
 
-  BuildContext context;
-
-  CrawllerService(this.context)
+  CrawllerService()
       : this.p = PuppeteerUtil(),
         this.delay = const Duration(milliseconds: 25),
         this.timeout = Duration(seconds: 20);
 
   static ChangeNotifierProvider get provider =>
       ChangeNotifierProvider<CrawllerService>(
-          create: (context) => CrawllerService(context));
+          create: (_) => CrawllerService());
 
   static Widget consumer(
           {required ConsumerBuilderType<CrawllerService> builder}) =>
@@ -68,14 +65,15 @@ class CrawllerService extends ChangeNotifier {
   Future<void> saveInstaUser(InstaAccountSettingPageComponent c) async {
     try {
       await InstaUserRepository.me.save(instaUser: InstaUser(id: c.idController.text, pw: c.pwController.text));
-      DialogUtil.snackBar(context, "저장 성공하였습니다.");
+      DialogUtil.toastInfo(c.context, "저장 성공하였습니다.");
+      PageUtil.back(c.context);
     } catch (e) {
-      DialogUtil.snackBar(context, "저장 실패하였습니다.");
+      DialogUtil.toastError(c.context, "저장 실패하였습니다.");
     }
   }
 
   void goPostListViewPage() async {
-    PageUtil.go(context, PostListViewPage());
+    // PageUtil.go(context, PostListViewPage());
   }
 
   /*

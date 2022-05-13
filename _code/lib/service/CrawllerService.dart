@@ -63,7 +63,7 @@ class CrawllerService extends ChangeNotifier {
   }
 
   Future<void> setInstaUser(InstaAccountSettingPageComponent c) async {
-    InstaUser? instaUser = await getInstaUser();
+    InstaUser? instaUser = await _getInstaUser();
     if (instaUser != null) {
       c.idController.text = instaUser.id ?? "";
       c.pwController.text = instaUser.pw ?? "";

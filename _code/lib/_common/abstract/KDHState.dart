@@ -4,8 +4,14 @@ import 'package:insta_crawller_flutter/util/MyComponents.dart';
 
 abstract class KDHState<TargetWidget extends StatefulWidget>
     extends State<TargetWidget> {
-  //호출순서 : mustRebuild->rebuild(Function? afterBuild);
+  bool _loaded = false;
 
+  void finishLoad({Future<void> Function()? afterBuild}) {
+    _loaded = true;
+    rebuild(afterBuild: afterBuild);
+  }
+
+  //호출순서 : mustRebuild->rebuild(Function? afterBuild);
 
   @override
   void initState() {
@@ -18,14 +24,14 @@ abstract class KDHState<TargetWidget extends StatefulWidget>
         _getSizeOfWidgetList();
       }
 
-      await mustRebuild();
+      await mustFinishLoad();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     bool existToBuild = toBuild != null;
-    if (existToBuild) {
+    if (_loaded && existToBuild) {
       return toBuild!();
     }
 
@@ -52,6 +58,7 @@ abstract class KDHState<TargetWidget extends StatefulWidget>
   */
   List<WidgetToGetSize> widgetsToBuild() => [];
   Map<dynamic, WidgetToGetSize> buildedWidgets = {};
+
   void _getSizeOfWidgetList() {
     buildedWidgets.clear();
     for (var e in widgetsToBuild()) {
@@ -64,7 +71,9 @@ abstract class KDHState<TargetWidget extends StatefulWidget>
   //mustRebuild에서 toBuild를 채우고 반드시 rebuild해야 한다.
   //rebuild 할 때 afterBuild를 지정하면, 후 작업을 지정할 수 있다.
   Widget Function()? toBuild;
-  Future<void> mustRebuild();
+
+  Future<void> mustFinishLoad();
+
   void rebuild({Future<void> Function()? afterBuild}) {
     if (afterBuild != null) {
       //build 때, afterBuild 불리도록 요청.
@@ -80,6 +89,7 @@ abstract class KDHState<TargetWidget extends StatefulWidget>
 
   //3. 로딩위젯
   Widget loadingWidget() {
-    return MyComponents.scaffold(body: Center(child: MyComponents.loadingWidget()));
+    return MyComponents.scaffold(
+        body: Center(child: MyComponents.loadingWidget()));
   }
 }

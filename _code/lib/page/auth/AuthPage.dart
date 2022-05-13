@@ -53,7 +53,7 @@ class _AuthPageState extends KDHState<AuthPage> {
   );
 
   @override
-  Future<void> mustRebuild() async {
+  Future<void> mustFinishLoad() async {
     s = AuthPageService(this);
     toBuild = () {
       final authState = s.authStateManager.authState;
@@ -120,7 +120,7 @@ class _AuthPageState extends KDHState<AuthPage> {
         ),
       );
     };
-    rebuild();
+    finishLoad();
   }
 
   void setUIByAuthState(AuthState authState) {

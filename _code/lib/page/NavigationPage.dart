@@ -34,7 +34,7 @@ class _NavigationPageState extends KDHState<NavigationPage> {
   late CrawllerService s;
 
   @override
-  Future<void> mustRebuild() async {
+  Future<void> mustFinishLoad() async {
     c = NavigationPageComponent(this);
     s = CrawllerService.read(context);
 
@@ -97,7 +97,7 @@ class _NavigationPageState extends KDHState<NavigationPage> {
                 )),
           ),
         );
-    rebuild();
+    finishLoad();
   }
 
   Widget closeButton() {

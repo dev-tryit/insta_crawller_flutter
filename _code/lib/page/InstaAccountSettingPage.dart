@@ -52,7 +52,7 @@ class _InstaAccountSettingPageState extends KDHState<InstaAccountSettingPage> {
   late final InstaAccountSettingPageComponent c;
 
   @override
-  Future<void> mustRebuild() async {
+  Future<void> mustFinishLoad() async {
     c = InstaAccountSettingPageComponent(this);
     s = CrawllerService.read(context);
 
@@ -113,8 +113,7 @@ class _InstaAccountSettingPageState extends KDHState<InstaAccountSettingPage> {
         },
       );
     };
-    rebuild(afterBuild: () async {
-      s.setInstaUser(c);
-    });
+    await s.setInstaUser(c);
+    finishLoad();
   }
 }

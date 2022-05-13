@@ -8,22 +8,22 @@ import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
 
-class LoadPage extends StatefulWidget {
+class SplashPage extends StatefulWidget {
   static const String staticClassName = "SplashPage";
   final String className = staticClassName;
 
-  const LoadPage({Key? key}) : super(key: key);
+  const SplashPage({Key? key}) : super(key: key);
 
   @override
-  _LoadPageState createState() => _LoadPageState();
+  _SplashPageState createState() => _SplashPageState();
 }
 
-class _LoadPageState extends KDHState<LoadPage> {
+class _SplashPageState extends KDHState<SplashPage> {
   @override
-  Future<void> mustRebuild() async {
+  Future<void> mustFinishLoad() async {
     toBuild = () => loadingWidget();
 
-    rebuild(afterBuild: () async {
+    finishLoad(afterBuild: () async {
       await Future.delayed(const Duration(seconds: 1));
       PageUtil.goReplacement(
           context, !(await AuthUtil.me.isLogin()) ? AuthPage(nextPage: MainPage()) : MainPage());
@@ -34,7 +34,6 @@ class _LoadPageState extends KDHState<LoadPage> {
   Widget loadingWidget() {
     return MyComponents.scaffold(
         body: Container(
-      width: 350,
       color: MyTheme.mainColor,
       alignment: Alignment.center,
       child: Text(

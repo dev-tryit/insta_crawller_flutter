@@ -93,7 +93,7 @@ class MyApp extends StatelessWidget {
         return child;
       },
       navigatorObservers: [BotToastNavigatorObserver()],
-      home: LoadPage(),
+      home: SplashPage(),
     );
   }
 }

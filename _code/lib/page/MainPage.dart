@@ -26,7 +26,7 @@ class _MainPageState extends KDHState<MainPage> {
   List<PostUrl> postUrlList = [];
 
   @override
-  Future<void> mustRebuild() async {
+  Future<void> mustFinishLoad() async {
     postUrlList = await PostUrlService.read(context).getPostUrlList();
 
     toBuild = () {
@@ -43,7 +43,7 @@ class _MainPageState extends KDHState<MainPage> {
         ),
       );
     };
-    rebuild();
+    finishLoad();
   }
 
   Widget appBar() {

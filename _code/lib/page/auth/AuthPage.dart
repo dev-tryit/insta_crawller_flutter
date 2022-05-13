@@ -6,6 +6,7 @@ import 'package:insta_crawller_flutter/MySetting.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/util/DialogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
+import 'package:insta_crawller_flutter/_common/util/MediaQueryUtil.dart';
 import 'package:insta_crawller_flutter/_common/widget/EasyFade.dart';
 import 'package:insta_crawller_flutter/state/auth/AuthState.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
@@ -58,6 +59,8 @@ class _AuthPageState extends KDHState<AuthPage> {
       final authState = s.authStateManager.authState;
       setUIByAuthState(authState);
 
+      var height = MediaQueryUtil.getKeyboardHeight(context);
+
       return MyComponents.scaffold(
         bottomSheet: nextButtonText != null
             ? AnimatedOpacity(
@@ -109,7 +112,8 @@ class _AuthPageState extends KDHState<AuthPage> {
                   onChanged: (value) => _formKey.currentState?.validate(),
                   decoration: inputBoxDecoration,
                 ),
-                ...elementList
+                ...elementList,
+                SizedBox(height: height),
               ],
             ),
           ),

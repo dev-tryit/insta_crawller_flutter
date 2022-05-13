@@ -32,6 +32,8 @@ class InstaAccountSettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQueryUtil.getKeyboardHeight(context);
+
     return MyComponents.scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -56,13 +58,14 @@ class InstaAccountSettingPage extends StatelessWidget {
               obscureText: true,
               decoration: inputBoxDecoration,
             ),
+            SizedBox(height: height),
           ],
         ),
       ),
       bottomSheet: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(
-              bottom: MediaQueryUtil.getKeyboardHeight(context)),
+              bottom: height),
           child: SizedBox(
             width: double.infinity,
             height: 50,

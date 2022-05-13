@@ -65,7 +65,7 @@ abstract class KDHState<TargetWidget extends StatefulWidget>
   //rebuild 할 때 afterBuild를 지정하면, 후 작업을 지정할 수 있다.
   Widget Function()? toBuild;
   Future<void> mustRebuild();
-  void rebuild({Function? afterBuild}) {
+  void rebuild({Future<void> Function()? afterBuild}) {
     if (afterBuild != null) {
       //build 때, afterBuild 불리도록 요청.
       WidgetsBinding.instance?.addPostFrameCallback((_) => afterBuild());

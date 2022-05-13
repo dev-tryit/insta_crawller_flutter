@@ -4,6 +4,7 @@ import 'package:insta_crawller_flutter/_common/util/DialogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PuppeteerUtil.dart';
+import 'package:insta_crawller_flutter/page/InstaAccountSettingPage.dart';
 import 'package:insta_crawller_flutter/page/PostListViewPage.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ class CrawllerService extends ChangeNotifier {
   final Duration timeout;
 
   BuildContext context;
+
   CrawllerService(this.context)
       : this.p = PuppeteerUtil(),
         this.delay = const Duration(milliseconds: 25),
@@ -22,12 +24,15 @@ class CrawllerService extends ChangeNotifier {
   static ChangeNotifierProvider get provider =>
       ChangeNotifierProvider<CrawllerService>(
           create: (context) => CrawllerService(context));
-  static Widget consumer({required ConsumerBuilderType<CrawllerService> builder}) => Consumer<CrawllerService>(builder: builder);
-  static CrawllerService read(BuildContext context) => context.read<CrawllerService>();
 
+  static Widget consumer(
+          {required ConsumerBuilderType<CrawllerService> builder}) =>
+      Consumer<CrawllerService>(builder: builder);
+
+  static CrawllerService read(BuildContext context) =>
+      context.read<CrawllerService>();
 
   void saveHumorPost() async {
-
     // await p.startBrowser(headless: false, width: 1280, height: 1024);
     //
     // await login(idController.text, pwController.text);
@@ -50,18 +55,25 @@ class CrawllerService extends ChangeNotifier {
     //
     // await p.stopBrowser();
   }
-  Future<InstaUser?> getInstaUser() async {
-    return await InstaUserRepository.me.getOne();
+
+  Future<void> setInstaUser(InstaAccountSettingPageComponent c) async {
+    InstaUser? instaUser = await InstaUserRepository.me.getOne();
+    if (instaUser != null) {
+      c.idController.text = instaUser.id ?? "";
+      c.pwController.text = instaUser.pw ?? "";
+    }
+    notifyListeners();
   }
 
-  Future<void> saveInstaUser(String id, String pw) async {
+  Future<void> saveInstaUser(InstaAccountSettingPageComponent c) async {
     try {
-      await InstaUserRepository.me.save(instaUser: InstaUser(id: id, pw: pw));
+      await InstaUserRepository.me.save(instaUser: InstaUser(id: c.idController.text, pw: c.pwController.text));
       DialogUtil.snackBar(context, "저장 성공하였습니다.");
     } catch (e) {
       DialogUtil.snackBar(context, "저장 실패하였습니다.");
     }
   }
+
   void goPostListViewPage() async {
     PageUtil.go(context, PostListViewPage());
   }
@@ -72,7 +84,6 @@ class CrawllerService extends ChangeNotifier {
     await visitAccountAndGetPostLink();
     await saveInfoAboutPost();
    */
-
 
   Future<void> login(String? id, String? pw) async {
     const String loginPageUrl = "https://www.instagram.com/accounts/login/";

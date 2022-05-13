@@ -208,17 +208,17 @@ class AuthPageService {
 
     String email = state.emailController.text.trim();
     if (!EmailValidator.validate(email)) {
-      DialogUtil.toastError(context, "이메일 형식이 잘못되었습니다.");
+      InteractionUtil.error(context, "이메일 형식이 잘못되었습니다.");
       return;
     }
 
-    DialogUtil.showLoadingDialog();
+    InteractionUtil.loading();
     if (authStateManager.authState is AuthStateSendEmail) {
       await authStateManager.handle({'email': email, 'context': context});
     } else if (authStateManager.authState is AuthStateNeedVerification) {
       await authStateManager.handle({'email': email, 'context': context});
     }
-    DialogUtil.dismissLoadingDialog();
+    InteractionUtil.closeLoading();
     rebuild();
   }
 
@@ -248,7 +248,7 @@ class AuthPageService {
         'context': context,
       });
     } else {
-      DialogUtil.toastError(
+      InteractionUtil.error(
         context,
         "loginOrRegister에 에러가 있습니다. 회원가입, 로그인 상태가 아닙니다.",
       );

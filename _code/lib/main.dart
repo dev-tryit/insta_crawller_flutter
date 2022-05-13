@@ -89,7 +89,7 @@ class MyApp extends StatelessWidget {
         //     child: child!,
         //   ),
         // );
-        child = DialogUtil.botToastBuilder()(context, child);
+        child = InteractionUtil.builder()(context, child);
         return child;
       },
       navigatorObservers: [BotToastNavigatorObserver()],

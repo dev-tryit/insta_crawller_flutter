@@ -1,26 +1,26 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 
-class DialogUtil {
-  static TransitionBuilder botToastBuilder() {
+class InteractionUtil {
+  static TransitionBuilder builder() {
     return BotToastInit();
   }
 
-  static void toastInfo(BuildContext context, String text,
+  static void success(BuildContext context, String text,
       {int durationMilliseocnds = 1500}) {
     BotToast.showText(text: text);
   }
 
-  static void toastError(BuildContext context, String? text,
+  static void error(BuildContext context, String? text,
       {int durationMilliseocnds = 1500}) {
     BotToast.showText(text: text ?? "에러가 발생하였습니다");
   }
 
-  static CancelFunc showLoadingDialog() {
+  static CancelFunc loading() {
     return BotToast.showLoading();
   }
 
-  static void dismissLoadingDialog() {
+  static void closeLoading() {
     BotToast.closeAllLoading();
   }
 

@@ -65,10 +65,10 @@ class CrawllerService extends ChangeNotifier {
   Future<void> saveInstaUser(InstaAccountSettingPageComponent c) async {
     try {
       await InstaUserRepository.me.save(instaUser: InstaUser(id: c.idController.text, pw: c.pwController.text));
-      DialogUtil.toastInfo(c.context, "저장 성공하였습니다.");
+      InteractionUtil.success(c.context, "저장 성공하였습니다.");
       PageUtil.back(c.context);
     } catch (e) {
-      DialogUtil.toastError(c.context, "저장 실패하였습니다.");
+      InteractionUtil.error(c.context, "저장 실패하였습니다.");
     }
   }
 

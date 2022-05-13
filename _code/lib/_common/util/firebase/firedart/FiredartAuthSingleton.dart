@@ -4,12 +4,12 @@ import 'package:firedart/auth/exceptions.dart';
 import 'package:firedart/auth/user_gateway.dart';
 import 'package:firedart/firedart.dart';
 import 'package:hive/hive.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:insta_crawller_flutter/MySetting.dart';
 import 'package:insta_crawller_flutter/_common/model/exception/CommonException.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/firebase/FirebaseAuthUtilInterface.dart';
 import 'package:insta_crawller_flutter/firebase_options.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FiredartAuthSingleton extends FirebaseAuthUtilInterface {
   static final FiredartAuthSingleton _singleton =
@@ -175,7 +175,7 @@ class PreferencesStore extends TokenStore {
 
 class HiveStore extends TokenStore {
   static Future<HiveStore> create() async {
-    var box = await Hive.openBox("auth_store",
+    var box = await Hive.openBox(MySetting.appName,
         compactionStrategy: (entries, deletedEntries) => deletedEntries > 50);
     return HiveStore._internal(box);
   }

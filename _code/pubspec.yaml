@@ -83,6 +83,7 @@ dependencies:
     emojis: ^0.9.9
     card_swiper: ^2.0.3
     bot_toast: ^4.0.1
+    material_tag_editor: ^0.1.2
 
 #    device_frame: ^1.0.0
 

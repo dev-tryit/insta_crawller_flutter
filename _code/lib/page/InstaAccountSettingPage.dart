@@ -23,7 +23,9 @@ class InstaAccountSettingPageComponent
   InstaAccountSettingPageComponent(_InstaAccountSettingPageState state)
       : super(state);
 
-  final TextStyle textStyle = const TextStyle(color: MyTheme.mainColor);
+  final TextStyle textStyle =
+      const TextStyle(color: MyTheme.mainColor, fontSize: 11);
+  final TextStyle hintStyle = const TextStyle(fontSize: 11);
   final InputDecoration inputBoxDecoration = const InputDecoration(
     border: OutlineInputBorder(
       borderSide: BorderSide(color: MyTheme.mainColor),
@@ -45,6 +47,8 @@ class InstaAccountSettingPageComponent
 
   final TextEditingController idController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
+
+  List<String> accountIdList = [];
 }
 
 class _InstaAccountSettingPageState extends KDHState<InstaAccountSettingPage> {
@@ -64,7 +68,7 @@ class _InstaAccountSettingPageState extends KDHState<InstaAccountSettingPage> {
           return MyComponents.scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              title: Text("Set My Insta Account", style: MyFonts.coiny()),
+              title: Text("Set Insta Account", style: MyFonts.coiny()),
               backgroundColor: MyTheme.subColor,
               foregroundColor: MyTheme.mainColor,
               shadowColor: Colors.transparent,
@@ -75,20 +79,36 @@ class _InstaAccountSettingPageState extends KDHState<InstaAccountSettingPage> {
                   const SizedBox(height: 50),
                   MyComponents.inputBox(
                     label: "Insta ID",
-                    controller: c.idController,
                     textStyle: c.textStyle,
+                    controller: c.idController,
                     decoration: c.inputBoxDecoration,
                   ),
                   const SizedBox(height: 25),
                   MyComponents.inputBox(
                     label: "Insta PW",
-                    controller: c.pwController,
                     textStyle: c.textStyle,
+                    controller: c.pwController,
                     obscureText: true,
                     decoration: c.inputBoxDecoration,
                   ),
                   const SizedBox(height: 25),
-                  
+                  MyComponents.inputTagEditor(
+                      label: "Target Insta Account",
+                      textStyle: c.textStyle,
+                      hintText: "Please Type",
+                      iconColor: MyTheme.mainColor,
+                      valueList: c.accountIdList,
+                      onTagChanged: (newValue) => setState(() {
+                            c.accountIdList.add(newValue);
+                          }),
+                      tagBuilder: (context, index) => InstaAccountChip(
+                            index: index,
+                            label: c.accountIdList[index],
+                            onDeleted: (index) => setState(() {
+                              c.accountIdList.removeAt(index);
+                            }),
+                          ),
+                      hintStyle: c.hintStyle),
                   SizedBox(height: height),
                 ],
               ),
@@ -117,5 +137,33 @@ class _InstaAccountSettingPageState extends KDHState<InstaAccountSettingPage> {
     };
     await s.setInstaUser(c);
     finishLoad();
+  }
+}
+
+class InstaAccountChip extends StatelessWidget {
+  final String label;
+  final ValueChanged<int> onDeleted;
+  final int index;
+
+  const InstaAccountChip({
+    Key? key,
+    required this.label,
+    required this.onDeleted,
+    required this.index,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      labelPadding: const EdgeInsets.only(left: 8.0),
+      label: Text(label),
+      deleteIcon: const Icon(
+        Icons.close,
+        size: 18,
+      ),
+      onDeleted: () {
+        onDeleted(index);
+      },
+    );
   }
 }

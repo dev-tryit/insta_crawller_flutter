@@ -4,6 +4,7 @@ import 'package:insta_crawller_flutter/MySetting.dart';
 import 'package:insta_crawller_flutter/_common/util/AnimationUtil.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyTheme.dart';
+import 'package:material_tag_editor/tag_editor.dart';
 
 class MyComponents {
   MyComponents._();
@@ -21,6 +22,59 @@ class MyComponents {
         body: body,
         bottomSheet: bottomSheet,
         appBar: appBar,
+      ),
+    );
+  }
+
+  static Widget inputTagEditor<T>({
+    required List<T> valueList,
+    required String label,
+    String? hintText,
+    required Widget Function(BuildContext, int) tagBuilder,
+    required ValueChanged<String> onTagChanged,
+    Color iconColor = Colors.black,
+    TextStyle? textStyle,
+    List<String> delimiters = const [',', ' '],
+    TextStyle? hintStyle,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32, right: 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: textStyle),
+          const SizedBox(height: 3),
+          Theme(
+            data: ThemeData(
+              primaryColor: iconColor,
+              hintColor: iconColor,
+              colorScheme: ColorScheme(
+                primary: iconColor,
+                secondary: iconColor,
+                surface: iconColor,
+                background: iconColor,
+                error: iconColor,
+                onPrimary: iconColor,
+                onSecondary: iconColor,
+                onSurface: iconColor,
+                onBackground: iconColor,
+                onError: iconColor,
+                brightness: Brightness.light,
+              ),
+            ),
+            child: TagEditor(
+                length: valueList.length,
+                delimiters: delimiters,
+                hasAddButton: true,
+                inputDecoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: hintText,
+                  hintStyle: hintStyle,
+                ),
+                onTagChanged: onTagChanged,
+                tagBuilder: tagBuilder),
+          )
+        ],
       ),
     );
   }
@@ -290,7 +344,6 @@ class MyComponents {
       overflow: overflow,
     );
   }
-
 
   static Widget _buttonToPreventMultipleClicks(
       {VoidCallback? onPressed, ButtonStyle? style, required Widget? child}) {

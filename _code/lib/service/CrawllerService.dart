@@ -47,16 +47,17 @@ class CrawllerService extends ChangeNotifier {
     await _login(instaUser);
     await _turnOffAlarmDialog();
 
-    for(var instaUserId in instaUser.accountIdList??[]) {
+    for (var instaUserId in instaUser.accountIdList ?? []) {
       LogUtil.debug("instaUser.accountIdList 중 instaUserId 탐색중입니다.");
       List<String> postUrlList = await getPostUrlList(instaUserId);
       if (postUrlList.isNotEmpty) {
         for (String postUrl in postUrlList) {
-          if (await PostUrlRepository.me.getOneByUrl(postUrl) != null) continue;
-
-          List<String> mediaStrList = await getMediaStrListOf(postUrl: postUrl);
-          var postUrlObj = PostUrl(
-              instaUserId: instaUserId, url: postUrl, mediaUrlList: mediaStrList);
+          PostUrl postUrlObj =
+              await PostUrlRepository.me.getOneByUrl(postUrl) ??
+                  PostUrl(
+                      instaUserId: instaUserId,
+                      url: postUrl,
+                      mediaUrlList: await getMediaStrListOf(postUrl: postUrl));
           await PostUrlRepository.me.save(postUrl: postUrlObj);
         }
       } else {
@@ -83,10 +84,13 @@ class CrawllerService extends ChangeNotifier {
       var pw = c.pwController.text;
       var accountIdList = c.accountIdList;
 
-      InstaUser instaUser = (await _getInstaUser()?..id=id..pw=pw..accountIdList=accountIdList) ?? InstaUser(id: id, pw: pw, accountIdList: accountIdList);
+      InstaUser instaUser = (await _getInstaUser()
+            ?..id = id
+            ..pw = pw
+            ..accountIdList = accountIdList) ??
+          InstaUser(id: id, pw: pw, accountIdList: accountIdList);
 
-      await InstaUserRepository.me.save(
-          instaUser: instaUser);
+      await InstaUserRepository.me.save(instaUser: instaUser);
       InteractionUtil.success(c.context, "저장 성공하였습니다.");
       PageUtil.back(c.context);
     } catch (e) {

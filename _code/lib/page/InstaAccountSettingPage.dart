@@ -87,6 +87,8 @@ class _InstaAccountSettingPageState extends KDHState<InstaAccountSettingPage> {
                     obscureText: true,
                     decoration: c.inputBoxDecoration,
                   ),
+                  const SizedBox(height: 25),
+                  
                   SizedBox(height: height),
                 ],
               ),

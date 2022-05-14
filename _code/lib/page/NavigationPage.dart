@@ -39,11 +39,8 @@ class _NavigationPageState extends KDHState<NavigationPage> {
     s = CrawllerService.read(context);
 
     List<ButtonState> buttonStateList = [
+      ButtonState("Set Insta Account", ()=>s.goInstaAccountSettingPage(c)),
       ButtonState("Collect Posts", ()=>s.saveHumorPost(c)),
-      ButtonState("Set My Insta Account", ()=>s.goInstaAccountSettingPage(c)),
-      ButtonState("Set Target Insta Account", () async {
-        await PageUtil.back(context);
-      }),
       ButtonState("View BookMarked Post", () async {
         await PageUtil.back(context);
       }),

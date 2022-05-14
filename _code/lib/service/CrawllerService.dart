@@ -17,9 +17,9 @@ class CrawllerService extends ChangeNotifier {
   final Duration timeout;
 
   CrawllerService()
-      : this.p = PuppeteerUtil(),
-        this.delay = const Duration(milliseconds: 25),
-        this.timeout = Duration(seconds: 20);
+      : p = PuppeteerUtil(),
+        delay = const Duration(milliseconds: 25),
+        timeout = Duration(seconds: 20);
 
   static ChangeNotifierProvider get provider =>
       ChangeNotifierProvider<CrawllerService>(create: (_) => CrawllerService());
@@ -47,16 +47,19 @@ class CrawllerService extends ChangeNotifier {
     await _login(instaUser);
     await _turnOffAlarmDialog();
 
-    var id = instaUser.id ?? "";
-    List<String> postUrlList = await getPostUrlList(id);
+    List<String> postUrlList = await getPostUrlList(instaUser.id ?? "");
 
-    for (String postUrl in postUrlList) {
-      if (await PostUrlRepository.me.getOneByUrl(postUrl) != null) continue;
+    if (postUrlList.isNotEmpty) {
+      for (String postUrl in postUrlList) {
+        if (await PostUrlRepository.me.getOneByUrl(postUrl) != null) continue;
 
-      List<String> mediaStrList = await getMediaStrListOf(postUrl: postUrl);
-      var postUrlObj =
-          PostUrl(instaUserId: id, url: postUrl, mediaUrlList: mediaStrList);
-      await PostUrlRepository.me.save(postUrl: postUrlObj);
+        List<String> mediaStrList = await getMediaStrListOf(postUrl: postUrl);
+        var postUrlObj = PostUrl(
+            instaUserId: "dd", url: postUrl, mediaUrlList: mediaStrList);
+        await PostUrlRepository.me.save(postUrl: postUrlObj);
+      }
+    } else {
+      LogUtil.debug("Posts가 없습니다.");
     }
 
     await p.stopBrowser();
@@ -73,13 +76,17 @@ class CrawllerService extends ChangeNotifier {
 
   Future<void> saveInstaUser(InstaAccountSettingPageComponent c) async {
     try {
+      var id = c.idController.text;
+      var pw = c.pwController.text;
+
+      InstaUser instaUser = (await _getInstaUser()?..id=id..pw=pw) ?? InstaUser(id: id, pw: pw);
+
       await InstaUserRepository.me.save(
-          instaUser:
-              InstaUser(id: c.idController.text, pw: c.pwController.text));
+          instaUser: instaUser);
       InteractionUtil.success(c.context, "저장 성공하였습니다.");
       PageUtil.back(c.context);
     } catch (e) {
-      InteractionUtil.error(c.context, "저장 실패하였습니다.");
+      InteractionUtil.error(c.context, "저장 실패하였습니다. :$e");
     }
   }
 

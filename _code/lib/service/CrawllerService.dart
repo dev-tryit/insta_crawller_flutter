@@ -47,19 +47,21 @@ class CrawllerService extends ChangeNotifier {
     await _login(instaUser);
     await _turnOffAlarmDialog();
 
-    List<String> postUrlList = await getPostUrlList(instaUser.id ?? "");
+    for(var instaUserId in instaUser.accountIdList??[]) {
+      LogUtil.debug("instaUser.accountIdList 중 instaUserId 탐색중입니다.");
+      List<String> postUrlList = await getPostUrlList(instaUserId);
+      if (postUrlList.isNotEmpty) {
+        for (String postUrl in postUrlList) {
+          if (await PostUrlRepository.me.getOneByUrl(postUrl) != null) continue;
 
-    if (postUrlList.isNotEmpty) {
-      for (String postUrl in postUrlList) {
-        if (await PostUrlRepository.me.getOneByUrl(postUrl) != null) continue;
-
-        List<String> mediaStrList = await getMediaStrListOf(postUrl: postUrl);
-        var postUrlObj = PostUrl(
-            instaUserId: "dd", url: postUrl, mediaUrlList: mediaStrList);
-        await PostUrlRepository.me.save(postUrl: postUrlObj);
+          List<String> mediaStrList = await getMediaStrListOf(postUrl: postUrl);
+          var postUrlObj = PostUrl(
+              instaUserId: instaUserId, url: postUrl, mediaUrlList: mediaStrList);
+          await PostUrlRepository.me.save(postUrl: postUrlObj);
+        }
+      } else {
+        LogUtil.debug("Posts가 없습니다.");
       }
-    } else {
-      LogUtil.debug("Posts가 없습니다.");
     }
 
     await p.stopBrowser();
@@ -70,6 +72,7 @@ class CrawllerService extends ChangeNotifier {
     if (instaUser != null) {
       c.idController.text = instaUser.id ?? "";
       c.pwController.text = instaUser.pw ?? "";
+      c.accountIdList = (instaUser.accountIdList ?? []).cast<String>();
     }
     notifyListeners();
   }
@@ -94,13 +97,6 @@ class CrawllerService extends ChangeNotifier {
   void goPostListViewPage() async {
     // PageUtil.go(context, PostListViewPage());
   }
-
-  /*
-
-    await login(id, pw);
-    await visitAccountAndGetPostLink();
-    await saveInfoAboutPost();
-   */
 
   Future<void> _login(InstaUser instaUser) async {
     var id = instaUser.id;

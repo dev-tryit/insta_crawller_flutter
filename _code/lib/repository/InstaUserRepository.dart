@@ -6,9 +6,10 @@ class InstaUser extends WithDocId {
   final className = staticClassName;
   String? id;
   String? pw;
+  List? accountIdList;
 
   InstaUser(
-      {required this.id, required this.pw})
+      {required this.id, required this.pw, required this.accountIdList})
       : super(documentId: DateTime.now().microsecondsSinceEpoch);
 
   factory InstaUser.fromJson(Map<String, dynamic> json) => fromMap(json);
@@ -19,6 +20,7 @@ class InstaUser extends WithDocId {
     return InstaUser(
       id: map['id'],
       pw: map['pw'],
+      accountIdList: map['accountIdList'],
     )
       ..documentId = map['documentId']
       ..email = map['email'];
@@ -30,6 +32,7 @@ class InstaUser extends WithDocId {
       'email': instance.email,
       'id': instance.id,
       'pw': instance.pw,
+      'accountIdList': instance.accountIdList,
     };
   }
 }

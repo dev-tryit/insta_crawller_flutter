@@ -78,8 +78,9 @@ class CrawllerService extends ChangeNotifier {
     try {
       var id = c.idController.text;
       var pw = c.pwController.text;
+      var accountIdList = c.accountIdList;
 
-      InstaUser instaUser = (await _getInstaUser()?..id=id..pw=pw) ?? InstaUser(id: id, pw: pw);
+      InstaUser instaUser = (await _getInstaUser()?..id=id..pw=pw..accountIdList=accountIdList) ?? InstaUser(id: id, pw: pw, accountIdList: accountIdList);
 
       await InstaUserRepository.me.save(
           instaUser: instaUser);

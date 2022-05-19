@@ -9,6 +9,7 @@ import 'package:insta_crawller_flutter/_common/util/InteractionUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/NavigationPage.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
+import 'package:insta_crawller_flutter/service/CrawllerService.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
 import 'package:insta_crawller_flutter/util/MyColors.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
@@ -34,25 +35,25 @@ class MainPageComponent extends KDHComponent<_MainPageState> {
 
 class _MainPageState extends KDHState<MainPage> {
   late final PostUrlService s;
+  late final CrawllerService crawller;
   late final MainPageComponent c;
 
   @override
   Future<void> mustFinishLoad() async {
     c = MainPageComponent(this);
     s = PostUrlService.read(context);
+    crawller = CrawllerService.read(context);
 
     toBuild = () {
-      return PostUrlService.consumer(
-        builder: (context, value, child) => MyComponents.scaffold(
-          body: Container(
-            color: MyTheme.mainColor,
-            alignment: Alignment.center,
-            child: Column(
-              children: [
-                appBar(),
-                Expanded(child: scrollView()),
-              ],
-            ),
+      return MyComponents.scaffold(
+        body: Container(
+          color: MyTheme.mainColor,
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              appBar(),
+              Expanded(child: scrollView()),
+            ],
           ),
         ),
       );
@@ -99,26 +100,28 @@ class _MainPageState extends KDHState<MainPage> {
   }
 
   Widget scrollView() {
-    return c.postUrlList.isNotEmpty
-        ? SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 34),
-              child: Column(
-                children: c.postUrlList
-                    .map((postUrl) => instaCardGroup(postUrl))
-                    .toList(),
+    return PostUrlService.consumer(
+      builder: (context, value, child) => c.postUrlList.isNotEmpty
+          ? SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 34),
+                child: Column(
+                  children: c.postUrlList
+                      .map((postUrl) => instaCardGroup(postUrl))
+                      .toList(),
+                ),
+              ),
+            )
+          : Center(
+              child: Text(
+                "There are no Posts collected",
+                style: MyFonts.coiny(
+                  color: MyTheme.subColor,
+                  fontWeight: FontWeight.w100,
+                ),
               ),
             ),
-          )
-        : Center(
-            child: Text(
-              "There are no Posts collected",
-              style: MyFonts.coiny(
-                color: MyTheme.subColor,
-                fontWeight: FontWeight.w100,
-              ),
-            ),
-          );
+    );
   }
 
   Widget instaCardGroup(PostUrl postUrl) {
@@ -147,13 +150,14 @@ class _MainPageState extends KDHState<MainPage> {
                     onTap: () {
                       InteractionUtil.showAlertDialog(
                         BackButtonBehavior.close,
-                        content: const Text("정말 삭제하시겠습니까?"),
+                        content: const Text("정말 업로드하시겠습니까?"),
                         confirmLabel: "확인",
                         cancelLabel: "취소",
                         cancel: () {},
                         backgroundReturn: () {},
-                        confirm: () {
-                          BotToast.showText(text: '해당 항목이 삭제되었습니다.');
+                        confirm: () async {
+                          await crawller.uploadPostUrl(c, postUrl);
+                          BotToast.showText(text: '해당 항목이 업로드되었습니다.');
                         },
                       );
                     },

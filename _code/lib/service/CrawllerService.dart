@@ -1,15 +1,21 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:insta_crawller_flutter/_common/interface/Type.dart';
 import 'package:insta_crawller_flutter/_common/util/InteractionUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PuppeteerUtil.dart';
 import 'package:insta_crawller_flutter/page/InstaAccountSettingPage.dart';
+import 'package:insta_crawller_flutter/page/MainPage.dart';
 import 'package:insta_crawller_flutter/page/NavigationPage.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:puppeteer/puppeteer.dart';
 
 class CrawllerService extends ChangeNotifier {
   final PuppeteerUtil p;
@@ -38,30 +44,24 @@ class CrawllerService extends ChangeNotifier {
   void saveHumorPost(NavigationPageComponent c) async {
     await p.startBrowser(headless: false, width: 1280, height: 1024);
 
-    InstaUser? instaUser = await _getInstaUser();
-    if (instaUser == null) {
-      InteractionUtil.error(c.context, "Need to set my insta account");
-      return;
-    }
-
-    await _login(instaUser);
-    await _turnOffAlarmDialog();
-
-    for (var instaUserId in instaUser.accountIdList ?? []) {
-      LogUtil.debug("instaUser.accountIdList 중 instaUserId 탐색중입니다.");
-      List<String> postUrlList = await getPostUrlList(instaUserId);
-      if (postUrlList.isNotEmpty) {
-        for (String postUrl in postUrlList) {
-          PostUrl postUrlObj =
-              await PostUrlRepository.me.getOneByUrl(postUrl) ??
-                  PostUrl(
-                      instaUserId: instaUserId,
-                      url: postUrl,
-                      mediaUrlList: await getMediaStrListOf(postUrl: postUrl));
-          await PostUrlRepository.me.save(postUrl: postUrlObj);
+    InstaUser? instaUser = await _login(c.context);
+    if (instaUser != null) {
+      for (var instaUserId in instaUser.accountIdList ?? []) {
+        LogUtil.debug("instaUser.accountIdList 중 instaUserId 탐색중입니다.");
+        List<String> postUrlList = await getPostUrlList(instaUserId);
+        if (postUrlList.isNotEmpty) {
+          for (String postUrl in postUrlList) {
+            PostUrl postUrlObj = await PostUrlRepository.me
+                    .getOneByUrl(postUrl) ??
+                PostUrl(
+                    instaUserId: instaUserId,
+                    url: postUrl,
+                    mediaUrlList: await getMediaStrListOf(postUrl: postUrl));
+            await PostUrlRepository.me.save(postUrl: postUrlObj);
+          }
+        } else {
+          LogUtil.debug("Posts가 없습니다.");
         }
-      } else {
-        LogUtil.debug("Posts가 없습니다.");
       }
     }
 
@@ -102,7 +102,13 @@ class CrawllerService extends ChangeNotifier {
     // PageUtil.go(context, PostListViewPage());
   }
 
-  Future<void> _login(InstaUser instaUser) async {
+  Future<InstaUser?> _login(BuildContext context) async {
+    InstaUser? instaUser = await _getInstaUser();
+    if (instaUser == null) {
+      InteractionUtil.error(context, "Need to set my insta account");
+      return null;
+    }
+
     var id = instaUser.id;
     var pw = instaUser.pw;
 
@@ -125,6 +131,19 @@ class CrawllerService extends ChangeNotifier {
         break;
       }
     }
+
+    Future<void> _turnOffAlarmDialog() async {
+      bool existAlarmDialog = await p.existTag(
+          'img[src="/static/images/ico/xxhdpi_launcher.png/99cf3909d459.png"]');
+      LogUtil.debug("turnOffAlarmDialog existAlarmDialog : $existAlarmDialog");
+      if (existAlarmDialog) {
+        await p.click('[role="dialog"] button:nth-child(2)');
+      }
+    }
+
+    await _turnOffAlarmDialog();
+
+    return instaUser;
   }
 
   Future<bool> _isLoginSuccess() async {
@@ -134,15 +153,6 @@ class CrawllerService extends ChangeNotifier {
 
   Future<void> saveInfoAboutPost() async {
     //Post 내용 저장.
-  }
-
-  Future<void> _turnOffAlarmDialog() async {
-    bool existAlarmDialog = await p.existTag(
-        'img[src="/static/images/ico/xxhdpi_launcher.png/99cf3909d459.png"]');
-    LogUtil.debug("turnOffAlarmDialog existAlarmDialog : $existAlarmDialog");
-    if (existAlarmDialog) {
-      await p.click('[role="dialog"] button:nth-child(2)');
-    }
   }
 
   Future<List<String>> getPostUrlList(String targetId) async {
@@ -357,5 +367,44 @@ class CrawllerService extends ChangeNotifier {
         child: nextPage,
       ),
     );
+  }
+
+  Future<void> uploadPostUrl(MainPageComponent c, PostUrl postUrl) async {
+    await p.startBrowser(headless: false, width: 1280, height: 1024);
+
+    InstaUser? instaUser = await _login(c.context);
+    if (instaUser != null) {
+      await p.goto("https://www.instagram.com/");
+
+      //업로드 버튼 클릭
+      await (await p.parent(await p.parent(await p.$('[aria-label="새로운 게시물"]')))).click();
+
+      //네트워크 이미지 메모리에 파일 얻기
+      List<Uint8List> unsignedInt8List = [];
+      for (String mediaUrl in (postUrl.mediaUrlList ?? []).cast<String>()) {
+        Uint8List uint8list =
+            (await NetworkAssetBundle(Uri.parse(mediaUrl)).load(mediaUrl))
+                .buffer
+                .asUint8List();
+        unsignedInt8List.add(uint8list);
+
+        File tempFile = await File("tempFile").writeAsBytes(uint8list);
+
+        break;
+      }
+
+      //이미지 업로드
+      dynamic getUploadButton() async {
+        List<ElementHandle> tempList = await p.$$('button');
+        for(var element in tempList) {
+          //TODO: 해당 element의 text가 컴퓨터에서 선택인지 판단.
+        }
+
+      }
+      await getUploadButton();
+
+    }
+
+    await p.stopBrowser();
   }
 }

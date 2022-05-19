@@ -142,6 +142,10 @@ class PuppeteerUtil {
   Future<dynamic> evaluate(String pageFunction, {List? args}) async {
     return await tab.evaluate(pageFunction, args: args);
   }
+  
+  Future<ElementHandle> evaluateHandle(String pageFunction, {List? args}) async {
+    return await tab.evaluateHandle(pageFunction, args: args);
+  }
 
   Future<void> type(String selector, String content, {Duration? delay}) async {
     await tab.type(selector, content, delay: delay);
@@ -244,4 +248,8 @@ class PuppeteerUtil {
   }
 
   Future<void> setPageZoom({int zoom = 1}) async {}
+
+  Future<ElementHandle> parent(ElementHandle tag) async {
+    return await evaluateHandle(r'el => el.parentNode', args: [tag]);
+  }
 }

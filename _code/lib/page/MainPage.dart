@@ -55,7 +55,7 @@ class _MainPageState extends KDHState<MainPage> {
         ),
       );
     };
-    await s.setPostUrlList();
+    await s.resetPostUrlList();
     finishLoad();
   }
 

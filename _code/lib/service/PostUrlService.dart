@@ -37,7 +37,7 @@ class PostUrlService extends ChangeNotifier {
     return mediaUrlList;
   }
 
-  Future<void> setPostUrlList() async {
+  Future<void> resetPostUrlList() async {
     postUrlList = await _getPostUrlList();
     notifyListeners();
   }
@@ -49,15 +49,19 @@ class PostUrlService extends ChangeNotifier {
     }
 
     postUrlList.remove(postUrl);
+    notifyListeners();
 
     PostUrlRepository.me
-        .delete(documentId: postUrl.documentId!)
-        .then((value) => notifyListeners());
+        .delete(documentId: postUrl.documentId!);
   }
 
   Future<void> savePostUrl(PostUrl postUrl) async {
+    if(!postUrlList.contains(postUrl)) {
+      postUrlList.add(postUrl);
+      notifyListeners();
+    }
+
     PostUrlRepository.me
-        .save(postUrl: postUrl)
-        .then((value) => notifyListeners());
+        .save(postUrl: postUrl);
   }
 }

@@ -435,17 +435,47 @@ class CrawllerService extends ChangeNotifier {
         await p.waitForFileChooser(uploadButton, acceptFiles: fileList);
         return KDHResult.success;
       }
-
       result = await _uploadFiles();
       result.checkFail(errorMsg: "_uploadFiles error");
 
-      /*
-      [aria-label="자르기"] button
-       */
+      Future<KDHResult> _nextStep(String selector, String targetText) async {
+        ElementHandle? targetTag;
+        List<ElementHandle> tempList = await p.$$(selector);
+        for (ElementHandle tempElement in tempList) {
+          String elementStr = await p.text(tempElement);
+          if (elementStr.contains(targetText)) {
+            targetTag= tempElement;
+            break;
+          }
+        }
+
+        if (targetTag == null) {
+          return KDHResult.fail;
+        }
+
+        await targetTag.click();
+        return KDHResult.success;
+      }
+
+      await p.wait(1500);
+      result = await _nextStep('[aria-label="자르기"] button', "다음");
+      result.checkFail(errorMsg: '_nextStep[aria-label="자르기"] error');
+
+      await p.wait(1500);
+      result = await _nextStep('[aria-label="편집"] button', "다음");
+      result.checkFail(errorMsg: '_nextStep[aria-label="편집"] error');
+
+      //TODO: 공유하기 내용 받아서 여따가 넣어야함.
+
+      await p.wait(1500);
+      result = await _nextStep('[aria-label="새 게시물 만들기"] button', "공유하기");
+      result.checkFail(errorMsg: '_nextStep[aria-label="새 게시물 만들기"] error');
+
+      await p.goto("https://www.instagram.com/");
     } on CommonException catch (e) {
       LogUtil.warn("에러가 발생하였습니다 ${e.toString()}");
     } finally {
-      await p.stopBrowser();
+      // await p.stopBrowser();
     }
 
     return result;

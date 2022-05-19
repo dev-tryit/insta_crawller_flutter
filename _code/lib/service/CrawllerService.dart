@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:insta_crawller_flutter/_common/interface/Type.dart';
+import 'package:insta_crawller_flutter/_common/model/KDHResult.dart';
+import 'package:insta_crawller_flutter/_common/model/exception/CommonException.dart';
 import 'package:insta_crawller_flutter/_common/util/InteractionUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
@@ -369,31 +371,52 @@ class CrawllerService extends ChangeNotifier {
     );
   }
 
-  Future<void> uploadPostUrl(MainPageComponent c, PostUrl postUrl) async {
-    await p.startBrowser(headless: false, width: 1280, height: 1024);
+  Future<KDHResult> uploadPostUrl(MainPageComponent c, PostUrl postUrl) async {
+    KDHResult result = KDHResult.success;
+    try {
+      await p.startBrowser(headless: false, width: 1280, height: 1024);
 
-    InstaUser? instaUser = await _login(c.context);
-    if (instaUser != null) {
-      await p.goto("https://www.instagram.com/");
+      InstaUser? instaUser = await _login(c.context);
+      result = instaUser == null ? KDHResult.fail : KDHResult.success;
+      result.checkFail(errorMsg: "_login error");
 
-      Future<void> _clickUploadButton() async {
-        await (await p
-                .parent(await p.parent(await p.$('[aria-label="새로운 게시물"]'))))
-            .click();
+      Future<List<File>> _getFileList() async {
+        int i = 0;
+        List<File> fileList = [];
+        for (String mediaUrl in (postUrl.mediaUrlList ?? []).cast<String>()) {
+          try {
+            Uint8List uint8list =
+                (await NetworkAssetBundle(Uri.parse(mediaUrl)).load(mediaUrl))
+                    .buffer
+                    .asUint8List();
+            fileList.add(await File("tempFile$i.png").writeAsBytes(uint8list));
+          } catch (ignored) {}
+
+          i++;
+        }
+
+        return fileList;
       }
-      await _clickUploadButton();
 
-      //네트워크 이미지 메모리에 파일 얻기
-      List<Uint8List> unsignedInt8List = [];
-      for (String mediaUrl in (postUrl.mediaUrlList ?? []).cast<String>()) {
-        Uint8List uint8list =
-            (await NetworkAssetBundle(Uri.parse(mediaUrl)).load(mediaUrl))
-                .buffer
-                .asUint8List();
-        unsignedInt8List.add(uint8list);
+      await p.goto("https://www.instagram.com/");
+      List<File> fileList = await _getFileList();
+      result = fileList.isEmpty ? KDHResult.fail : KDHResult.success;
+      result.checkFail(errorMsg: "_getFileList error");
 
-        File tempFile = await File("tempFile").writeAsBytes(uint8list);
+      Future<KDHResult> _openUploadDialog() async {
+        const selector = '[aria-label="새로운 게시물"]';
+        if (!await p.existTag(selector)) {
+          return KDHResult.fail;
+        }
 
+        await (await p.parent(await p.parent(await p.$(selector)))).click();
+        return KDHResult.success;
+      }
+
+      result = await _openUploadDialog();
+      result.checkFail(errorMsg: "_openUploadDialog error");
+
+      Future<KDHResult> _uploadFiles() async {
         Future<ElementHandle?> getUploadButton() async {
           List<ElementHandle> tempList = await p.$$('button');
           for (ElementHandle element in tempList) {
@@ -404,18 +427,27 @@ class CrawllerService extends ChangeNotifier {
           }
           return null;
         }
+
         ElementHandle? uploadButton = await getUploadButton();
         if (uploadButton == null) {
-          LogUtil.warn("uploadButton가 없습니다.");
-          return;
+          return KDHResult.fail;
         }
-
-        await p.waitForFileChooser(uploadButton, acceptFiles: [tempFile]);
-
-        break;
+        await p.waitForFileChooser(uploadButton, acceptFiles: fileList);
+        return KDHResult.success;
       }
+
+      result = await _uploadFiles();
+      result.checkFail(errorMsg: "_uploadFiles error");
+
+      /*
+      [aria-label="자르기"] button
+       */
+    } on CommonException catch (e) {
+      LogUtil.warn("에러가 발생하였습니다 ${e.toString()}");
+    } finally {
+      await p.stopBrowser();
     }
 
-    // await p.stopBrowser();
+    return result;
   }
 }

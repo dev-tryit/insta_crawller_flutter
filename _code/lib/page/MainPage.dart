@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
+import 'package:insta_crawller_flutter/_common/abstract/KDHComponent.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/extension/RandomExtension.dart';
 import 'package:insta_crawller_flutter/_common/util/InteractionUtil.dart';
@@ -25,12 +26,20 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends KDHState<MainPage> {
+class MainPageComponent extends KDHComponent<_MainPageState> {
   List<PostUrl> postUrlList = [];
+
+  MainPageComponent(_MainPageState state) : super(state);
+}
+
+class _MainPageState extends KDHState<MainPage> {
+  late final PostUrlService s;
+  late final MainPageComponent c;
 
   @override
   Future<void> mustFinishLoad() async {
-    postUrlList = await PostUrlService.read(context).getPostUrlList();
+    c = MainPageComponent(this);
+    s = PostUrlService.read(context);
 
     toBuild = () {
       return MyComponents.scaffold(
@@ -46,6 +55,7 @@ class _MainPageState extends KDHState<MainPage> {
         ),
       );
     };
+    await s.setPostUrlList(c);
     finishLoad();
   }
 
@@ -87,12 +97,12 @@ class _MainPageState extends KDHState<MainPage> {
   }
 
   Widget scrollView() {
-    return postUrlList.isNotEmpty
+    return c.postUrlList.isNotEmpty
         ? SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(top: 34),
               child: Column(
-                children: postUrlList
+                children: c.postUrlList
                     .map((postUrl) => instaCardGroup(postUrl))
                     .toList(),
               ),
@@ -130,14 +140,20 @@ class _MainPageState extends KDHState<MainPage> {
                   Text(postUrl.instaUserId ?? ""),
                   SizedBox(width: 5),
                   InkWell(
-                    child: Image(
-                      width: 18,
-                      height: 18,
-                      image: MyImage.downloadsIcon,
-                      fit: BoxFit.fill,
-                    ),
+                    child: Icon(Icons.ios_share,
+                        color: MyTheme.subColor, size: 18),
                     onTap: () {
-                      print("downloadsIcon click");
+                      InteractionUtil.showAlertDialog(
+                        BackButtonBehavior.close,
+                        content: const Text("정말 삭제하시겠습니까?"),
+                        confirmLabel: "확인",
+                        cancelLabel: "취소",
+                        cancel: () {},
+                        backgroundReturn: () {},
+                        confirm: () {
+                          BotToast.showText(text: '해당 항목이 삭제되었습니다.');
+                        },
+                      );
                     },
                   ),
                   InkWell(
@@ -151,7 +167,8 @@ class _MainPageState extends KDHState<MainPage> {
                         cancelLabel: "취소",
                         cancel: () {},
                         backgroundReturn: () {},
-                        confirm: () {
+                        confirm: () async {
+                          await s.deletePostUrl(c, postUrl);
                           BotToast.showText(text: '해당 항목이 삭제되었습니다.');
                         },
                       );

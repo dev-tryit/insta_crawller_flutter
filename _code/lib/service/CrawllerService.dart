@@ -103,6 +103,11 @@ class CrawllerService extends ChangeNotifier {
   }
 
   Future<InstaUser?> _login(BuildContext context) async {
+    Future<bool> _isLoginSuccess() async {
+      bool isLoginPage = await p.existTag('input[name="username"]');
+      return !isLoginPage;
+    }
+
     InstaUser? instaUser = await _getInstaUser();
     if (instaUser == null) {
       InteractionUtil.error(context, "Need to set my insta account");
@@ -127,7 +132,7 @@ class CrawllerService extends ChangeNotifier {
 
       if (await p.existTag('#slfErrorAlert')) {
         LogUtil.debug(
-            "[$id] 로그인에 실패하였습니다. 원인 : ${await p.text(tag: await p.$('#slfErrorAlert'))}");
+            "[$id] 로그인에 실패하였습니다. 원인 : ${await p.text(await p.$('#slfErrorAlert'))}");
         break;
       }
     }
@@ -144,11 +149,6 @@ class CrawllerService extends ChangeNotifier {
     await _turnOffAlarmDialog();
 
     return instaUser;
-  }
-
-  Future<bool> _isLoginSuccess() async {
-    bool isLoginPage = await p.existTag('input[name="username"]');
-    return !isLoginPage;
   }
 
   Future<void> saveInfoAboutPost() async {
@@ -170,7 +170,7 @@ class CrawllerService extends ChangeNotifier {
 
     bool valid = await p.existTag(selector);
 
-    String contents = await p.text(tag: await p.$(selector));
+    String contents = await p.text(await p.$(selector));
     LogUtil.debug("해당 TargetId($targetId)의 contents : $contents");
 
     valid = contents.contains("게시물") || contents.contains("Posts");
@@ -377,7 +377,9 @@ class CrawllerService extends ChangeNotifier {
       await p.goto("https://www.instagram.com/");
 
       //업로드 버튼 클릭
-      await (await p.parent(await p.parent(await p.$('[aria-label="새로운 게시물"]')))).click();
+      await (await p
+              .parent(await p.parent(await p.$('[aria-label="새로운 게시물"]'))))
+          .click();
 
       //네트워크 이미지 메모리에 파일 얻기
       List<Uint8List> unsignedInt8List = [];
@@ -390,21 +392,31 @@ class CrawllerService extends ChangeNotifier {
 
         File tempFile = await File("tempFile").writeAsBytes(uint8list);
 
-        break;
-      }
-
-      //이미지 업로드
-      dynamic getUploadButton() async {
-        List<ElementHandle> tempList = await p.$$('button');
-        for(var element in tempList) {
-          //TODO: 해당 element의 text가 컴퓨터에서 선택인지 판단.
+        //이미지 업로드
+        Future<ElementHandle?> getUploadButton() async {
+          List<ElementHandle> tempList = await p.$$('button');
+          for (ElementHandle element in tempList) {
+            String elementStr = await p.text(element);
+            if (elementStr.contains("컴퓨터에서")) {
+              return element;
+            }
+            //TODO: 해당 element의 text가 컴퓨터에서 선택인지 판단.
+          }
+          return null;
         }
 
-      }
-      await getUploadButton();
+        ElementHandle? uploadButton = await getUploadButton();
+        if (uploadButton == null) {
+          LogUtil.warn("uploadButton가 없습니다.");
+          return;
+        }
 
+        await p.waitForFileChooser(uploadButton, acceptFiles: [tempFile]);
+
+        break;
+      }
     }
 
-    await p.stopBrowser();
+    // await p.stopBrowser();
   }
 }

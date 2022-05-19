@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:puppeteer/plugins/stealth.dart';
 import 'package:puppeteer/puppeteer.dart';
 
@@ -11,18 +13,23 @@ class PuppeteerUtil {
 
   Future<void> openBrowser(Future<void> Function() function,
       {int width = 1920,
-        int height = 1600,
-        bool headless = true,
-        String? browserUrl}) async {
-    await startBrowser(width:width, height:height,headless:headless,browserUrl:browserUrl );
+      int height = 1600,
+      bool headless = true,
+      String? browserUrl}) async {
+    await startBrowser(
+        width: width,
+        height: height,
+        headless: headless,
+        browserUrl: browserUrl);
     await function();
     await stopBrowser();
   }
 
-  Future<void> startBrowser({int width = 1920,
-        int height = 1600,
-        bool headless = true,
-        String? browserUrl}) async {
+  Future<void> startBrowser(
+      {int width = 1920,
+      int height = 1600,
+      bool headless = true,
+      String? browserUrl}) async {
     bool isConnect = (browserUrl ?? "").isNotEmpty;
 
     if (isConnect) {
@@ -101,6 +108,7 @@ class PuppeteerUtil {
 
     await setPageZoom();
   }
+
   Future<void> stopBrowser() async {
     try {
       await tab.close();
@@ -116,34 +124,42 @@ class PuppeteerUtil {
     await tab.goto(url, wait: Until.networkIdle, timeout: defaultTimeout);
   }
 
-  Future<String> text({ElementHandle? tag}) async {
-    if (tag == null) {
-      return await tab.content ?? "";
-    } else {
-      return await evaluate(r'el => el.textContent', args: [tag]);
-    }
+  Future<String> bodyText() async {
+    return await tab.content ?? "";
   }
 
-  Future<String> getAttr({required ElementHandle tag, required String attr}) async {
+  Future<String> text(ElementHandle tag) async {
+    return await evaluate(r'el => el.textContent', args: [tag]);
+  }
+
+  Future<String> getAttr(
+      {required ElementHandle tag, required String attr}) async {
     return await evaluate('el => el.getAttribute("$attr")', args: [tag]);
   }
 
-  Future<void> setAttr({required ElementHandle tag, required String attr, required String attrValue}) async {
-    return await evaluate('el => el.setAttribute("$attr","$attrValue")', args: [tag]);
+  Future<void> setAttr(
+      {required ElementHandle tag,
+      required String attr,
+      required String attrValue}) async {
+    return await evaluate('el => el.setAttribute("$attr","$attrValue")',
+        args: [tag]);
   }
 
   Future<String> getHtml({required ElementHandle tag}) async {
     return await evaluate(r'el => el.innerHtml', args: [tag]);
   }
-  Future<String> setHtml({required ElementHandle tag, required String value}) async {
+
+  Future<String> setHtml(
+      {required ElementHandle tag, required String value}) async {
     return await evaluate(r'el => el.innerHtml="$value"', args: [tag]);
   }
 
   Future<dynamic> evaluate(String pageFunction, {List? args}) async {
     return await tab.evaluate(pageFunction, args: args);
   }
-  
-  Future<ElementHandle> evaluateHandle(String pageFunction, {List? args}) async {
+
+  Future<ElementHandle> evaluateHandle(String pageFunction,
+      {List? args}) async {
     return await tab.evaluateHandle(pageFunction, args: args);
   }
 
@@ -183,8 +199,8 @@ class PuppeteerUtil {
 
   Future<bool> waitForSelector(String selector,
       {bool? visible,
-        bool? hidden,
-        Duration timeout = const Duration(seconds: 10)}) async {
+      bool? hidden,
+      Duration timeout = const Duration(seconds: 10)}) async {
     try {
       await tab.waitForSelector(selector,
           visible: visible, hidden: hidden, timeout: timeout);
@@ -251,5 +267,13 @@ class PuppeteerUtil {
 
   Future<ElementHandle> parent(ElementHandle tag) async {
     return await evaluateHandle(r'el => el.parentNode', args: [tag]);
+  }
+
+  Future<void> waitForFileChooser(ElementHandle tag, {required List<File> acceptFiles}) async {
+    var futureFileChooser = tab.waitForFileChooser();
+    await tag.click();
+
+    var fileChooser = await futureFileChooser;
+    await fileChooser.accept(acceptFiles);
   }
 }

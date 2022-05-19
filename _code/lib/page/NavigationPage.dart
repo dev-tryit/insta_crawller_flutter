@@ -31,16 +31,16 @@ class NavigationPageComponent extends KDHComponent<_NavigationPageState> {
 
 class _NavigationPageState extends KDHState<NavigationPage> {
   late final NavigationPageComponent c;
-  late CrawllerService s;
+  late CrawllerService crawller;
 
   @override
   Future<void> mustFinishLoad() async {
     c = NavigationPageComponent(this);
-    s = CrawllerService.read(context);
+    crawller = CrawllerService.read(context);
 
     List<ButtonState> buttonStateList = [
-      ButtonState("Set Insta Account", ()=>s.goInstaAccountSettingPage(c)),
-      ButtonState("Collect Posts", ()=>s.saveHumorPost(c)),
+      ButtonState("Set Insta Account", ()=>crawller.goInstaAccountSettingPage(c)),
+      ButtonState("Collect Posts", ()=>crawller.saveHumorPost(c)),
       ButtonState("View BookMarked Post", () async {
         await PageUtil.back(context);
       }),

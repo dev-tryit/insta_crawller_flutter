@@ -11,7 +11,6 @@ import 'package:insta_crawller_flutter/page/NavigationPage.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/service/CrawllerService.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
-import 'package:insta_crawller_flutter/util/MyColors.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyImage.dart';
@@ -28,8 +27,6 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageComponent extends KDHComponent<_MainPageState> {
-  List<PostUrl> postUrlList = [];
-
   MainPageComponent(_MainPageState state) : super(state);
 }
 
@@ -58,7 +55,7 @@ class _MainPageState extends KDHState<MainPage> {
         ),
       );
     };
-    await s.setPostUrlList(c);
+    await s.setPostUrlList();
     finishLoad();
   }
 
@@ -101,12 +98,12 @@ class _MainPageState extends KDHState<MainPage> {
 
   Widget scrollView() {
     return PostUrlService.consumer(
-      builder: (context, value, child) => c.postUrlList.isNotEmpty
+      builder: (context, value, child) => value.postUrlList.isNotEmpty
           ? SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.only(top: 34),
                 child: Column(
-                  children: c.postUrlList
+                  children: value.postUrlList
                       .map((postUrl) => instaCardGroup(postUrl))
                       .toList(),
                 ),
@@ -174,7 +171,7 @@ class _MainPageState extends KDHState<MainPage> {
                         cancel: () {},
                         backgroundReturn: () {},
                         confirm: () async {
-                          await s.deletePostUrl(c, postUrl);
+                          await s.deletePostUrl(postUrl);
                           BotToast.showText(text: '해당 항목이 삭제되었습니다.');
                         },
                       );

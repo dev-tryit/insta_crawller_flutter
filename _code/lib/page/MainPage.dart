@@ -42,15 +42,17 @@ class _MainPageState extends KDHState<MainPage> {
     s = PostUrlService.read(context);
 
     toBuild = () {
-      return MyComponents.scaffold(
-        body: Container(
-          color: MyTheme.mainColor,
-          alignment: Alignment.center,
-          child: Column(
-            children: [
-              appBar(),
-              Expanded(child: scrollView()),
-            ],
+      return PostUrlService.consumer(
+        builder: (context, value, child) => MyComponents.scaffold(
+          body: Container(
+            color: MyTheme.mainColor,
+            alignment: Alignment.center,
+            child: Column(
+              children: [
+                appBar(),
+                Expanded(child: scrollView()),
+              ],
+            ),
           ),
         ),
       );

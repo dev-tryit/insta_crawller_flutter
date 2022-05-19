@@ -376,10 +376,12 @@ class CrawllerService extends ChangeNotifier {
     if (instaUser != null) {
       await p.goto("https://www.instagram.com/");
 
-      //업로드 버튼 클릭
-      await (await p
-              .parent(await p.parent(await p.$('[aria-label="새로운 게시물"]'))))
-          .click();
+      Future<void> _clickUploadButton() async {
+        await (await p
+                .parent(await p.parent(await p.$('[aria-label="새로운 게시물"]'))))
+            .click();
+      }
+      await _clickUploadButton();
 
       //네트워크 이미지 메모리에 파일 얻기
       List<Uint8List> unsignedInt8List = [];
@@ -392,7 +394,6 @@ class CrawllerService extends ChangeNotifier {
 
         File tempFile = await File("tempFile").writeAsBytes(uint8list);
 
-        //이미지 업로드
         Future<ElementHandle?> getUploadButton() async {
           List<ElementHandle> tempList = await p.$$('button');
           for (ElementHandle element in tempList) {
@@ -400,11 +401,9 @@ class CrawllerService extends ChangeNotifier {
             if (elementStr.contains("컴퓨터에서")) {
               return element;
             }
-            //TODO: 해당 element의 text가 컴퓨터에서 선택인지 판단.
           }
           return null;
         }
-
         ElementHandle? uploadButton = await getUploadButton();
         if (uploadButton == null) {
           LogUtil.warn("uploadButton가 없습니다.");

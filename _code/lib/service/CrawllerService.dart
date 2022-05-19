@@ -27,7 +27,7 @@ class CrawllerService extends ChangeNotifier {
 
   CrawllerService()
       : p = PuppeteerUtil(),
-        delay = const Duration(milliseconds: 25),
+        delay = const Duration(milliseconds: 15),
         timeout = Duration(seconds: 20);
 
   static ChangeNotifierProvider get provider =>
@@ -77,7 +77,7 @@ class CrawllerService extends ChangeNotifier {
     if (instaUser != null) {
       c.idController.text = instaUser.id ?? "";
       c.pwController.text = instaUser.pw ?? "";
-      c.accountIdList = (instaUser.accountIdList ?? []).cast<String>();
+      c.accountIdList = List.of((instaUser.accountIdList ?? []).cast<String>());
     }
     notifyListeners();
   }

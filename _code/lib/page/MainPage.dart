@@ -1,12 +1,15 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/extension/RandomExtension.dart';
+import 'package:insta_crawller_flutter/_common/util/InteractionUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/NavigationPage.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
+import 'package:insta_crawller_flutter/util/MyColors.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyImage.dart';
@@ -136,7 +139,24 @@ class _MainPageState extends KDHState<MainPage> {
                     onTap: () {
                       print("downloadsIcon click");
                     },
-                  )
+                  ),
+                  InkWell(
+                    child:
+                        Icon(Icons.delete, color: MyTheme.subColor, size: 18),
+                    onTap: () {
+                      InteractionUtil.showAlertDialog(
+                        BackButtonBehavior.close,
+                        content: const Text("정말 삭제하시겠습니까?"),
+                        confirmLabel: "확인",
+                        cancelLabel: "취소",
+                        cancel: () {},
+                        backgroundReturn: () {},
+                        confirm: () {
+                          BotToast.showText(text: '해당 항목이 삭제되었습니다.');
+                        },
+                      );
+                    },
+                  ),
                 ],
               ),
               SizedBox(height: 8),

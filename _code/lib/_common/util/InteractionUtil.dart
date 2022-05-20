@@ -1,5 +1,9 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 class InteractionUtil {
   static TransitionBuilder builder() {
@@ -39,6 +43,23 @@ class InteractionUtil {
       builder: (BuildContext buildContext) {
         return page;
       },
+    );
+  }
+
+  static void zoomImage(BuildContext context, List<GalleryItem> galleryItems,
+      int index, bool verticalGallery) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GalleryPhotoViewWrapper(
+          galleryItems: galleryItems,
+          backgroundDecoration: const BoxDecoration(
+            color: Colors.black,
+          ),
+          initialIndex: index,
+          scrollDirection: verticalGallery ? Axis.vertical : Axis.horizontal,
+        ),
+      ),
     );
   }
 
@@ -177,4 +198,135 @@ class _CustomOffsetAnimationState extends State<CustomOffsetAnimation> {
       },
     );
   }
+}
+
+class GalleryPhotoViewWrapper extends StatefulWidget {
+  GalleryPhotoViewWrapper({
+    Key? key,
+    this.loadingBuilder,
+    this.backgroundDecoration,
+    this.minScale,
+    this.maxScale,
+    this.initialIndex = 0,
+    required this.galleryItems,
+    this.scrollDirection = Axis.horizontal,
+  })  : pageController = PageController(initialPage: initialIndex),
+        super(key: key);
+
+  final LoadingBuilder? loadingBuilder;
+  final BoxDecoration? backgroundDecoration;
+  final dynamic minScale;
+  final dynamic maxScale;
+  final int initialIndex;
+  final PageController pageController;
+  final List<GalleryItem> galleryItems;
+  final Axis scrollDirection;
+
+  @override
+  State<StatefulWidget> createState() {
+    return _GalleryPhotoViewWrapperState();
+  }
+}
+
+class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
+  late int currentIndex = widget.initialIndex;
+  final PhotoViewController controller = PhotoViewController();
+
+  void onPageChanged(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Listener(
+        onPointerSignal: (pointerSignal) {
+          if (pointerSignal is PointerScrollEvent) {
+            print("onPointerSignal : $pointerSignal");
+            controller.scale = (controller.scale ?? 0) -
+                pointerSignal.scrollDelta.dy*0.0035;
+          }
+        },
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: widget.backgroundDecoration,
+          constraints: BoxConstraints.expand(
+            height: MediaQuery.of(context).size.height,
+          ),
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              PhotoViewGallery.builder(
+                scrollPhysics: const BouncingScrollPhysics(),
+                builder: _buildItem,
+                itemCount: widget.galleryItems.length,
+                loadingBuilder: widget.loadingBuilder,
+                backgroundDecoration: widget.backgroundDecoration,
+                pageController: widget.pageController,
+                onPageChanged: onPageChanged,
+                scrollDirection: widget.scrollDirection,
+              ),
+              Container(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  "Image ${currentIndex + 1}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 17.0,
+                    decoration: null,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 10,
+                right: 5,
+                child: IconButton(
+                  icon: Icon(Icons.close, color: Colors.white),
+                  onPressed: () {
+                    PageUtil.back(context);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
+    GalleryItem item = widget.galleryItems[index];
+    String id = item.id;
+    String path = item.path;
+
+    ImageProvider imageProvider;
+    if (item.isUrl) {
+      imageProvider = NetworkImage(path);
+    } else {
+      imageProvider = AssetImage(path);
+    }
+
+    return PhotoViewGalleryPageOptions(
+      imageProvider: imageProvider,
+      initialScale: PhotoViewComputedScale.contained,
+      minScale: PhotoViewComputedScale.contained * (0.5 + index / 10),
+      maxScale: PhotoViewComputedScale.covered * 4.1,
+      heroAttributes: PhotoViewHeroAttributes(tag: id),
+      controller: controller,
+    );
+  }
+}
+
+class GalleryItem {
+  GalleryItem({
+    required this.path,
+  })  : id = path,
+        isUrl = path.contains("http");
+
+  final String id;
+  final String path;
+  final bool isUrl;
 }

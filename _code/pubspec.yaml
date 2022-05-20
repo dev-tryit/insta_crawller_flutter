@@ -84,6 +84,7 @@ dependencies:
     card_swiper: ^2.0.3
     bot_toast: ^4.0.1
     material_tag_editor: ^0.1.2
+    photo_view: ^0.13.0
 
 #    device_frame: ^1.0.0
 

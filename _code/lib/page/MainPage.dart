@@ -183,10 +183,18 @@ class _MainPageState extends KDHState<MainPage> {
                 child: Swiper(
                   itemCount: mediaUrlList.length,
                   itemBuilder: (BuildContext context, int i) {
-                    String mediaUrl = mediaUrlList[i];
-                    return Image.network(
-                      mediaUrl,
-                      fit: BoxFit.fill,
+                    return InkWell(
+                      onTap: () {
+                        var galleryItems = mediaUrlList
+                            .map((e) => GalleryItem(path: e))
+                            .toList();
+                        InteractionUtil.zoomImage(
+                            context, galleryItems, i, false);
+                      },
+                      child: Image.network(
+                        mediaUrlList[i],
+                        fit: BoxFit.fill,
+                      ),
                     );
                   },
                   itemWidth: 300.0,

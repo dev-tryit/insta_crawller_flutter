@@ -98,11 +98,11 @@ class _MainPageState extends KDHState<MainPage> {
 
   Widget scrollView() {
     return PostUrlService.consumer(
-      builder: (context, value, child) => c.postUrlList.isNotEmpty
+      builder: (context, value, child) => value.postUrlList.isNotEmpty
           ? Padding(
               padding: const EdgeInsets.only(top: 34),
               child: ListView(
-                children: c.postUrlList
+                children: value.postUrlList
                     .map((postUrl) => instaCardGroup(postUrl))
                     .toList(),
               ),
@@ -169,7 +169,7 @@ class _MainPageState extends KDHState<MainPage> {
                         cancel: () {},
                         backgroundReturn: () {},
                         confirm: () async {
-                          await s.deletePostUrl(c, postUrl);
+                          await s.deletePostUrl(postUrl);
                           BotToast.showText(text: '해당 항목이 삭제되었습니다.');
                         },
                       );

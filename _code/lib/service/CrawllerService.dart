@@ -382,15 +382,12 @@ class CrawllerService extends ChangeNotifier {
       result.checkFail(errorMsg: "_login error");
 
       Future<List<File>> _getFileList() async {
-        int i = 0;
         List<File> fileList = [];
         for (String mediaUrl in (postUrl.mediaUrlList ?? []).cast<String>()) {
           try {
-            File file = await FileUtil.downloadFile(mediaUrl, "tempFile$i.png");
+            File file = await FileUtil.downloadFile(mediaUrl);
             fileList.add(file);
           } catch (ignored) {}
-
-          i++;
         }
 
         return fileList;

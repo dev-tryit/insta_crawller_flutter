@@ -23,14 +23,14 @@ class FileUtil {
     return extension(_removeQueryString(path));
   }
 
-  static Future<File> downloadFile(String downloadUrl, String filePath) async {
-    //TODO: URL에서 확장자 뽑기.
-
+  static Future<File> downloadFile(String downloadUrl,
+      {String? filePath}) async {
     Uint8List uint8list =
         (await NetworkAssetBundle(Uri.parse(downloadUrl)).load(downloadUrl))
             .buffer
             .asUint8List();
-    return await File(filePath).writeAsBytes(uint8list);
+    return await File(filePath ?? getFileName(downloadUrl))
+        .writeAsBytes(uint8list);
   }
 
   static void writeFile(String filePath, String text) {

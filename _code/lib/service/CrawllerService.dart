@@ -14,6 +14,7 @@ import 'package:insta_crawller_flutter/page/MainPage.dart';
 import 'package:insta_crawller_flutter/page/NavigationPage.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
+import 'package:insta_crawller_flutter/service/PostUrlService.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:puppeteer/puppeteer.dart';
@@ -25,7 +26,7 @@ class CrawllerService extends ChangeNotifier {
 
   CrawllerService()
       : p = PuppeteerUtil(),
-        delay = const Duration(milliseconds: 25),
+        delay = const Duration(milliseconds: 15),
         timeout = Duration(seconds: 20);
 
   static ChangeNotifierProvider get provider =>
@@ -43,22 +44,23 @@ class CrawllerService extends ChangeNotifier {
   }
 
   void saveHumorPost(NavigationPageComponent c) async {
+    var context = c.context;
+    PostUrlService service = PostUrlService.read(context);
+
     await p.startBrowser(headless: false, width: 1280, height: 1024);
 
-    InstaUser? instaUser = await _login(c.context);
+    InstaUser? instaUser = await _login(context);
     if (instaUser != null) {
       for (var instaUserId in instaUser.accountIdList ?? []) {
         LogUtil.debug("instaUser.accountIdList 중 instaUserId 탐색중입니다.");
         List<String> postUrlList = await getPostUrlList(instaUserId);
+
         if (postUrlList.isNotEmpty) {
-          for (String postUrl in postUrlList) {
-            PostUrl postUrlObj = await PostUrlRepository.me
-                    .getOneByUrl(postUrl) ??
+          for (String postUrlStr in postUrlList) {
+            PostUrl postUrl = await PostUrlRepository.me.getOneByUrl(postUrlStr) ??
                 PostUrl(
-                    instaUserId: instaUserId,
-                    url: postUrl,
-                    mediaUrlList: await getMediaStrListOf(postUrl: postUrl));
-            await PostUrlRepository.me.save(postUrl: postUrlObj);
+                    instaUserId: instaUserId, url: postUrlStr, mediaUrlList: await getMediaStrListOf(postUrl: postUrlStr));
+            service.savePostUrl(postUrl);
           }
         } else {
           LogUtil.debug("Posts가 없습니다.");
@@ -74,7 +76,7 @@ class CrawllerService extends ChangeNotifier {
     if (instaUser != null) {
       c.idController.text = instaUser.id ?? "";
       c.pwController.text = instaUser.pw ?? "";
-      c.accountIdList = (instaUser.accountIdList ?? []).cast<String>();
+      c.accountIdList = List.of((instaUser.accountIdList ?? []).cast<String>());
     }
     notifyListeners();
   }

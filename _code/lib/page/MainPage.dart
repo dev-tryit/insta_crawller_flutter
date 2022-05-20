@@ -27,8 +27,6 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageComponent extends KDHComponent<_MainPageState> {
-  List<PostUrl> postUrlList = [];
-
   MainPageComponent(_MainPageState state) : super(state);
 }
 
@@ -57,7 +55,7 @@ class _MainPageState extends KDHState<MainPage> {
         ),
       );
     };
-    await s.setPostUrlList(c);
+    await s.resetPostUrlList();
     finishLoad();
   }
 

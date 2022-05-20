@@ -43,6 +43,7 @@ class PuppeteerUtil {
           '--no-sandbox',
           '--window-size=$width,$height',
         ],
+        userDataDir: "./browserData", //쿠키 유지 방법
         defaultViewport: DeviceViewport(
           width: width,
           height: height,

@@ -11,7 +11,6 @@ import 'package:insta_crawller_flutter/page/NavigationPage.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:insta_crawller_flutter/service/CrawllerService.dart';
 import 'package:insta_crawller_flutter/service/PostUrlService.dart';
-import 'package:insta_crawller_flutter/util/MyColors.dart';
 import 'package:insta_crawller_flutter/util/MyComponents.dart';
 import 'package:insta_crawller_flutter/util/MyFonts.dart';
 import 'package:insta_crawller_flutter/util/MyImage.dart';
@@ -102,14 +101,12 @@ class _MainPageState extends KDHState<MainPage> {
   Widget scrollView() {
     return PostUrlService.consumer(
       builder: (context, value, child) => c.postUrlList.isNotEmpty
-          ? SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 34),
-                child: Column(
-                  children: c.postUrlList
-                      .map((postUrl) => instaCardGroup(postUrl))
-                      .toList(),
-                ),
+          ? Padding(
+              padding: const EdgeInsets.only(top: 34),
+              child: ListView(
+                children: c.postUrlList
+                    .map((postUrl) => instaCardGroup(postUrl))
+                    .toList(),
               ),
             )
           : Center(

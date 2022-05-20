@@ -1,11 +1,10 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:insta_crawller_flutter/_common/interface/Type.dart';
 import 'package:insta_crawller_flutter/_common/model/KDHResult.dart';
 import 'package:insta_crawller_flutter/_common/model/exception/CommonException.dart';
+import 'package:insta_crawller_flutter/_common/util/FileUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/InteractionUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
@@ -385,11 +384,8 @@ class CrawllerService extends ChangeNotifier {
         List<File> fileList = [];
         for (String mediaUrl in (postUrl.mediaUrlList ?? []).cast<String>()) {
           try {
-            Uint8List uint8list =
-                (await NetworkAssetBundle(Uri.parse(mediaUrl)).load(mediaUrl))
-                    .buffer
-                    .asUint8List();
-            fileList.add(await File("tempFile$i.png").writeAsBytes(uint8list));
+            File file = await FileUtil.downloadFile(mediaUrl, "tempFile$i.png");
+            fileList.add(file);
           } catch (ignored) {}
 
           i++;
@@ -467,11 +463,11 @@ class CrawllerService extends ChangeNotifier {
 
       //TODO: 공유하기 내용 받아서 여따가 넣어야함.
 
-      await p.wait(1500);
-      result = await _nextStep('[aria-label="새 게시물 만들기"] button', "공유하기");
-      result.checkFail(errorMsg: '_nextStep[aria-label="새 게시물 만들기"] error');
+      // await p.wait(1500);
+      // result = await _nextStep('[aria-label="새 게시물 만들기"] button', "공유하기");
+      // result.checkFail(errorMsg: '_nextStep[aria-label="새 게시물 만들기"] error');
 
-      await p.goto("https://www.instagram.com/");
+      // await p.goto("https://www.instagram.com/");
     } on CommonException catch (e) {
       LogUtil.warn("에러가 발생하였습니다 ${e.toString()}");
     } finally {

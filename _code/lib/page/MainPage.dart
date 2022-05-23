@@ -159,7 +159,31 @@ class _MainPageState extends KDHState<MainPage> {
                   ),
                   InkWell(
                     child:
-                        Icon(Icons.delete, color: MyTheme.subColor, size: 18),
+                    Icon(Icons.add_box_outlined, color: MyTheme.subColor, size: 18),
+                    onTap: () {
+                      //TODO: 제목 작성 기능.
+                      //TODO: 1. 배경색,배경이미지 선택,
+                      //TODO: 2. 글자색 선택,
+                      //TODO: 3. 글꼴 선택
+
+
+                      // InteractionUtil.showAlertDialog(
+                      //   BackButtonBehavior.close,
+                      //   content: const Text("추가하시겠습니까?"),
+                      //   confirmLabel: "확인",
+                      //   cancelLabel: "취소",
+                      //   cancel: () {},
+                      //   backgroundReturn: () {},
+                      //   confirm: () async {
+                      //     await s.deletePostUrl(postUrl);
+                      //     BotToast.showText(text: '해당 항목이 삭제되었습니다.');
+                      //   },
+                      // );
+                    },
+                  ),
+                  InkWell(
+                    child:
+                    Icon(Icons.delete, color: MyTheme.subColor, size: 18),
                     onTap: () {
                       InteractionUtil.showAlertDialog(
                         BackButtonBehavior.close,

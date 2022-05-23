@@ -59,15 +59,20 @@ abstract class FirebaseStoreUtilInterface<Type extends WithDocId> {
   Type? _applyInstance(Map<String, dynamic>? map) =>
       (map == null || map.isEmpty) ? null : fromMap(map);
 
-  Future<Type?> save(
-      {required Type instance, int? newDocumentId}) async {
+  Future<Type?> save({required Type instance, int? newDocumentId}) async {
     var ref = dRef(documentId: newDocumentId ?? instance.documentId);
     await ref.set(toMap(instance));
     return _applyInstance(await dRefToMap(ref));
   }
 
   Future<Type?> getOne({required int documentId}) async {
-    return _applyInstance(await dRefToMap(dRef(documentId: documentId)));
+    Type? nullableType =
+        _applyInstance(await dRefToMap(dRef(documentId: documentId)));
+    if (nullableType != null && (nullableType.deleted ?? false)) {
+      return null;
+    }
+
+    return nullableType;
   }
 
   Future<bool> exist({required String key, required String value}) async {
@@ -97,11 +102,13 @@ abstract class FirebaseStoreUtilInterface<Type extends WithDocId> {
       query = query.where("email", isEqualTo: AuthUtil.me.email ?? "");
     }
 
-    return await _convertListFromDocs(
+    List<Type> convertedList = (await _convertListFromDocs(
       await queryToList(query),
       useSort: useSort,
       descending: descending,
-    );
+    ));
+
+    return convertedList.where((e) => !(e.deleted ?? false)).toList();
   }
 
   Future<Type?> getOneByField(
@@ -135,7 +142,8 @@ abstract class FirebaseStoreUtilInterface<Type extends WithDocId> {
   Future<void> deleteListByField(
       {required String key,
       required String value,
-      bool deleteByChecking = true}) async {//TODO: 동작 되는지 나중에 확인 필요.
+      bool deleteByChecking = true}) async {
+    //TODO: 동작 되는지 나중에 확인 필요.
     List list = await queryToList(cRef().where(key, isEqualTo: value));
 
     List<Future> futureList = [];

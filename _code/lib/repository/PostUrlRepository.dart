@@ -9,7 +9,9 @@ class PostUrl extends WithDocId {
   List? mediaUrlList;
 
   PostUrl(
-      {required this.instaUserId, required this.url, required this.mediaUrlList})
+      {required this.instaUserId,
+      required this.url,
+      required this.mediaUrlList})
       : super(documentId: DateTime.now().microsecondsSinceEpoch);
 
   factory PostUrl.fromJson(Map<String, dynamic> json) => fromMap(json);
@@ -23,13 +25,15 @@ class PostUrl extends WithDocId {
       mediaUrlList: List.from(map['mediaUrlList']),
     )
       ..documentId = map['documentId']
-      ..email = map['email'];
+      ..email = map['email']
+      ..deleted = map['deleted'];
   }
 
   static Map<String, dynamic> toMap(PostUrl instance) {
     return {
       'documentId': instance.documentId,
       'email': instance.email,
+      'deleted': instance.deleted,
       'instaUserId': instance.instaUserId,
       'url': instance.url,
       'mediaUrlList': instance.mediaUrlList,
@@ -39,7 +43,8 @@ class PostUrl extends WithDocId {
 
 class PostUrlRepository {
   static final PostUrlRepository _singleton = PostUrlRepository._internal();
-  static PostUrlRepository get me=>_singleton;
+
+  static PostUrlRepository get me => _singleton;
 
   PostUrlRepository._internal();
 
@@ -70,7 +75,7 @@ class PostUrlRepository {
   }
 
   Future<PostUrl?> getOneByUrl(String url) async {
-    return await _.getOneByField(onlyMyData: true, key: "url", value:url);
+    return await _.getOneByField(onlyMyData: true, key: "url", value: url);
   }
 
   Future<List<PostUrl>> getList() async {

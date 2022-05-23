@@ -8,8 +8,7 @@ class InstaUser extends WithDocId {
   String? pw;
   List? accountIdList;
 
-  InstaUser(
-      {required this.id, required this.pw, required this.accountIdList})
+  InstaUser({required this.id, required this.pw, required this.accountIdList})
       : super(documentId: DateTime.now().microsecondsSinceEpoch);
 
   factory InstaUser.fromJson(Map<String, dynamic> json) => fromMap(json);
@@ -23,13 +22,15 @@ class InstaUser extends WithDocId {
       accountIdList: map['accountIdList'],
     )
       ..documentId = map['documentId']
-      ..email = map['email'];
+      ..email = map['email']
+      ..deleted = map['deleted'];
   }
 
   static Map<String, dynamic> toMap(InstaUser instance) {
     return {
       'documentId': instance.documentId,
       'email': instance.email,
+      'deleted': instance.deleted,
       'id': instance.id,
       'pw': instance.pw,
       'accountIdList': instance.accountIdList,
@@ -39,7 +40,8 @@ class InstaUser extends WithDocId {
 
 class InstaUserRepository {
   static final InstaUserRepository _singleton = InstaUserRepository._internal();
-  static InstaUserRepository get me=>_singleton;
+
+  static InstaUserRepository get me => _singleton;
 
   InstaUserRepository._internal();
 

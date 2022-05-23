@@ -199,6 +199,9 @@ class _MainPageState extends KDHState<MainPage> {
                           Image.network(
                             mediaUrl,
                             fit: BoxFit.fill,
+                            errorBuilder: (context, error, stackTrace){
+                              return Text("이미지 로드 실패");
+                            },
                           ),
                           IconButton(icon: Icon(Icons.delete), onPressed: () {
                             InteractionUtil.showAlertDialog(

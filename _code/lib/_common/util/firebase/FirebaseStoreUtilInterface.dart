@@ -135,15 +135,18 @@ abstract class FirebaseStoreUtilInterface<Type extends WithDocId> {
   Future<void> deleteListByField(
       {required String key,
       required String value,
-      bool deleteByChecking = true}) async {
+      bool deleteByChecking = true}) async {//TODO: 동작 되는지 나중에 확인 필요.
     List list = await queryToList(cRef().where(key, isEqualTo: value));
+
+    List<Future> futureList = [];
     for (var documentSnapshot in list) {
       if (deleteByChecking) {
-        await deleteOne(
-            documentId: documentSnapshot.reference.id, deleteByChecking: true);
+        futureList.add(deleteOne(
+            documentId: documentSnapshot.reference.id, deleteByChecking: true));
       } else {
-        await documentSnapshot.reference.delete();
+        futureList.add(documentSnapshot.reference.delete());
       }
     }
+    await Future.wait(futureList);
   }
 }

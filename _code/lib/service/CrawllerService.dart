@@ -60,7 +60,7 @@ class CrawllerService extends ChangeNotifier {
             PostUrl postUrl = await PostUrlRepository.me.getOneByUrl(postUrlStr) ??
                 PostUrl(
                     instaUserId: instaUserId, url: postUrlStr, mediaUrlList: await getMediaStrListOf(postUrl: postUrlStr));
-            service.savePostUrl(postUrl);
+            service.addPostUrl(postUrl);
           }
         } else {
           LogUtil.debug("Posts가 없습니다.");

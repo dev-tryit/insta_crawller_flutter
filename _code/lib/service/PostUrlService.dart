@@ -55,7 +55,7 @@ class PostUrlService extends ChangeNotifier {
         .delete(documentId: postUrl.documentId!);
   }
 
-  Future<void> savePostUrl(PostUrl postUrl) async {
+  Future<void> addPostUrl(PostUrl postUrl) async {
     if(!postUrlList.contains(postUrl)) {
       postUrlList.add(postUrl);
       notifyListeners();
@@ -69,6 +69,9 @@ class PostUrlService extends ChangeNotifier {
     if(postUrl.mediaUrlList != null) {
       postUrl.mediaUrlList!.remove(mediaUrl);
       notifyListeners();
+
+      PostUrlRepository.me
+          .save(postUrl: postUrl);
     }
   }
 }

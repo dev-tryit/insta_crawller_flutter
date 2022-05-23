@@ -162,9 +162,10 @@ class _MainPageState extends KDHState<MainPage> {
                     Icon(Icons.add_box_outlined, color: MyTheme.subColor, size: 18),
                     onTap: () {
                       //TODO: 제목 작성 기능.
-                      //TODO: 1. 배경색,배경이미지 선택,
+                      //TODO: 1. 배경색 선택,
                       //TODO: 2. 글자색 선택,
                       //TODO: 3. 글꼴 선택
+                      //TODO: 이미지 첨부
 
 
                       // InteractionUtil.showAlertDialog(

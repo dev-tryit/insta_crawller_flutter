@@ -20,7 +20,7 @@ class PostUrl extends WithDocId {
     return PostUrl(
       instaUserId: map['instaUserId'],
       url: map['url'],
-      mediaUrlList: map['mediaUrlList'],
+      mediaUrlList: List.from(map['mediaUrlList']),
     )
       ..documentId = map['documentId']
       ..email = map['email'];

@@ -184,17 +184,36 @@ class _MainPageState extends KDHState<MainPage> {
                   itemWidth: 300.0,
                   itemCount: mediaUrlList.length,
                   itemBuilder: (BuildContext context, int i) {
+                    var mediaUrl =  mediaUrlList[i];
+
                     return InkWell(
                       onTap: () {
-                        var galleryItems = mediaUrlList
-                            .map((e) => GalleryItem(path: e))
-                            .toList();
                         InteractionUtil.zoomImage(
-                            context, galleryItems, i, false);
+                            context, mediaUrlList
+                            .map((e) => GalleryItem(path: e))
+                            .toList(), i, false);
                       },
-                      child: Image.network(
-                        mediaUrlList[i],
-                        fit: BoxFit.fill,
+                      child: Stack(
+                        alignment: Alignment.topRight,
+                        children: [
+                          Image.network(
+                            mediaUrl,
+                            fit: BoxFit.fill,
+                          ),
+                          IconButton(icon: Icon(Icons.delete), onPressed: () {
+                            InteractionUtil.showAlertDialog(
+                              BackButtonBehavior.close,
+                              content: const Text("정말 삭제하시겠습니까?"),
+                              confirmLabel: "확인",
+                              cancelLabel: "취소",
+                              cancel: () {},
+                              backgroundReturn: () {},
+                              confirm: () async {
+                                s.deleteMediaUrlOf(postUrl, mediaUrl);
+                              },
+                            );
+                          }),
+                        ],
                       ),
                     );
                   },

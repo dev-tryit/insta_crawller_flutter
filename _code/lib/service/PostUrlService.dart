@@ -64,4 +64,11 @@ class PostUrlService extends ChangeNotifier {
     PostUrlRepository.me
         .save(postUrl: postUrl);
   }
+
+  void deleteMediaUrlOf(PostUrl postUrl, mediaUrl) {
+    if(postUrl.mediaUrlList != null) {
+      postUrl.mediaUrlList!.remove(mediaUrl);
+      notifyListeners();
+    }
+  }
 }

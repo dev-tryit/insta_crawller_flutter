@@ -19,8 +19,8 @@ import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 
-const width = 350.0;
-const height = 700.0;
+const width = 600.0;
+const height = 900.0;
 
 Future<void> main() async {
   ErrorUtil.catchError(() async {

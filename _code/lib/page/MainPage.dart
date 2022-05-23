@@ -181,6 +181,7 @@ class _MainPageState extends KDHState<MainPage> {
               Container(
                 height: 215,
                 child: Swiper(
+                  itemWidth: 300.0,
                   itemCount: mediaUrlList.length,
                   itemBuilder: (BuildContext context, int i) {
                     return InkWell(
@@ -197,7 +198,6 @@ class _MainPageState extends KDHState<MainPage> {
                       ),
                     );
                   },
-                  itemWidth: 300.0,
                   layout: SwiperLayout.STACK,
                 ),
               ),

@@ -51,7 +51,7 @@ class PostUrlRepository {
   );
 
   Future<PostUrl?> save({required PostUrl postUrl}) async {
-    return await _.saveByDocumentId(instance: postUrl);
+    return await _.save(instance: postUrl);
   }
 
   Future<bool> existDocumentId({required String documentId}) async {
@@ -74,6 +74,6 @@ class PostUrlRepository {
   }
 
   Future<List<PostUrl>> getList() async {
-    return await _.getList(onlyMyData: true);
+    return await _.getListByField(onlyMyData: true);
   }
 }

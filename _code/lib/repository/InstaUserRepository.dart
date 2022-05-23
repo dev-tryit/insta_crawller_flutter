@@ -51,7 +51,7 @@ class InstaUserRepository {
   );
 
   Future<InstaUser?> save({required InstaUser instaUser}) async {
-    return await _.saveByDocumentId(instance: instaUser);
+    return await _.save(instance: instaUser);
   }
 
   Future<bool> existDocumentId({required String documentId}) async {
@@ -70,6 +70,6 @@ class InstaUserRepository {
   }
 
   Future<List<InstaUser>> getList() async {
-    return await _.getList(onlyMyData: true);
+    return await _.getListByField(onlyMyData: true);
   }
 }

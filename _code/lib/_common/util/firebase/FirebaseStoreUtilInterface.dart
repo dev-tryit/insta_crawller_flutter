@@ -70,6 +70,11 @@ abstract class FirebaseStoreUtilInterface<Type extends WithDocId> {
     return _applyInstance(await dRefToMap(dRef(documentId: documentId)));
   }
 
+  Future<bool> exist({required String key, required String value}) async {
+    var data = await getOneByField(key: key, value: value);
+    return data != null;
+  }
+
   Future<List<Type>> getListByField({
     String? key,
     String? value,
@@ -140,10 +145,5 @@ abstract class FirebaseStoreUtilInterface<Type extends WithDocId> {
         await documentSnapshot.reference.delete();
       }
     }
-  }
-
-  Future<bool> exist({required String key, required String value}) async {
-    var data = await getOneByField(key: key, value: value);
-    return data != null;
   }
 }

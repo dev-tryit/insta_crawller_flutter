@@ -51,7 +51,9 @@ class CrawllerService extends ChangeNotifier {
 
     InstaUser? instaUser = await _login(context);
     if (instaUser != null) {
-      for (var instaUserId in instaUser.accountIdList ?? []) {
+      List targetIdList = instaUser.accountIdList ?? [];
+      targetIdList.shuffle();
+      for (var instaUserId in targetIdList) {
         LogUtil.debug("instaUser.accountIdList 중 instaUserId 탐색중입니다.");
         List<String> postUrlList = await getPostUrlList(instaUserId);
 

@@ -60,12 +60,14 @@ class CrawllerService extends ChangeNotifier {
 
         if (postUrlList.isNotEmpty) {
           for (String postUrlStr in postUrlList) {
-            PostUrl postUrl = await PostUrlRepository.me
-                    .getOneByUrl(postUrlStr) ??
-                PostUrl(
-                    instaUserId: instaUserId,
-                    url: postUrlStr,
-                    mediaUrlList: await getMediaStrListOf(postUrl: postUrlStr),);
+            PostUrl postUrl =
+                await PostUrlRepository.me.getOneByUrl(postUrlStr) ??
+                    PostUrl(
+                      instaUserId: instaUserId,
+                      url: postUrlStr,
+                      mediaUrlList:
+                          await getMediaStrListOf(postUrl: postUrlStr),
+                    );
             service.addPostUrl(postUrl);
           }
         } else {
@@ -378,9 +380,9 @@ class CrawllerService extends ChangeNotifier {
     );
   }
 
-  Future<KDHResult> uploadPostUrl(BuildContext context, PostUrl postUrl, File? selectedThumbnailFile) async {
+  Future<KDHResult> uploadPostUrl(BuildContext context, PostUrl postUrl,
+      File? selectedThumbnailFile) async {
     KDHResult result = KDHResult.success;
-
 
     try {
       await p.startBrowser(headless: false, width: 1280, height: 1024);
@@ -405,7 +407,7 @@ class CrawllerService extends ChangeNotifier {
       List<File> fileList = await _getFileList();
       result = fileList.isEmpty ? KDHResult.fail : KDHResult.success;
       result.checkFailAndThrowException(errorMsg: "_getFileList error");
-      if(selectedThumbnailFile != null) {
+      if (selectedThumbnailFile != null) {
         fileList.insert(0, selectedThumbnailFile);
       }
 
@@ -466,18 +468,21 @@ class CrawllerService extends ChangeNotifier {
 
       await p.wait(1500);
       result = await _nextStep('[aria-label="자르기"] button', "다음");
-      result.checkFailAndThrowException(errorMsg: '_nextStep[aria-label="자르기"] error');
+      result.checkFailAndThrowException(
+          errorMsg: '_nextStep[aria-label="자르기"] error');
 
       await p.wait(1500);
       result = await _nextStep('[aria-label="편집"] button', "다음");
-      result.checkFailAndThrowException(errorMsg: '_nextStep[aria-label="편집"] error');
+      result.checkFailAndThrowException(
+          errorMsg: '_nextStep[aria-label="편집"] error');
 
-      //TODO: 해시태그 필요.
-      await p.typeClick('[aria-label="문구 입력..."]', "헤헤");
+      await p.typeClick('[aria-label="문구 입력..."]',
+          "#사람 #명언 #북스타그램 #데일리 #럽스타그램 #감성글 #독서 #좋은글 #직장인 #감성 #연애 #책추천 #인간관계 #고민 #힐링 #책 #책스타그램 #서점 #책선물 #베스트셀러 #위로글 #자존감 #위로글귀 #공감 #일상 #동기부여 #자기계발 #글 #글스타그램 #20대 #30대 #꿀잼영상 #유머영상 #유머동영상 #유머모음 #유머피드 #유머릴스 #유머그램 #꿀잼피드 #꿀잼릴스 #좋아요 #좋아요댓글 #선팔 #맞팔 #ㅋㅋㅋ #ㅋㅋㅋㅋㅋ #먹스타그램 #먹스타 #뭐해 #환영 #꿀잼 #소통 #개그 #웃음 #웃짤 #웃긴사진 #재미 #재밌는 #웃긴 #맞팔 #지55 #유머저장소 #선팔 #맞팔 #좋반 #좋아요 #좋아요반사 #맞팔해요 #좋테 #좋튀");
 
       await p.wait(1500);
       result = await _nextStep('[aria-label="새 게시물 만들기"] button', "공유하기");
-      result.checkFailAndThrowException(errorMsg: '_nextStep[aria-label="새 게시물 만들기"] error');
+      result.checkFailAndThrowException(
+          errorMsg: '_nextStep[aria-label="새 게시물 만들기"] error');
 
       await p.goto("https://www.instagram.com/");
     } on CommonException catch (e) {
@@ -488,5 +493,4 @@ class CrawllerService extends ChangeNotifier {
 
     return result;
   }
-
 }

@@ -476,6 +476,7 @@ class CrawllerService extends ChangeNotifier {
       result.checkFailAndThrowException(
           errorMsg: '_nextStep[aria-label="편집"] error');
 
+      await p.wait(1500);
       await p.typeClick('[aria-label="문구 입력..."]',
           "#사람 #명언 #북스타그램 #데일리 #럽스타그램 #감성글 #독서 #좋은글 #직장인 #감성 #연애 #책추천 #인간관계 #고민 #힐링 #책 #책스타그램 #서점 #책선물 #베스트셀러 #위로글 #자존감 #위로글귀 #공감 #일상 #동기부여 #자기계발 #글 #글스타그램 #20대 #30대 #꿀잼영상 #유머영상 #유머동영상 #유머모음 #유머피드 #유머릴스 #유머그램 #꿀잼피드 #꿀잼릴스 #좋아요 #좋아요댓글 #선팔 #맞팔 #ㅋㅋㅋ #ㅋㅋㅋㅋㅋ #먹스타그램 #먹스타 #뭐해 #환영 #꿀잼 #소통 #개그 #웃음 #웃짤 #웃긴사진 #재미 #재밌는 #웃긴 #맞팔 #지55 #유머저장소 #선팔 #맞팔 #좋반 #좋아요 #좋아요반사 #맞팔해요 #좋테 #좋튀");
 
@@ -484,6 +485,7 @@ class CrawllerService extends ChangeNotifier {
       result.checkFailAndThrowException(
           errorMsg: '_nextStep[aria-label="새 게시물 만들기"] error');
 
+      await p.wait(1500);
       await p.goto("https://www.instagram.com/");
     } on CommonException catch (e) {
       rethrow;

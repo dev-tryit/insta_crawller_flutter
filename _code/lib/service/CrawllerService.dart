@@ -381,6 +381,7 @@ class CrawllerService extends ChangeNotifier {
   Future<KDHResult> uploadPostUrl(BuildContext context, PostUrl postUrl, File? selectedThumbnailFile) async {
     KDHResult result = KDHResult.success;
 
+
     try {
       await p.startBrowser(headless: false, width: 1280, height: 1024);
 
@@ -471,17 +472,18 @@ class CrawllerService extends ChangeNotifier {
       result = await _nextStep('[aria-label="편집"] button', "다음");
       result.checkFailAndThrowException(errorMsg: '_nextStep[aria-label="편집"] error');
 
-      //TODO: 공유하기 내용 받아서 여따가 넣어야함.
+      //TODO: 해시태그 필요.
+      await p.typeClick('[aria-label="문구 입력..."]', "헤헤");
 
-      // await p.wait(1500);
-      // result = await _nextStep('[aria-label="새 게시물 만들기"] button', "공유하기");
-      // result.checkFail(errorMsg: '_nextStep[aria-label="새 게시물 만들기"] error');
+      await p.wait(1500);
+      result = await _nextStep('[aria-label="새 게시물 만들기"] button', "공유하기");
+      result.checkFailAndThrowException(errorMsg: '_nextStep[aria-label="새 게시물 만들기"] error');
 
-      // await p.goto("https://www.instagram.com/");
+      await p.goto("https://www.instagram.com/");
     } on CommonException catch (e) {
       rethrow;
     } finally {
-      // await p.stopBrowser();
+      await p.stopBrowser();
     }
 
     return result;

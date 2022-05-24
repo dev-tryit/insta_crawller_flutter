@@ -277,4 +277,17 @@ class PuppeteerUtil {
     var fileChooser = await futureFileChooser;
     await fileChooser.accept(acceptFiles);
   }
+
+  Future<void> focus(String selector) async {
+    await tab.focus(selector);
+  }
+
+  Future<void> typeFocus(String selector, String text, {Duration? delay}) async {
+    await focus(selector);
+    await tab.keyboard.type('text', delay: delay);
+  }
+  Future<void> typeClick(String selector, String text, {Duration? delay}) async {
+    await click(selector);
+    await tab.keyboard.type('text', delay: delay);
+  }
 }

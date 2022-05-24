@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:emojis/emoji.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:insta_crawller_flutter/_common/abstract/KDHComponent.dart';
 import 'package:insta_crawller_flutter/_common/abstract/KDHState.dart';
 import 'package:insta_crawller_flutter/_common/extension/RandomExtension.dart';
+import 'package:insta_crawller_flutter/_common/util/FileUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/InteractionUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/page/NavigationPage.dart';
@@ -26,20 +29,12 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class MainPageComponent extends KDHComponent<_MainPageState> {
-  MainPageComponent(_MainPageState state) : super(state);
-}
-
 class _MainPageState extends KDHState<MainPage> {
   late final PostUrlService s;
-  late final CrawllerService crawller;
-  late final MainPageComponent c;
 
   @override
   Future<void> mustFinishLoad() async {
-    c = MainPageComponent(this);
     s = PostUrlService.read(context);
-    crawller = CrawllerService.read(context);
 
     toBuild = () {
       return MyComponents.scaffold(
@@ -143,48 +138,13 @@ class _MainPageState extends KDHState<MainPage> {
                     child: Icon(Icons.ios_share,
                         color: MyTheme.subColor, size: 18),
                     onTap: () {
-                      InteractionUtil.showAlertDialog(
-                        BackButtonBehavior.close,
-                        content: const Text("정말 업로드하시겠습니까?"),
-                        confirmLabel: "확인",
-                        cancelLabel: "취소",
-                        cancel: () {},
-                        backgroundReturn: () {},
-                        confirm: () async {
-                          await crawller.uploadPostUrl(c, postUrl);
-                          BotToast.showText(text: '해당 항목이 업로드되었습니다.');
-                        },
-                      );
+                      final dialog = FileUploadDialog(this);
+                      dialog.open(postUrl);
                     },
                   ),
                   InkWell(
                     child:
-                    Icon(Icons.add_box_outlined, color: MyTheme.subColor, size: 18),
-                    onTap: () {
-                      //TODO: 제목 작성 기능.
-                      //TODO: 1. 배경색 선택,
-                      //TODO: 2. 글자색 선택,
-                      //TODO: 3. 글꼴 선택
-                      //TODO: 이미지 첨부
-
-
-                      // InteractionUtil.showAlertDialog(
-                      //   BackButtonBehavior.close,
-                      //   content: const Text("추가하시겠습니까?"),
-                      //   confirmLabel: "확인",
-                      //   cancelLabel: "취소",
-                      //   cancel: () {},
-                      //   backgroundReturn: () {},
-                      //   confirm: () async {
-                      //     await s.deletePostUrl(postUrl);
-                      //     BotToast.showText(text: '해당 항목이 삭제되었습니다.');
-                      //   },
-                      // );
-                    },
-                  ),
-                  InkWell(
-                    child:
-                    Icon(Icons.delete, color: MyTheme.subColor, size: 18),
+                        Icon(Icons.delete, color: MyTheme.subColor, size: 18),
                     onTap: () {
                       InteractionUtil.showAlertDialog(
                         BackButtonBehavior.close,
@@ -209,14 +169,17 @@ class _MainPageState extends KDHState<MainPage> {
                   itemWidth: 300.0,
                   itemCount: mediaUrlList.length,
                   itemBuilder: (BuildContext context, int i) {
-                    var mediaUrl =  mediaUrlList[i];
+                    var mediaUrl = mediaUrlList[i];
 
                     return InkWell(
                       onTap: () {
                         InteractionUtil.zoomImage(
-                            context, mediaUrlList
-                            .map((e) => GalleryItem(path: e))
-                            .toList(), i, false);
+                            context,
+                            mediaUrlList
+                                .map((e) => GalleryItem(path: e))
+                                .toList(),
+                            i,
+                            false);
                       },
                       child: Stack(
                         alignment: Alignment.topRight,
@@ -224,23 +187,25 @@ class _MainPageState extends KDHState<MainPage> {
                           Image.network(
                             mediaUrl,
                             fit: BoxFit.fill,
-                            errorBuilder: (context, error, stackTrace){
+                            errorBuilder: (context, error, stackTrace) {
                               return Text("이미지 로드 실패");
                             },
                           ),
-                          IconButton(icon: Icon(Icons.delete), onPressed: () {
-                            InteractionUtil.showAlertDialog(
-                              BackButtonBehavior.close,
-                              content: const Text("정말 삭제하시겠습니까?"),
-                              confirmLabel: "확인",
-                              cancelLabel: "취소",
-                              cancel: () {},
-                              backgroundReturn: () {},
-                              confirm: () async {
-                                s.deleteMediaUrlOf(postUrl, mediaUrl);
-                              },
-                            );
-                          }),
+                          IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                InteractionUtil.showAlertDialog(
+                                  BackButtonBehavior.close,
+                                  content: const Text("정말 삭제하시겠습니까?"),
+                                  confirmLabel: "확인",
+                                  cancelLabel: "취소",
+                                  cancel: () {},
+                                  backgroundReturn: () {},
+                                  confirm: () async {
+                                    s.deleteMediaUrlOf(postUrl, mediaUrl);
+                                  },
+                                );
+                              }),
                         ],
                       ),
                     );
@@ -259,4 +224,84 @@ class _MainPageState extends KDHState<MainPage> {
   void moveNavigationPage() {
     PageUtil.go(context, NavigationPage());
   }
+
+
 }
+
+class FileUploadDialog extends StatefulWidget {
+  File? selectedThumbnailFile;
+  final _MainPageState _mainPageState;
+  FileUploadDialog(this._mainPageState, {Key? key}) : super(key: key);
+
+  @override
+  State<FileUploadDialog> createState() => _FileUploadDialogState();
+
+  void open(PostUrl postUrl) {
+    final context = _mainPageState.context;
+
+    CrawllerService crawller = CrawllerService.read(context);
+    //TODO: 제목 작성 기능.
+    //TODO: 1. 배경색 선택,
+    //TODO: 2. 글자색 선택,
+    //TODO: 3. 글꼴 선택
+    //TODO: 이미지 첨부
+
+    InteractionUtil.showAlertDialog(
+      BackButtonBehavior.close,
+      content: this,
+      confirmLabel: "확인",
+      cancelLabel: "취소",
+      cancel: () {},
+      backgroundReturn: () {},
+      confirm: () async {
+        try {
+          await crawller.uploadPostUrl(context, postUrl, selectedThumbnailFile);
+          BotToast.showText(text: '해당 항목이 업로드되었습니다.');
+        }
+        catch(e){
+          BotToast.showText(text: '에러가 발생하였습니다. : ${e.toString()}');
+        }
+      },
+    );
+  }
+}
+
+class _FileUploadDialogState extends State<FileUploadDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("업로드하기"),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(child: Text(FileUtil.getFileName(widget.selectedThumbnailFile?.path ?? "첨부된 파일이 없습니다"), style: TextStyle(fontSize: 11))),
+            const SizedBox(width: 10),
+            ElevatedButton(
+              child: const Text("이미지 첨부"),
+              onPressed: () async {
+                widget.selectedThumbnailFile = await selectThumbnail();
+                setState(() {});
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Future<File?> selectThumbnail() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+    if (result?.files.single.path != null) {
+      return File(result!.files.single.path ?? "");
+    }
+    return null;
+  }
+}
+
+/*
+
+ */

@@ -7,7 +7,7 @@ extension KDHResultMethod on KDHResult {
     return this == KDHResult.success;
   }
 
-  void checkFail({required String errorMsg}) {
+  void checkFailAndThrowException({required String errorMsg}) {
     if (!isSuccess()) {
       throw CommonException(message: errorMsg);
     }

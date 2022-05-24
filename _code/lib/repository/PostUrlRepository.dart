@@ -7,11 +7,14 @@ class PostUrl extends WithDocId {
   String? instaUserId;
   String? url;
   List? mediaUrlList;
+  bool? finishUpload;
 
   PostUrl(
       {required this.instaUserId,
       required this.url,
-      required this.mediaUrlList})
+      required this.mediaUrlList,
+      required this.finishUpload,
+      })
       : super(documentId: DateTime.now().microsecondsSinceEpoch);
 
   factory PostUrl.fromJson(Map<String, dynamic> json) => fromMap(json);
@@ -23,6 +26,7 @@ class PostUrl extends WithDocId {
       instaUserId: map['instaUserId'],
       url: map['url'],
       mediaUrlList: List.from(map['mediaUrlList']),
+      finishUpload: map['finishUpload'],
     )
       ..documentId = map['documentId']
       ..email = map['email']
@@ -37,6 +41,7 @@ class PostUrl extends WithDocId {
       'instaUserId': instance.instaUserId,
       'url': instance.url,
       'mediaUrlList': instance.mediaUrlList,
+      'finishUpload': instance.finishUpload,
     };
   }
 }

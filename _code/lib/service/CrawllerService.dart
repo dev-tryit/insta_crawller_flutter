@@ -10,7 +10,6 @@ import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PageUtil.dart';
 import 'package:insta_crawller_flutter/_common/util/PuppeteerUtil.dart';
 import 'package:insta_crawller_flutter/page/InstaAccountSettingPage.dart';
-import 'package:insta_crawller_flutter/page/MainPage.dart';
 import 'package:insta_crawller_flutter/page/NavigationPage.dart';
 import 'package:insta_crawller_flutter/repository/InstaUserRepository.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
@@ -20,6 +19,8 @@ import 'package:provider/provider.dart';
 import 'package:puppeteer/puppeteer.dart';
 
 class CrawllerService extends ChangeNotifier {
+  File? thumbnailFile;
+
   final PuppeteerUtil p;
   final Duration delay;
   final Duration timeout;
@@ -59,9 +60,13 @@ class CrawllerService extends ChangeNotifier {
 
         if (postUrlList.isNotEmpty) {
           for (String postUrlStr in postUrlList) {
-            PostUrl postUrl = await PostUrlRepository.me.getOneByUrl(postUrlStr) ??
+            PostUrl postUrl = await PostUrlRepository.me
+                    .getOneByUrl(postUrlStr) ??
                 PostUrl(
-                    instaUserId: instaUserId, url: postUrlStr, mediaUrlList: await getMediaStrListOf(postUrl: postUrlStr));
+                    instaUserId: instaUserId,
+                    url: postUrlStr,
+                    mediaUrlList: await getMediaStrListOf(postUrl: postUrlStr),
+                    finishUpload: false);
             service.addPostUrl(postUrl);
           }
         } else {
@@ -374,14 +379,15 @@ class CrawllerService extends ChangeNotifier {
     );
   }
 
-  Future<KDHResult> uploadPostUrl(MainPageComponent c, PostUrl postUrl) async {
+  Future<KDHResult> uploadPostUrl(BuildContext context, PostUrl postUrl, File? selectedThumbnailFile) async {
     KDHResult result = KDHResult.success;
+
     try {
       await p.startBrowser(headless: false, width: 1280, height: 1024);
 
-      InstaUser? instaUser = await _login(c.context);
+      InstaUser? instaUser = await _login(context);
       result = instaUser == null ? KDHResult.fail : KDHResult.success;
-      result.checkFail(errorMsg: "_login error");
+      result.checkFailAndThrowException(errorMsg: "_login error");
 
       Future<List<File>> _getFileList() async {
         List<File> fileList = [];
@@ -398,7 +404,10 @@ class CrawllerService extends ChangeNotifier {
       await p.goto("https://www.instagram.com/");
       List<File> fileList = await _getFileList();
       result = fileList.isEmpty ? KDHResult.fail : KDHResult.success;
-      result.checkFail(errorMsg: "_getFileList error");
+      result.checkFailAndThrowException(errorMsg: "_getFileList error");
+      if(selectedThumbnailFile != null) {
+        fileList.insert(0, selectedThumbnailFile);
+      }
 
       Future<KDHResult> _openUploadDialog() async {
         const selector = '[aria-label="새로운 게시물"]';
@@ -411,7 +420,7 @@ class CrawllerService extends ChangeNotifier {
       }
 
       result = await _openUploadDialog();
-      result.checkFail(errorMsg: "_openUploadDialog error");
+      result.checkFailAndThrowException(errorMsg: "_openUploadDialog error");
 
       Future<KDHResult> _uploadFiles() async {
         Future<ElementHandle?> getUploadButton() async {
@@ -432,8 +441,9 @@ class CrawllerService extends ChangeNotifier {
         await p.waitForFileChooser(uploadButton, acceptFiles: fileList);
         return KDHResult.success;
       }
+
       result = await _uploadFiles();
-      result.checkFail(errorMsg: "_uploadFiles error");
+      result.checkFailAndThrowException(errorMsg: "_uploadFiles error");
 
       Future<KDHResult> _nextStep(String selector, String targetText) async {
         ElementHandle? targetTag;
@@ -441,7 +451,7 @@ class CrawllerService extends ChangeNotifier {
         for (ElementHandle tempElement in tempList) {
           String elementStr = await p.text(tempElement);
           if (elementStr.contains(targetText)) {
-            targetTag= tempElement;
+            targetTag = tempElement;
             break;
           }
         }
@@ -456,11 +466,11 @@ class CrawllerService extends ChangeNotifier {
 
       await p.wait(1500);
       result = await _nextStep('[aria-label="자르기"] button', "다음");
-      result.checkFail(errorMsg: '_nextStep[aria-label="자르기"] error');
+      result.checkFailAndThrowException(errorMsg: '_nextStep[aria-label="자르기"] error');
 
       await p.wait(1500);
       result = await _nextStep('[aria-label="편집"] button', "다음");
-      result.checkFail(errorMsg: '_nextStep[aria-label="편집"] error');
+      result.checkFailAndThrowException(errorMsg: '_nextStep[aria-label="편집"] error');
 
       //TODO: 공유하기 내용 받아서 여따가 넣어야함.
 
@@ -470,11 +480,12 @@ class CrawllerService extends ChangeNotifier {
 
       // await p.goto("https://www.instagram.com/");
     } on CommonException catch (e) {
-      LogUtil.warn("에러가 발생하였습니다 ${e.toString()}");
+      rethrow;
     } finally {
       // await p.stopBrowser();
     }
 
     return result;
   }
+
 }

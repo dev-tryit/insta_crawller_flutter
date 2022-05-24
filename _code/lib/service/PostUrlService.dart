@@ -5,6 +5,7 @@ import 'package:insta_crawller_flutter/_common/util/LogUtil.dart';
 import 'package:insta_crawller_flutter/repository/PostUrlRepository.dart';
 import 'package:provider/provider.dart';
 
+
 class PostUrlService extends ChangeNotifier {
   List<PostUrl> postUrlList = [];
 
@@ -74,4 +75,5 @@ class PostUrlService extends ChangeNotifier {
           .save(postUrl: postUrl);
     }
   }
+
 }

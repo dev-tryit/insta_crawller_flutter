@@ -7,8 +7,17 @@ import 'package:path/path.dart';
 import 'JsonUtil.dart';
 
 class FileUtil {
+  static int? _getStartIndexOfQueryString(String path){
+    int? index = path.indexOf("?");
+    if(index <= 0) {
+      index = null;
+    }
+
+    return index;
+  }
+
   static String _removeQueryString(String path) {
-    return path.substring(0, path.indexOf("?"));
+    return path.substring(0, _getStartIndexOfQueryString(path));
   }
 
   static String getFileName(String path) {

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image/image.dart';
 import 'package:insta_crawller_flutter/_common/interface/Type.dart';
 import 'package:insta_crawller_flutter/_common/model/KDHResult.dart';
 import 'package:insta_crawller_flutter/_common/model/exception/CommonException.dart';
@@ -407,6 +408,18 @@ class CrawllerService extends ChangeNotifier {
       List<File> fileList = await _getFileList();
       result = fileList.isEmpty ? KDHResult.fail : KDHResult.success;
       result.checkFailAndThrowException(errorMsg: "_getFileList error");
+
+      //WEBP -> PNG
+      fileList = fileList.map((file) {
+        if (FileUtil.getFileName(file.path).toLowerCase().contains("webp")) {
+          final image = decodeImage(file.readAsBytesSync())!;
+          return File('${FileUtil.getFileNameWithoutExtension(file.path)}.png')
+            ..writeAsBytesSync(encodePng(image));
+        } else {
+          return file;
+        }
+      }).toList();
+
       if (selectedThumbnailFile != null) {
         fileList.insert(0, selectedThumbnailFile);
       }

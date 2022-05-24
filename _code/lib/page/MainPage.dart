@@ -240,11 +240,6 @@ class FileUploadDialog extends StatefulWidget {
     final context = _mainPageState.context;
 
     CrawllerService crawller = CrawllerService.read(context);
-    //TODO: 제목 작성 기능.
-    //TODO: 1. 배경색 선택,
-    //TODO: 2. 글자색 선택,
-    //TODO: 3. 글꼴 선택
-    //TODO: 이미지 첨부
 
     InteractionUtil.showAlertDialog(
       BackButtonBehavior.close,
@@ -256,7 +251,7 @@ class FileUploadDialog extends StatefulWidget {
       confirm: () async {
         try {
           await crawller.uploadPostUrl(context, postUrl, selectedThumbnailFile);
-          // await _mainPageState.s.deletePostUrl(postUrl);
+          await _mainPageState.s.deletePostUrl(postUrl);
           BotToast.showText(text: '해당 항목이 업로드되었습니다.');
         }
         catch(e){

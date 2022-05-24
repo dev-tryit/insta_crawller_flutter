@@ -256,6 +256,7 @@ class FileUploadDialog extends StatefulWidget {
       confirm: () async {
         try {
           await crawller.uploadPostUrl(context, postUrl, selectedThumbnailFile);
+          _mainPageState.s.deletePostUrl(postUrl);
           BotToast.showText(text: '해당 항목이 업로드되었습니다.');
         }
         catch(e){

@@ -65,8 +65,7 @@ class CrawllerService extends ChangeNotifier {
                 PostUrl(
                     instaUserId: instaUserId,
                     url: postUrlStr,
-                    mediaUrlList: await getMediaStrListOf(postUrl: postUrlStr),
-                    finishUpload: false);
+                    mediaUrlList: await getMediaStrListOf(postUrl: postUrlStr),);
             service.addPostUrl(postUrl);
           }
         } else {

@@ -284,10 +284,10 @@ class PuppeteerUtil {
 
   Future<void> typeFocus(String selector, String text, {Duration? delay}) async {
     await focus(selector);
-    await tab.keyboard.type('text', delay: delay);
+    await tab.keyboard.type(text, delay: delay);
   }
   Future<void> typeClick(String selector, String text, {Duration? delay}) async {
     await click(selector);
-    await tab.keyboard.type('text', delay: delay);
+    await tab.keyboard.type(text, delay: delay);
   }
 }
